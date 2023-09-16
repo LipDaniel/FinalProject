@@ -79,8 +79,8 @@ class _LoginState extends State<Login> {
                       style:
                           TextStyle(fontWeight: FontWeight.w900, fontSize: 17)),
                   onPressed: () {
-                    Route route =
-                        MaterialPageRoute(builder: (context) => const BottomNavigationBarApp());
+                    Route route = MaterialPageRoute(
+                        builder: (context) => const BottomNavigationBarApp());
                     Navigator.push(context, route);
                   },
                 ),
@@ -88,24 +88,21 @@ class _LoginState extends State<Login> {
               const SizedBox(height: 50),
 
               // SOCIAL MEDIA
-              Positioned(
-                bottom: 0.0,
-                child: Center(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "Dont't have an account? ",
-                      style: DefaultTextStyle.of(context).style,
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: "Sign Up",
-                          style: const TextStyle(color: AppConstraint.mainColor),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              // print('13');
-                            },
-                        ),
-                      ],
-                    ),
+              Center(
+                child: RichText(
+                  text: TextSpan(
+                    text: "Dont't have an account? ",
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: "Sign Up",
+                        style: const TextStyle(color: AppConstraint.mainColor),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            // print('13');
+                          },
+                      ),
+                    ],
                   ),
                 ),
               )

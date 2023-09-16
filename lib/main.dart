@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/bottomnavi/bottomnavi_screen.dart';
+import 'package:projectsem4/View/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,6 +24,6 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: "Montserrat-Regular",
         ),
-        home: const Scaffold(body: BottomNavigationBarApp()));
+        home: const Scaffold(body: Login()));
   }
 }
