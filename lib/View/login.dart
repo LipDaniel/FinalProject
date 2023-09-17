@@ -48,11 +48,11 @@ class _LoginState extends State<Login> {
                 controller: phoneController,
                 decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFcccccc))),
+                        borderSide: BorderSide(color: AppConstraint.colorInput)),
                     hintText: 'Email or phone number',
                     prefixIcon: Icon(Icons.perm_identity),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue))),
+                        borderSide: BorderSide(color: AppConstraint.mainColor))),
               ),
               const SizedBox(height: 25),
               TextField(
@@ -60,11 +60,11 @@ class _LoginState extends State<Login> {
                 obscureText: true,
                 decoration: const InputDecoration(
                     enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Color(0xFFcccccc))),
+                        borderSide: BorderSide(color: AppConstraint.colorInput)),
                     hintText: 'Password',
                     prefixIcon: Icon(Icons.lock_outline),
                     focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.blue))),
+                        borderSide: BorderSide(color: AppConstraint.mainColor))),
               ),
               const SizedBox(height: 45),
               SizedBox(

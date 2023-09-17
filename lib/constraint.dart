@@ -7,4 +7,6 @@ class AppConstraint{
   static const fontFamily = "Verdana";
   static const colorSlogan = Color.fromARGB(255, 255, 255, 255);
   static const colorSubSlogan = Color.fromARGB(255, 255, 255, 255);
+  static const colorInput = Color.fromARGB(255, 234, 234, 234);
+  static const colorLabel = Color.fromARGB(255, 161, 161, 161);
 }
