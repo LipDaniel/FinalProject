@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/View/bottomnavi/bottomnavi_screen.dart';
+import 'package:projectsem4/View/login.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,9 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Color color = Colors.black;
-  String? text;
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,6 +20,6 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: "Montserrat-Regular",
         ),
-        home: const BottomNavigationBarApp());
+        home: const Scaffold(body: Login()));
   }
 }

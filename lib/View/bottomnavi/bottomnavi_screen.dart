@@ -1,27 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/home/home_screen.dart';
+import 'package:projectsem4/View/profile/profile_screen.dart';
 import 'package:projectsem4/constraint.dart';
 
-/// Flutter code sample for [BottomNavigationBar].
-
-class BottomNavigationBarApp extends StatelessWidget {
+class BottomNavigationBarApp extends StatefulWidget {
   const BottomNavigationBarApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Home();
-  }
-}
-
-class Home extends StatefulWidget {
-  const Home({super.key});
-
-  @override
-  State<Home> createState() => HomeState();
-}
-
-class HomeState extends State<Home> {
-  int _selectedIndex = 0;
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
@@ -34,8 +17,15 @@ class HomeState extends State<Home> {
       'Index 2: School',
       style: optionStyle,
     ),
-    Text('Index 3: Account', style: optionStyle)
+    ProfileScreen()
   ];
+
+  @override
+  State<BottomNavigationBarApp> createState() => _BottomNavigationBarAppState();
+}
+
+class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
+  int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -47,7 +37,7 @@ class HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: BottomNavigationBarApp._widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
