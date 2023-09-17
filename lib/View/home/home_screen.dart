@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projectsem4/View/home/widgets/header_widget.dart';
 import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,9 +10,10 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+List<String> lstOptionRadio = ['One way', 'Round trip'];
+
 class _HomeScreenState extends State<HomeScreen> {
-  int? selectedRadio = 1;
-  List<DateTime?> _date = [
+  final List<DateTime?> date = [
     DateTime(2021, 8, 10),
   ];
   List<String> airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
@@ -20,19 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return (screen - header - bottom) - 10;
   }
 
+  String selectedRadio = lstOptionRadio[0];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.none,
-        children: [
-          Container(
-            height:
-                MediaQuery.sizeOf(context).height - kBottomNavigationBarHeight,
-          ),
-          _header(context),
-          _searchForm(context)
-        ],
+        children: [const HeaderHomeWidget(), _searchForm(context)],
       ),
     );
   }
@@ -49,18 +44,17 @@ class _HomeScreenState extends State<HomeScreen> {
             kBottomNavigationBarHeight),
         width: MediaQuery.sizeOf(context).width,
         decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: Colors.white,
             boxShadow: [
               BoxShadow(
                   color: Colors.black12, offset: Offset(5, 0), blurRadius: 10)
             ],
             borderRadius: BorderRadius.all(Radius.circular(40))),
         child: Padding(
-          padding:
-              const EdgeInsets.only(left: 20, right: 20, top: 30, bottom: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Column(
             children: [
-              _radioButton(),
+              __radioButton(),
 
               Expanded(
                   child: Row(
@@ -124,46 +118,54 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Expanded _radioButton() {
-    return Expanded(
-        child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget __radioButton() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          child: RadioListTile<int>(
-            activeColor: AppConstraint.mainColor,
-            title: const Text(
-              "One way",
-              style: TextStyle(fontSize: 13.0),
-            ),
-            value: 2,
-            groupValue: selectedRadio,
-            onChanged: (value) {
-              setState(() {
-                selectedRadio = value;
-              });
-            },
+          flex: 2,
+          child: Row(
+            children: [
+              Radio(
+                value: lstOptionRadio[0],
+                groupValue: selectedRadio,
+                onChanged: (value) {
+                  setState(() {
+                    selectedRadio = value.toString();
+                  });
+                },
+              ),
+              Text(
+                lstOptionRadio[0],
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              )
+            ],
           ),
         ),
         Expanded(
-          child: RadioListTile<int>(
-            activeColor: AppConstraint.mainColor,
-            title: const Text(
-              "Round trip",
-              style: TextStyle(fontSize: 13.0),
-            ),
-            value: 1,
-            groupValue: selectedRadio,
-            onChanged: (value) {
-              setState(() {
-                selectedRadio = value;
-              });
-            },
+          flex: 2,
+          child: Row(
+            children: [
+              Radio(
+                value: lstOptionRadio[1],
+                groupValue: selectedRadio,
+                onChanged: (value) {
+                  setState(() {
+                    selectedRadio = value.toString();
+                  });
+                },
+              ),
+              Text(
+                lstOptionRadio[1],
+                style:
+                    const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+              )
+            ],
           ),
         ),
-        // Expanded(child: SizedBox(width: 10))
       ],
-    ));
+    );
   }
 
   DropdownSearch<String> _dropDownSearchFrom() {
@@ -225,46 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 borderSide: BorderSide(color: AppConstraint.mainColor))),
       ),
       onChanged: print,
-    );
-  }
-
-  Container _header(BuildContext context) {
-    double height = MediaQuery.sizeOf(context).height * 0.33;
-    return Container(
-      height: height,
-      decoration: const BoxDecoration(
-          color: AppConstraint.mainColor,
-          borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(40.0),
-              bottomRight: Radius.circular(40.0))),
-      padding: const EdgeInsets.all(20.0),
-      child: Row(children: [
-        const Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Start',
-                style: TextStyle(
-                    fontSize: 80,
-                    color: AppConstraint.colorSlogan,
-                    fontWeight: FontWeight.bold,
-                    textBaseline: TextBaseline.alphabetic,
-                    height: 1.2)),
-            Text(
-              'Your Moment',
-              style: TextStyle(
-                  fontSize: 30,
-                  color: AppConstraint.colorSubSlogan,
-                  fontWeight: FontWeight.bold,
-                  height: 1.0),
-            ),
-          ],
-        ),
-        const SizedBox(width: 10),
-        Image.asset(
-          'assets/image/flight.png',
-          scale: 3.8,
-        )
-      ]),
     );
   }
 }
