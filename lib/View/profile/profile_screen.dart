@@ -55,14 +55,14 @@ class ProfileScreen extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('2T',
+                                Text('Lipdaniel',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
-                                Text('iaoht.dev@gmail.com'),
+                                Text('iaoht.dev@gmail.com', style: TextStyle(color: AppConstraint.colorSlogan),),
                               ],
                             ),
                           )
