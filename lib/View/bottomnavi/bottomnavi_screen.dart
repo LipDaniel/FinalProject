@@ -10,11 +10,11 @@ class BottomNavigationBarApp extends StatefulWidget {
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     Text(
-      'Index 1: Notification',
+      'Notification',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'My Wallet',
       style: optionStyle,
     ),
     ProfileScreen()

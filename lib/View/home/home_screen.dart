@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/home/widgets/header_widget.dart';
 import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+
+const List<String> _amountList = <String>['0', '1', '2', '3', '4'];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,12 +16,22 @@ class HomeScreen extends StatefulWidget {
 List<String> lstOptionRadio = ['One way', 'Round trip'];
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<DateTime?> date = [
-    DateTime(2021, 8, 10),
-  ];
+  final TextEditingController _adultAmount = TextEditingController();
+  final TextEditingController _childrenAmount = TextEditingController();
+  final TextEditingController _babyAmount = TextEditingController();
+
   List<String> airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
+
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _adultAmount.text = "0";
+    _childrenAmount.text = "0";
+    _babyAmount.text = "0";
   }
 
   String selectedRadio = lstOptionRadio[0];
@@ -27,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Stack(
         clipBehavior: Clip.none,
-        children: [const HeaderHomeWidget(), _searchForm(context)],
+        children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
       ),
     );
   }
@@ -51,71 +64,215 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             borderRadius: BorderRadius.all(Radius.circular(40))),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Column(
             children: [
               __radioButton(),
-
+              const SizedBox(height: 10),
               Expanded(
+                  flex: 2,
                   child: Row(
-                children: [
-                  Expanded(
-                      flex: 5,
-                      child: Column(
-                        children: [
-                          Expanded(child: _dropDownSearchFrom()),
-                          Expanded(child: _dropDownSearchTo()),
-                        ],
+                    children: [
+                      Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              Expanded(child: _dropDownSearchFrom()),
+                              Expanded(child: _dropDownSearchTo()),
+                            ],
+                          )),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            icon: const Icon(Icons.swap_vert),
+                            onPressed: () => {}),
+                      ),
+                    ],
+                  )),
+              _departDate(),
+              _returnDate(),
+              Expanded(
+                  flex: 1,
+                  child: Row(
+                    children: [
+                      _amountAdultField(context),
+                      const SizedBox(width: 20),
+                      _amountChildrenField(context),
+                      const SizedBox(width: 20),
+                      _amountBabyField(context)
+                    ],
+                  )),
+              // const Expanded(child: ),
+              // const SizedBox(height: 35.0),
+              SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                height: 40.0,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
                       )),
-                  Expanded(
-                    flex: 1,
-                    child: IconButton(
-                        icon: const Icon(Icons.swap_vert), onPressed: () => {}),
-                  ),
-                ],
-              )),
-              const Expanded(
-                  child: TextField(
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: AppConstraint.colorInput)),
-                          hintText: 'Depart',
-                          prefixIcon: Icon(Icons.calendar_month),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppConstraint.mainColor))))),
-              const Expanded(
-                  child: TextField(
-                      decoration: InputDecoration(
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: AppConstraint.colorInput)),
-                          hintText: 'Return',
-                          prefixIcon: Icon(Icons.calendar_month),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: AppConstraint.mainColor))))),
-
-              ElevatedButton(
-                onPressed: () {},
-                style: const ButtonStyle(
-                    backgroundColor:
-                        MaterialStatePropertyAll(AppConstraint.mainColor)),
-                child: const Text('Find',
-                    style: TextStyle(color: AppConstraint.colorSlogan)),
+                      backgroundColor: const MaterialStatePropertyAll(
+                          AppConstraint.mainColor)),
+                  child: const Text('Find',
+                      style: TextStyle(color: AppConstraint.colorSlogan)),
+                ),
               ),
-              // CalendarDatePicker2(
-              //   config: CalendarDatePicker2Config(),
-              //   value: _date,
-              //   onValueChanged: (dates) => _date = dates,
-              // )
-              // Expanded(child: Bottom),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Expanded _amountAdultField(BuildContext context) {
+    return Expanded(
+        child: CupertinoTextField(
+            controller: _adultAmount,
+            suffix: const Text('Adult',
+                style: TextStyle(color: AppConstraint.colorIcon)),
+            prefix:
+                const Icon(Icons.people_alt, color: AppConstraint.colorIcon),
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppConstraint.colorInput))),
+            readOnly: true,
+            onTap: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(
+                    actions: [buildPickerForAdult()],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                )));
+  }
+
+  Expanded _amountChildrenField(BuildContext context) {
+    return Expanded(
+        child: CupertinoTextField(
+            controller: _childrenAmount,
+            suffix: const Text('Child',
+                style: TextStyle(color: AppConstraint.colorIcon)),
+            prefix:
+                const Icon(Icons.child_care, color: AppConstraint.colorIcon),
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppConstraint.colorInput))),
+            readOnly: true,
+            onTap: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(
+                    actions: [buildPickerForChildren()],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                )));
+  }
+
+  Expanded _amountBabyField(BuildContext context) {
+    return Expanded(
+        child: CupertinoTextField(
+            controller: _babyAmount,
+            suffix: const Text('Baby',
+                style: TextStyle(color: AppConstraint.colorIcon)),
+            prefix:
+                const Icon(Icons.child_friendly, color: AppConstraint.colorIcon),
+            decoration: const BoxDecoration(
+                border: Border(
+                    bottom: BorderSide(color: AppConstraint.colorInput))),
+            readOnly: true,
+            onTap: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(
+                    actions: [buildPickerForBaby()],
+                    cancelButton: CupertinoActionSheetAction(
+                      child: const Text('Cancel'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                )));
+  }
+
+Widget buildPickerForBaby() => SizedBox(
+        height: 350,
+        child: CupertinoPicker(
+            itemExtent: 64,
+            onSelectedItemChanged: (value) => setState(() {
+                  _babyAmount.text = value.toString();
+                }),
+            children: List<Widget>.generate(_amountList.length, (int index) {
+              return Center(
+                  child: Text(
+                _amountList[index],
+                style: const TextStyle(fontSize: 35),
+              ));
+            })),
+      );
+
+  Widget buildPickerForChildren() => SizedBox(
+        height: 350,
+        child: CupertinoPicker(
+            itemExtent: 64,
+            onSelectedItemChanged: (value) => setState(() {
+                  _childrenAmount.text = value.toString();
+                }),
+            children: List<Widget>.generate(_amountList.length, (int index) {
+              return Center(
+                  child: Text(
+                _amountList[index],
+                style: const TextStyle(fontSize: 35),
+              ));
+            })),
+      );
+
+  Widget buildPickerForAdult() => SizedBox(
+        height: 350,
+        child: CupertinoPicker(
+            itemExtent: 64,
+            onSelectedItemChanged: (value) => setState(() {
+                  _adultAmount.text = value.toString();
+                }),
+            children: List<Widget>.generate(_amountList.length, (int index) {
+              return Center(
+                  child: Text(
+                _amountList[index],
+                style: const TextStyle(fontSize: 35),
+              ));
+            })),
+      );
+
+  Expanded _returnDate() {
+    return const Expanded(
+        flex: 1,
+        child: TextField(
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppConstraint.colorInput)),
+                labelText: 'Return',
+                labelStyle: TextStyle(color: AppConstraint.colorLabel),
+                prefixIcon: Icon(Icons.calendar_month),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppConstraint.mainColor)))));
+  }
+
+  Expanded _departDate() {
+    return const Expanded(
+        flex: 1,
+        child: TextField(
+            decoration: InputDecoration(
+                enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppConstraint.colorInput)),
+                labelText: 'Depart',
+                labelStyle: TextStyle(color: AppConstraint.colorLabel),
+                prefixIcon: Icon(Icons.calendar_month),
+                focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: AppConstraint.mainColor)))));
   }
 
   Widget __radioButton() {
