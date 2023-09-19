@@ -5,6 +5,7 @@ import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 const List<String> _amountList = <String>['0', '1', '2', '3', '4'];
+const List<String> _seatClassList = <String>['Economy', 'Special economy', 'Business','First class'];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -92,6 +93,9 @@ class _HomeScreenState extends State<HomeScreen> {
               _departDate(),
               _returnDate(),
               Expanded(
+                child: _dropDownSeatClass(),
+              ),
+              Expanded(
                   flex: 1,
                   child: Row(
                     children: [
@@ -103,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   )),
               // const Expanded(child: ),
-              // const SizedBox(height: 35.0),
+              const SizedBox(height: 10.0),
               SizedBox(
                 width: MediaQuery.sizeOf(context).width,
                 height: 40.0,
@@ -181,8 +185,8 @@ class _HomeScreenState extends State<HomeScreen> {
             controller: _babyAmount,
             suffix: const Text('Baby',
                 style: TextStyle(color: AppConstraint.colorIcon)),
-            prefix:
-                const Icon(Icons.child_friendly, color: AppConstraint.colorIcon),
+            prefix: const Icon(Icons.child_friendly,
+                color: AppConstraint.colorIcon),
             decoration: const BoxDecoration(
                 border: Border(
                     bottom: BorderSide(color: AppConstraint.colorInput))),
@@ -199,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 )));
   }
 
-Widget buildPickerForBaby() => SizedBox(
+  Widget buildPickerForBaby() => SizedBox(
         height: 350,
         child: CupertinoPicker(
             itemExtent: 64,
@@ -322,6 +326,26 @@ Widget buildPickerForBaby() => SizedBox(
           ),
         ),
       ],
+    );
+  }
+
+DropdownSearch<String> _dropDownSeatClass() {
+    return DropdownSearch<String>(
+      popupProps: const PopupProps.modalBottomSheet(
+        showSelectedItems: true,
+      ),
+      items: _seatClassList,
+      dropdownDecoratorProps: const DropDownDecoratorProps(
+        dropdownSearchDecoration: InputDecoration(
+            enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: AppConstraint.colorInput)),
+            labelText: 'Seat class',
+            labelStyle: TextStyle(color: AppConstraint.colorLabel),
+            prefixIcon: Icon(Icons.flight_class),
+            focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: AppConstraint.mainColor))),
+      ),
+      onChanged: print,
     );
   }
 
