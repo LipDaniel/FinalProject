@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:projectsem4/View/home/widgets/header_widget.dart';
 import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:intl/intl.dart';
 
 const List<String> _amountList = <String>['0', '1', '2', '3', '4'];
-const List<String> _seatClassList = <String>['Economy', 'Special economy', 'Business','First class'];
+const List<String> _seatClassList = <String>[
+  'Economy',
+  'Special economy',
+  'Business',
+  'First class'
+];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,11 +26,24 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _adultAmount = TextEditingController();
   final TextEditingController _childrenAmount = TextEditingController();
   final TextEditingController _babyAmount = TextEditingController();
+  final TextEditingController _departInput = TextEditingController();
+  final TextEditingController _returnInput = TextEditingController();
+  String? _airportFrom = '';
+  String? _airportTo = '';
 
   List<String> airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
+  }
+
+  void swapAirPort(){
+    print(1);
+    setState(() {
+      String? tmp = _airportFrom;
+      _airportFrom = _airportTo;
+      _airportTo = tmp;
+    });
   }
 
   @override
@@ -33,9 +52,13 @@ class _HomeScreenState extends State<HomeScreen> {
     _adultAmount.text = "0";
     _childrenAmount.text = "0";
     _babyAmount.text = "0";
+    _babyAmount.text = "0";
+    _departInput.text = "";
+    _returnInput.text = "";
   }
 
   String selectedRadio = lstOptionRadio[0];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,10 +88,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
             borderRadius: BorderRadius.all(Radius.circular(40))),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
           child: Column(
             children: [
-              __radioButton(),
+              _radioButton(),
               const SizedBox(height: 10),
               Expanded(
                   flex: 2,
@@ -86,7 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         flex: 1,
                         child: IconButton(
                             icon: const Icon(Icons.swap_vert),
-                            onPressed: () => {}),
+                            onPressed: () => swapAirPort()),
                       ),
                     ],
                   )),
@@ -252,34 +275,67 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
   Expanded _returnDate() {
-    return const Expanded(
+    return Expanded(
         flex: 1,
         child: TextField(
-            decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppConstraint.colorInput)),
-                labelText: 'Return',
-                labelStyle: TextStyle(color: AppConstraint.colorLabel),
-                prefixIcon: Icon(Icons.calendar_month),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppConstraint.mainColor)))));
+          controller: _departInput,
+          readOnly: true,
+          decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppConstraint.colorInput)),
+              labelText: 'Return',
+              labelStyle: TextStyle(color: AppConstraint.colorLabel),
+              prefixIcon: Icon(Icons.calendar_month),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppConstraint.mainColor))),
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2030));
+            if (pickedDate != null) {
+              String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+              setState(() {
+                _departInput.text = formattedDate; //set output date to TextField value.
+              });
+            } else {}
+          },
+        ));
   }
 
   Expanded _departDate() {
-    return const Expanded(
+    return Expanded(
         flex: 1,
         child: TextField(
-            decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppConstraint.colorInput)),
-                labelText: 'Depart',
-                labelStyle: TextStyle(color: AppConstraint.colorLabel),
-                prefixIcon: Icon(Icons.calendar_month),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: AppConstraint.mainColor)))));
+            controller: _returnInput,
+          readOnly: true,
+          decoration: const InputDecoration(
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppConstraint.colorInput)),
+              labelText: 'Depart',
+              labelStyle: TextStyle(color: AppConstraint.colorLabel),
+              prefixIcon: Icon(Icons.calendar_month),
+              focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppConstraint.mainColor))),
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime.now(),
+                lastDate: DateTime(2030));
+            if (pickedDate != null) {
+              String formattedDate =
+                  DateFormat('dd-MM-yyyy').format(pickedDate);
+              setState(() {
+                _returnInput.text =formattedDate; //set output date to TextField value.
+              });
+            } else {}
+          },
+        ));
   }
 
-  Widget __radioButton() {
+  Widget _radioButton() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -329,7 +385,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-DropdownSearch<String> _dropDownSeatClass() {
+  DropdownSearch<String> _dropDownSeatClass() {
     return DropdownSearch<String>(
       popupProps: const PopupProps.modalBottomSheet(
         showSelectedItems: true,
@@ -351,6 +407,7 @@ DropdownSearch<String> _dropDownSeatClass() {
 
   DropdownSearch<String> _dropDownSearchFrom() {
     return DropdownSearch<String>(
+      selectedItem: _airportFrom,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
             autofocus: true,
@@ -376,12 +433,17 @@ DropdownSearch<String> _dropDownSeatClass() {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppConstraint.mainColor))),
       ),
-      onChanged: print,
+      onChanged: (value) => {
+        setState(() {
+          _airportFrom = value;
+        })
+      },
     );
   }
 
   DropdownSearch<String> _dropDownSearchTo() {
     return DropdownSearch<String>(
+      selectedItem: _airportTo,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
             autofocus: true,
@@ -407,7 +469,11 @@ DropdownSearch<String> _dropDownSeatClass() {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppConstraint.mainColor))),
       ),
-      onChanged: print,
+      onChanged: (value) => {
+        setState(() {
+          _airportTo = value;
+        })
+      },
     );
   }
 }
