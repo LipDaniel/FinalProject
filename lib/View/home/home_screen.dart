@@ -38,7 +38,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void swapAirPort(){
-    print(1);
     setState(() {
       String? tmp = _airportFrom;
       _airportFrom = _airportTo;
