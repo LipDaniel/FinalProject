@@ -15,10 +15,6 @@ class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  int countdown() {
-    return 1;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

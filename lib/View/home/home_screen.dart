@@ -28,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _babyAmount = TextEditingController();
   final TextEditingController _departInput = TextEditingController();
   final TextEditingController _returnInput = TextEditingController();
-  String? _airportFrom = '';
-  String? _airportTo = '';
+  String? _airportFrom;
+  String? _airportTo;
 
   List<String> airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
 
@@ -277,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
         flex: 1,
         child: TextField(
-          controller: _departInput,
+          controller: _returnInput,
           readOnly: true,
           decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
@@ -296,7 +296,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (pickedDate != null) {
               String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
               setState(() {
-                _departInput.text = formattedDate; //set output date to TextField value.
+                _returnInput.text = formattedDate; //set output date to TextField value.
               });
             } else {}
           },
@@ -307,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
         flex: 1,
         child: TextField(
-            controller: _returnInput,
+            controller: _departInput,
           readOnly: true,
           decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
@@ -327,9 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
               String formattedDate =
                   DateFormat('dd-MM-yyyy').format(pickedDate);
               setState(() {
-                _returnInput.text =formattedDate; //set output date to TextField value.
+                _departInput.text = formattedDate; 
               });
-            } else {}
+            }
           },
         ));
   }
