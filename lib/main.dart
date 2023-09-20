@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
           items: [
             IntroductionSliderItem(
               backgroundImageDecoration: const BackgroundImageDecoration(
-                  image: AssetImage("assets/image/intro-flight-2.png"),
+                  image: AssetImage("assets/image/intro-flight-3.png"),
                   fit: BoxFit.fitWidth),
               title: _slider(
                   context,
@@ -37,7 +37,7 @@ class _MyAppState extends State<MyApp> {
             ),
             IntroductionSliderItem(
               backgroundImageDecoration: const BackgroundImageDecoration(
-                  image: AssetImage("assets/image/intro-flight-3.png"),
+                  image: AssetImage("assets/image/intro-flight-1.png"),
                   fit: BoxFit.fitWidth),
               title: _slider(
                   context,
@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
             ),
             IntroductionSliderItem(
               backgroundImageDecoration: const BackgroundImageDecoration(
-                  image: AssetImage("assets/image/intro-flight-1.png"),
+                  image: AssetImage("assets/image/intro-flight-2.png"),
                   fit: BoxFit.fitWidth),
               title: _slider(
                   context,
