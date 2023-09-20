@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:projectsem4/View/bottomnavi/bottomnavi_screen.dart';
+import 'package:projectsem4/view/bottomnavi/bottomnavi_screen.dart';
 import 'package:projectsem4/constraint.dart';
 
 // ignore: must_be_immutable

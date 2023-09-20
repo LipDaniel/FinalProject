@@ -1,17 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:projectsem4/View/home/widgets/header_widget.dart';
+import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
-
-const List<String> _amountList = <String>['0', '1', '2', '3', '4'];
-const List<String> _seatClassList = <String>[
-  'Economy',
-  'Special economy',
-  'Business',
-  'First class'
-];
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,9 +12,16 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-List<String> lstOptionRadio = ['One way', 'Round trip'];
-
 class _HomeScreenState extends State<HomeScreen> {
+  final List<String> _amountList = ['0', '1', '2', '3', '4'];
+  final List<String> _lstOptionRadio = ['One way', 'Round trip'];
+  final List<String> _airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
+  final List<String> _seatClassList = [
+    'Economy',
+    'Special economy',
+    'Business',
+    'First class'
+  ];
   final TextEditingController _adultAmount = TextEditingController();
   final TextEditingController _childrenAmount = TextEditingController();
   final TextEditingController _babyAmount = TextEditingController();
@@ -30,14 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _returnInput = TextEditingController();
   String? _airportFrom;
   String? _airportTo;
-
-  List<String> airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
+  String? _selectedRadio;
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
   }
 
-  void swapAirPort(){
+  void swapAirPort() {
     setState(() {
       String? tmp = _airportFrom;
       _airportFrom = _airportTo;
@@ -48,6 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _selectedRadio = _lstOptionRadio[0];
     _adultAmount.text = "0";
     _childrenAmount.text = "0";
     _babyAmount.text = "0";
@@ -55,8 +54,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _departInput.text = "";
     _returnInput.text = "";
   }
-
-  String selectedRadio = lstOptionRadio[0];
 
   @override
   Widget build(BuildContext context) {
@@ -294,9 +291,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 firstDate: DateTime.now(),
                 lastDate: DateTime(2030));
             if (pickedDate != null) {
-              String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+              String formattedDate =
+                  DateFormat('dd-MM-yyyy').format(pickedDate);
               setState(() {
-                _returnInput.text = formattedDate; //set output date to TextField value.
+                _returnInput.text =
+                    formattedDate; //set output date to TextField value.
               });
             } else {}
           },
@@ -307,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
         flex: 1,
         child: TextField(
-            controller: _departInput,
+          controller: _departInput,
           readOnly: true,
           decoration: const InputDecoration(
               enabledBorder: UnderlineInputBorder(
@@ -327,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen> {
               String formattedDate =
                   DateFormat('dd-MM-yyyy').format(pickedDate);
               setState(() {
-                _departInput.text = formattedDate; 
+                _departInput.text = formattedDate;
               });
             }
           },
@@ -343,16 +342,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             children: [
               Radio(
-                value: lstOptionRadio[0],
-                groupValue: selectedRadio,
+                value: _lstOptionRadio[0],
+                groupValue: _selectedRadio,
                 onChanged: (value) {
                   setState(() {
-                    selectedRadio = value.toString();
+                    _selectedRadio = value.toString();
                   });
                 },
               ),
               Text(
-                lstOptionRadio[0],
+                _lstOptionRadio[0],
                 style:
                     const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               )
@@ -364,16 +363,16 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Row(
             children: [
               Radio(
-                value: lstOptionRadio[1],
-                groupValue: selectedRadio,
+                value: _lstOptionRadio[1],
+                groupValue: _selectedRadio,
                 onChanged: (value) {
                   setState(() {
-                    selectedRadio = value.toString();
+                    _selectedRadio = value.toString();
                   });
                 },
               ),
               Text(
-                lstOptionRadio[1],
+                _lstOptionRadio[1],
                 style:
                     const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
               )
@@ -421,7 +420,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showSearchBox: true,
         showSelectedItems: true,
       ),
-      items: airportLs,
+      items: _airportLs,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -457,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
         showSearchBox: true,
         showSelectedItems: true,
       ),
-      items: airportLs,
+      items: _airportLs,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
