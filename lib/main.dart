@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/view/login.dart';
+import 'package:projectsem4/view/home/flight_list_screen.dart';
 import 'package:introduction_slider/introduction_slider.dart';
 import 'package:projectsem4/constraint.dart';
 
@@ -22,7 +23,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: "Montserrat-Regular",
         ),
-        home: _intoductionslide(context));
+        // home: _intoductionslide(context));
+        home: const FlightListScreen());
   }
 
   IntroductionSlider _intoductionslide(BuildContext context) {

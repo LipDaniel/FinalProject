@@ -58,9 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        clipBehavior: Clip.none,
-        children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
+      body: SingleChildScrollView(
+        child: SizedBox(
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
+          ),
+        ),
       ),
     );
   }
