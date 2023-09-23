@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projectsem4/view/bottomnavi/bottomnavi_screen.dart';
+import 'package:projectsem4/view/home/home_screen.dart';
 import 'package:projectsem4/view/login.dart';
 import 'package:projectsem4/view/home/flight_list_screen.dart';
 import 'package:introduction_slider/introduction_slider.dart';
@@ -24,7 +26,7 @@ class _MyAppState extends State<MyApp> {
           fontFamily: "Montserrat-Regular",
         ),
         // home: _intoductionslide(context));
-        home: const FlightListScreen());
+        home: BottomNavigationBarApp());
   }
 
   IntroductionSlider _intoductionslide(BuildContext context) {

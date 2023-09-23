@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/view/home/home_screen.dart';
+import 'package:projectsem4/view/notification/notification_screen.dart';
 import 'package:projectsem4/view/profile/profile_screen.dart';
 import 'package:projectsem4/constraint.dart';
 
@@ -9,10 +10,7 @@ class BottomNavigationBarApp extends StatefulWidget {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Text(
-      'Notification',
-      style: optionStyle,
-    ),
+    NotificationScreen(),
     Text(
       'My Wallet',
       style: optionStyle,

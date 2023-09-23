@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:projectsem4/view/home/flight_list_screen.dart';
 import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -58,12 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: SizedBox(
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
-          ),
+      body: SizedBox(
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
         ),
       ),
     );
@@ -135,7 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.sizeOf(context).width,
                 height: 40.0,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Route route = MaterialPageRoute(
+                        builder: (context) => const FlightListScreen());
+                    Navigator.push(context, route);
+                  },
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -348,6 +351,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Radio(
                 value: _lstOptionRadio[0],
                 groupValue: _selectedRadio,
+                activeColor: AppConstraint.mainColor,
                 onChanged: (value) {
                   setState(() {
                     _selectedRadio = value.toString();
@@ -369,6 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Radio(
                 value: _lstOptionRadio[1],
                 groupValue: _selectedRadio,
+                activeColor: AppConstraint.mainColor,
                 onChanged: (value) {
                   setState(() {
                     _selectedRadio = value.toString();
