@@ -48,7 +48,7 @@ class _SeatWidgetState extends State<SeatWidget> {
             height: 10,
           ),
           Image.asset(
-            'assets/image/logo_airline.png',
+            'assets/image/logo-airline.png',
             height: 40,
           ),
           const Text(
