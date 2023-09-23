@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -68,7 +68,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         fontSize: 20,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
-                                Text('iaoht.dev@gmail.com', style: TextStyle(color: AppConstraint.colorSlogan),),
+                                Text(
+                                  'iaoht.dev@gmail.com',
+                                  style: TextStyle(
+                                      color: AppConstraint.colorSlogan),
+                                ),
                               ],
                             ),
                           )

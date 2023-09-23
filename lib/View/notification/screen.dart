@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class NotificationScreen extends StatefulWidget {

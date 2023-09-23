@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/view/profile/screen.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {
   const BottomNavigationBarApp({super.key});

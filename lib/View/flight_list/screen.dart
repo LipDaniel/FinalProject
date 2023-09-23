@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/choose_seat/screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';

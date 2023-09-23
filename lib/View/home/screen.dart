@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/view/flight_list/screen.dart';
 import 'package:projectsem4/view/home/widgets/header_widget.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -62,7 +62,11 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SizedBox(
         child: Stack(
           clipBehavior: Clip.none,
-          children: [Container(), const HeaderHomeWidget(), _searchForm(context)],
+          children: [
+            Container(),
+            const HeaderHomeWidget(),
+            _searchForm(context)
+          ],
         ),
       ),
     );

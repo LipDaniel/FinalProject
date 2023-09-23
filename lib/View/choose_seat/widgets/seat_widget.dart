@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 // import 'package:projectsem4/choose_seat/model.dart';
 // import 'package:projectsem4/ulits/enum_app.dart';
 
@@ -18,11 +18,11 @@ class _SeatWidgetState extends State<SeatWidget> {
   @override
   void initState() {
     // lstDisable = [
-      // const SeatsModel(id: 'A1'),
-      // const SeatsModel(id: 'A3'),
-      // const SeatsModel(id: 'A4'),
-      // const SeatsModel(id: 'B7'),
-      // const SeatsModel(id: 'C2'),
+    // const SeatsModel(id: 'A1'),
+    // const SeatsModel(id: 'A3'),
+    // const SeatsModel(id: 'A4'),
+    // const SeatsModel(id: 'B7'),
+    // const SeatsModel(id: 'C2'),
     // ];
     super.initState();
   }

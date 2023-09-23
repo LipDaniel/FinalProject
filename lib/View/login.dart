@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectsem4/view/bottomnavi/screen.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 
 // ignore: must_be_immutable
 class Login extends StatefulWidget {

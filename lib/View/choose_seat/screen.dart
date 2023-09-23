@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/choose_seat/widgets/seat_widget.dart';
-import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/ulits/constraint.dart';
 
 class ChooseSeetScreen extends StatefulWidget {
   const ChooseSeetScreen({super.key});
