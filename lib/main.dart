@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/view/bottomnavi/bottomnavi_screen.dart';
-import 'package:projectsem4/view/home/home_screen.dart';
+import 'package:projectsem4/view/bottomnavi/screen.dart';
+import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/login.dart';
-import 'package:projectsem4/view/home/flight_list_screen.dart';
+import 'package:projectsem4/view/home/screen.dart';
 import 'package:introduction_slider/introduction_slider.dart';
 import 'package:projectsem4/constraint.dart';
 

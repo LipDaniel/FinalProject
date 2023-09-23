@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/view/home/home_screen.dart';
-import 'package:projectsem4/view/notification/notification_screen.dart';
-import 'package:projectsem4/view/profile/profile_screen.dart';
+import 'package:projectsem4/view/home/screen.dart';
+import 'package:projectsem4/view/notification/screen.dart';
+import 'package:projectsem4/view/profile/screen.dart';
 import 'package:projectsem4/constraint.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {

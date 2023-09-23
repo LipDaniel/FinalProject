@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:projectsem4/constraint.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:projectsem4/constraint.dart';
+import 'package:projectsem4/view/choose_seat/screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
 
@@ -38,7 +39,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
     });
   }
 
-   @override
+  @override
   void initState() {
     super.initState();
     _selectedRadio = _lstOptionRadio[0];
@@ -161,16 +162,20 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  InkWell _flightItem(
+  Container _flightItem(
       timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
-    return InkWell(
-      onTap: () => {},
-      child: Container(
-          decoration: BoxDecoration(
-              color: AppConstraint.colorSlogan,
-              border: Border.all(color: AppConstraint.colorBox, width: 0.5)),
-          height: 120,
-          padding: const EdgeInsets.all(12.0),
+    return Container(
+        decoration: BoxDecoration(
+            color: AppConstraint.colorSlogan,
+            border: Border.all(color: AppConstraint.colorBox, width: 0.5)),
+        height: 120,
+        padding: const EdgeInsets.all(12.0),
+        child: InkWell(
+          onTap: () {
+            Route route = MaterialPageRoute(
+                builder: (context) => const ChooseSeetScreen());
+            Navigator.push(context, route);
+          },
           child: Column(
             children: [
               Row(
@@ -235,8 +240,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
               Text("Operated by $airlines",
                   style: const TextStyle(color: AppConstraint.colorLabel))
             ],
-          )),
-    );
+          ),
+        ));
   }
 
   InkWell _flightinfo(BuildContext context) {
@@ -246,12 +251,10 @@ class _FlightListScreenState extends State<FlightListScreen> {
             context: context,
             builder: (context) {
               return Dialog(
-                insetAnimationDuration: const Duration(milliseconds: 300),
-                insetAnimationCurve: Curves.easeInCirc,
-                backgroundColor: Colors.transparent,
-                child: 
-                _searchForm(context)
-              );
+                  insetAnimationDuration: const Duration(milliseconds: 300),
+                  insetAnimationCurve: Curves.easeInCirc,
+                  backgroundColor: Colors.transparent,
+                  child: _searchForm(context));
               //
             })
       },
