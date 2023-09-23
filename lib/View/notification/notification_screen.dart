@@ -14,6 +14,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: const Text('Notification',
               style: TextStyle(fontFamily: AppConstraint.fontFamilyBold)),
           backgroundColor: AppConstraint.mainColor,
