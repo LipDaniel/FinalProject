@@ -170,7 +170,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
               color: AppConstraint.colorSlogan,
               border: Border.all(color: AppConstraint.colorBox, width: 0.5)),
           height: 120,
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             children: [
               Row(
@@ -178,13 +178,13 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Image.asset('assets/image/logo-airline.png', width: 35),
-                  const SizedBox(width: 15),
+                  const SizedBox(width: 10),
                   Column(children: [
                     Text(
                       timeFrom,
                       style: const TextStyle(
                           fontFamily: AppConstraint.fontFamilyBold,
-                          fontSize: 21,
+                          fontSize: 20,
                           letterSpacing: 2),
                     ),
                     Text(
@@ -208,7 +208,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       timeTo,
                       style: const TextStyle(
                           fontFamily: AppConstraint.fontFamilyBold,
-                          fontSize: 21,
+                          fontSize: 20,
                           letterSpacing: 2),
                     ),
                     Text(
@@ -302,7 +302,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
         child: CupertinoTextField(
             controller: _adultAmount,
             suffix: const Text('Adult',
-                style: TextStyle(color: AppConstraint.colorIcon)),
+                style: TextStyle(color: AppConstraint.colorIcon, fontSize: 12)),
             prefix:
                 const Icon(Icons.people_alt, color: AppConstraint.colorIcon),
             decoration: const BoxDecoration(
@@ -326,7 +326,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
         child: CupertinoTextField(
             controller: _childrenAmount,
             suffix: const Text('Child',
-                style: TextStyle(color: AppConstraint.colorIcon)),
+                style: TextStyle(color: AppConstraint.colorIcon, fontSize: 12)),
             prefix:
                 const Icon(Icons.child_care, color: AppConstraint.colorIcon),
             decoration: const BoxDecoration(
@@ -350,7 +350,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
         child: CupertinoTextField(
             controller: _babyAmount,
             suffix: const Text('Baby',
-                style: TextStyle(color: AppConstraint.colorIcon)),
+                style: TextStyle(color: AppConstraint.colorIcon, fontSize: 12)),
             prefix: const Icon(Icons.child_friendly,
                 color: AppConstraint.colorIcon),
             decoration: const BoxDecoration(
