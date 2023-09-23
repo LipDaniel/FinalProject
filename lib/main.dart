@@ -25,8 +25,8 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           fontFamily: "Montserrat-Regular",
         ),
-        // home: _intoductionslide(context));
-        home: BottomNavigationBarApp());
+        home: _intoductionslide(context));
+        // home: BottomNavigationBarApp());
   }
 
   IntroductionSlider _intoductionslide(BuildContext context) {

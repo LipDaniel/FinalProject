@@ -38,6 +38,18 @@ class _FlightListScreenState extends State<FlightListScreen> {
     });
   }
 
+   @override
+  void initState() {
+    super.initState();
+    _selectedRadio = _lstOptionRadio[0];
+    _adultAmount.text = "0";
+    _childrenAmount.text = "0";
+    _babyAmount.text = "0";
+    _babyAmount.text = "0";
+    _departInput.text = "";
+    _returnInput.text = "";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
