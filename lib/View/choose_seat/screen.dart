@@ -14,15 +14,15 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppConstraint.mainColor,
         elevation: 0,
-        leading: const BackButton(
-          color: Colors.black,
-        ),
+        // leading: const BackButton(
+        //   color: Colors.black,
+        // ),
         title: Text(
           'Choose seats'.toUpperCase(),
           style: const TextStyle(
-              fontSize: 16, color: Colors.black54, fontWeight: FontWeight.bold),
+              fontSize: 16, fontFamily: AppConstraint.fontFamilyBold),
         ),
       ),
       body: SingleChildScrollView(
