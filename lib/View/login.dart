@@ -88,7 +88,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w900, fontSize: 17)),
                     onPressed: () {
                       Route route = MaterialPageRoute(
-                          builder: (context) => const BottomNavigationBarApp());
+                          builder: (context) => const BottomNavigationBarApp(), fullscreenDialog: true);
                       Navigator.push(context, route);
                     },
                   ),
