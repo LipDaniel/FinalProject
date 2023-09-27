@@ -1,9 +1,7 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:projectsem4/view/choose_seat/model.dart';
+import 'package:projectsem4/model/seat_model.dart';
 
-class AppConstraint{
+class AppConstraint {
   static const fontFamilyBold = "Montserrat-Bold";
   static const fontFamilyRegular = "Montserrat-Regular";
   static const mainColor = Color(0xff009688);
@@ -24,6 +22,22 @@ List<SeatsModel> firtClass = [
   const SeatsModel(id: 'A6'),
   const SeatsModel(id: 'A7'),
   const SeatsModel(id: 'A8'),
+  const SeatsModel(id: 'A2'),
+  const SeatsModel(id: 'A3'),
+  const SeatsModel(id: 'A4'),
+  const SeatsModel(id: 'A5'),
+  const SeatsModel(id: 'A6'),
+  const SeatsModel(id: 'A7'),
+  const SeatsModel(id: 'A8'),
+  const SeatsModel(id: 'A1'),
+  const SeatsModel(id: 'A2'),
+  const SeatsModel(id: 'A3'),
+  const SeatsModel(id: 'A4'),
+  const SeatsModel(id: 'A5'),
+  const SeatsModel(id: 'A6'),
+  const SeatsModel(id: 'A7'),
+  const SeatsModel(id: 'A8'),
+  const SeatsModel(id: 'A2'),
 ];
 List<SeatsModel> businessClass = [
   const SeatsModel(id: 'B1'),

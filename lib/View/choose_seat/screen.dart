@@ -13,12 +13,13 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomSheet: _btn(),
       appBar: AppBar(
         backgroundColor: AppConstraint.mainColor,
         elevation: 0,
-        // leading: const BackButton(
-        //   color: Colors.black,
-        // ),
+        leading: const BackButton(
+          color: Colors.white,
+        ),
         title: Text(
           'Choose seats'.toUpperCase(),
           style: const TextStyle(
@@ -111,6 +112,37 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
                   fontSize: 14),
             )
           ],
+        ),
+      ],
+    );
+  }
+
+  Widget _btn() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            bottom: 30,
+          ),
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(
+              vertical: 15,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.black, borderRadius: BorderRadius.circular(30)),
+            child: const Center(
+              child: Text(
+                'Next',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
         ),
       ],
     );

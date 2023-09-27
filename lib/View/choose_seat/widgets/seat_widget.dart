@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
-import 'package:projectsem4/view/choose_seat/model.dart';
 import 'package:projectsem4/ulits/enum_app.dart';
 
 class SeatWidget extends StatefulWidget {
@@ -30,7 +30,7 @@ class _SeatWidgetState extends State<SeatWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 25),
+      margin: const EdgeInsets.symmetric(horizontal: 15),
       padding: const EdgeInsets.symmetric(horizontal: 0),
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
@@ -65,7 +65,6 @@ class _SeatWidgetState extends State<SeatWidget> {
           const SizedBox(
             height: 20,
           ),
-          _btn()
         ],
       ),
     );
@@ -88,104 +87,87 @@ class _SeatWidgetState extends State<SeatWidget> {
         const SizedBox(
           height: 20,
         ),
-        Wrap(
-            children: seats.asMap().entries.map((e) {
-          int index = e.key;
-
-          List<int> lstIndex = [1];
-
-          double paddingRight;
-          for (int i = 1; i < seats.length; i++) {
-            if (i > 5) {
-              i = i + 3;
-            } else {
-              i = i + 4;
+        Padding(
+          padding: const EdgeInsets.only(left: 10, bottom: 10),
+          child: Wrap(
+              children: seats.asMap().entries.map((e) {
+            int index = e.key;
+            List<int> lstIndex = [2];
+            double paddingRight;
+            for (int i = 2; i < seats.length; i++) {
+              if (i > 8) {
+                i += 5;
+              } else {
+                i += 6;
+              }
+              lstIndex.add(i);
             }
-            lstIndex.add(i);
-          }
-          if (lstIndex.contains(index)) {
-            paddingRight = 50;
-          } else {
-            paddingRight = 10;
-          }
-
-          return InkWell(
-              onTap: () => __onChooseSeats(e.value),
-              child: lstDisable.contains(e.value)
-                  ? Container(
-                      margin: EdgeInsets.only(
-                          left: 10, right: paddingRight, bottom: 20),
-                      height: 50,
-                      width: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Center(
-                        child: Text(
-                          e.value.id!,
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+            if (lstIndex.contains(index)) {
+              paddingRight = 50;
+            } else {
+              paddingRight = 10;
+            }
+            return InkWell(
+                onTap: () => __onChooseSeats(e.value),
+                child: lstDisable.contains(e.value)
+                    ? Container(
+                        margin:
+                            EdgeInsets.only(right: paddingRight, bottom: 10),
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            e.value.id!,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                    )
-                  : lstSelected.contains(e.value)
-                      ? Container(
-                          margin: EdgeInsets.only(
-                              left: 10, right: paddingRight, bottom: 20),
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              color: AppConstraint.mainColor,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Text(
-                              e.value.id!,
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        )
-                      : Container(
-                          margin: EdgeInsets.only(
-                              left: 10, right: paddingRight, bottom: 20),
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey,
+                      )
+                    : lstSelected.contains(e.value)
+                        ? Container(
+                            margin: EdgeInsets.only(
+                                right: paddingRight, bottom: 10),
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                color: AppConstraint.mainColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                e.value.id!,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
                               ),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Center(
-                            child: Text(
-                              e.value.id!,
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
                             ),
-                          ),
-                        ));
-        }).toList())
+                          )
+                        : Container(
+                            margin: EdgeInsets.only(
+                                right: paddingRight, bottom: 10),
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                e.value.id!,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ));
+          }).toList()),
+        )
       ],
-    );
-  }
-
-  Container _btn() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(
-        vertical: 12,
-      ),
-      decoration: BoxDecoration(
-          color: Colors.black, borderRadius: BorderRadius.circular(30)),
-      child: const Center(
-        child: Text(
-          'Next',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 
