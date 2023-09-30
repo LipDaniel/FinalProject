@@ -40,7 +40,8 @@ dependencies:
   introduction_slider: ^2.0.1
   flutter_slidable: ^3.0.0
   equatable: ^2.0.5
-  
+  http: ^1.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
