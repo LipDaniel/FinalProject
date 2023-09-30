@@ -132,7 +132,8 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
               vertical: 15,
             ),
             decoration: BoxDecoration(
-                color: Colors.black, borderRadius: BorderRadius.circular(30)),
+                color: AppConstraint.mainColor,
+                borderRadius: BorderRadius.circular(30)),
             child: const Center(
               child: Text(
                 'Next',

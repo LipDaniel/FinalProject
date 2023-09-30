@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:projectsem4/ulits/constraint.dart';
-import 'package:projectsem4/view/choose_seat/screen.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 
 class FlightListScreen extends StatefulWidget {
   const FlightListScreen({super.key});

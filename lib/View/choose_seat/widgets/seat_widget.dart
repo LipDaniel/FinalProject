@@ -60,8 +60,6 @@ class _SeatWidgetState extends State<SeatWidget> {
             height: 20,
           ),
           _seatsType(firtClass, SeatsType.firtClass),
-          _seatsType(businessClass, SeatsType.businessClass),
-          _seatsType(economyClass, SeatsType.economyClass),
           const SizedBox(
             height: 20,
           ),
@@ -113,8 +111,8 @@ class _SeatWidgetState extends State<SeatWidget> {
                     ? Container(
                         margin:
                             EdgeInsets.only(right: paddingRight, bottom: 10),
-                        height: 40,
-                        width: 40,
+                        height: MediaQuery.sizeOf(context).width / 10,
+                        width: MediaQuery.sizeOf(context).width / 10,
                         decoration: BoxDecoration(
                             color: Colors.grey,
                             borderRadius: BorderRadius.circular(10)),
@@ -131,8 +129,8 @@ class _SeatWidgetState extends State<SeatWidget> {
                         ? Container(
                             margin: EdgeInsets.only(
                                 right: paddingRight, bottom: 10),
-                            height: 40,
-                            width: 40,
+                            height: MediaQuery.sizeOf(context).width / 10,
+                            width: MediaQuery.sizeOf(context).width / 10,
                             decoration: BoxDecoration(
                                 color: AppConstraint.mainColor,
                                 borderRadius: BorderRadius.circular(10)),
@@ -148,8 +146,8 @@ class _SeatWidgetState extends State<SeatWidget> {
                         : Container(
                             margin: EdgeInsets.only(
                                 right: paddingRight, bottom: 10),
-                            height: 40,
-                            width: 40,
+                            height: MediaQuery.sizeOf(context).width / 10,
+                            width: MediaQuery.sizeOf(context).width / 10,
                             decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.grey,
