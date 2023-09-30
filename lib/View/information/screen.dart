@@ -22,6 +22,7 @@ class _InformationScreenState extends State<InformationScreen> {
           children: [
             _passengerForm(),
             _passengerForm(),
+            const SizedBox(height: 100)
           ],
         ),
       ),
