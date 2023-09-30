@@ -1,4 +1,4 @@
 class ApiConfig {
-  static const baseUrl = 'http://localhost:8080/api';
-  static const airPort = '/flight/gets';
+  static const baseUrl = 'http://192.168.1.54:8080/api';
+  static const airPort = '/airport/gets';
 }

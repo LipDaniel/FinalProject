@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/repository/airport/airport_respo.dart';
 import 'package:projectsem4/view/flight_list/screen.dart';
 import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
@@ -28,9 +30,13 @@ class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _babyAmount = TextEditingController();
   final TextEditingController _departInput = TextEditingController();
   final TextEditingController _returnInput = TextEditingController();
-  String? _airportFrom;
-  String? _airportTo;
+  int? airFromSelected;
+  int? airToSelected;
+  AirportModel? _airportFrom;
+  AirportModel? _airportTo;
   String? _selectedRadio;
+  List<AirportModel> lstAir = [];
+  List<String> lstCity = [];
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
@@ -38,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void swapAirPort() {
     setState(() {
-      String? tmp = _airportFrom;
+      AirportModel? tmp = _airportFrom;
       _airportFrom = _airportTo;
       _airportTo = tmp;
     });
@@ -54,6 +60,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _babyAmount.text = "0";
     _departInput.text = "";
     _returnInput.text = "";
+    fetch();
+  }
+
+  fetch() async {
+    lstAir = await AirPortRepository.getAirPort();
+    setState(() {});
   }
 
   @override
@@ -416,8 +428,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  DropdownSearch<String> _dropDownSearchFrom() {
-    return DropdownSearch<String>(
+  DropdownSearch<AirportModel> _dropDownSearchFrom() {
+    return DropdownSearch<AirportModel>(
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCityName}',
       selectedItem: _airportFrom,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
@@ -431,9 +444,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: AppConstraint.mainColor)))),
         showSearchBox: true,
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _airportLs,
+      items: lstAir,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -446,14 +459,16 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       onChanged: (value) => {
         setState(() {
+          airFromSelected = value!.iApId;
           _airportFrom = value;
         })
       },
     );
   }
 
-  DropdownSearch<String> _dropDownSearchTo() {
-    return DropdownSearch<String>(
+  DropdownSearch<AirportModel> _dropDownSearchTo() {
+    return DropdownSearch<AirportModel>(
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCityName}',
       selectedItem: _airportTo,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
@@ -467,9 +482,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: AppConstraint.mainColor)))),
         showSearchBox: true,
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _airportLs,
+      items: lstAir,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -482,6 +497,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       onChanged: (value) => {
         setState(() {
+          airToSelected = value!.iApId;
           _airportTo = value;
         })
       },

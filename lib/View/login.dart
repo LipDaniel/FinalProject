@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:projectsem4/view/bottomnavi/screen.dart';
+import 'package:projectsem4/View/bottomnavi/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 // ignore: must_be_immutable
@@ -88,7 +88,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w900, fontSize: 17)),
                     onPressed: () {
                       Route route = MaterialPageRoute(
-                          builder: (context) => const BottomNavigationBarApp(), fullscreenDialog: true);
+                          builder: (context) => const BottomScreen(), fullscreenDialog: true);
                       Navigator.push(context, route);
                     },
                   ),

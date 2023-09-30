@@ -4,8 +4,8 @@ import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/view/profile/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
-class BottomNavigationBarApp extends StatefulWidget {
-  const BottomNavigationBarApp({super.key});
+class BottomScreen extends StatefulWidget {
+  const BottomScreen({super.key});
 
   
   static const List<Widget> _widgetOptions = <Widget>[
@@ -18,10 +18,10 @@ class BottomNavigationBarApp extends StatefulWidget {
   ];
 
   @override
-  State<BottomNavigationBarApp> createState() => _BottomNavigationBarAppState();
+  State<BottomScreen> createState() => _BottomScreenState();
 }
 
-class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
+class _BottomScreenState extends State<BottomScreen> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -34,7 +34,7 @@ class _BottomNavigationBarAppState extends State<BottomNavigationBarApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: BottomNavigationBarApp._widgetOptions.elementAt(_selectedIndex),
+        child: BottomScreen._widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
