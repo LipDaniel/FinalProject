@@ -6,14 +6,13 @@ import 'package:projectsem4/ulits/constraint.dart';
 
 class BottomNavigationBarApp extends StatefulWidget {
   const BottomNavigationBarApp({super.key});
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
+  
   static const List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     NotificationScreen(),
     Text(
       'My Wallet',
-      style: optionStyle,
     ),
     ProfileScreen()
   ];
