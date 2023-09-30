@@ -31,7 +31,6 @@ class _SeatWidgetState extends State<SeatWidget> {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
-      padding: const EdgeInsets.symmetric(horizontal: 0),
       width: MediaQuery.sizeOf(context).width,
       decoration: BoxDecoration(
           color: Colors.white,
