@@ -434,7 +434,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItem: _airportFrom,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -461,6 +460,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airFromSelected = value!.iApId;
           _airportFrom = value;
+          print(airFromSelected);
         })
       },
     );
@@ -472,7 +472,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItem: _airportTo,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -499,6 +498,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airToSelected = value!.iApId;
           _airportTo = value;
+          print(airToSelected);
         })
       },
     );
