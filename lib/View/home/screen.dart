@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> _amountList = ['0', '1', '2', '3', '4'];
   final List<String> _lstOptionRadio = ['One way', 'Round trip'];
-  final List<String> _airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
   final List<String> _seatClassList = [
     'Economy',
     'Special economy',
@@ -36,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   AirportModel? _airportTo;
   String? _selectedRadio;
   List<AirportModel> lstAir = [];
-  List<String> lstCity = [];
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
@@ -434,7 +432,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItem: _airportFrom,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -461,6 +458,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airFromSelected = value!.iApId;
           _airportFrom = value;
+          print(airFromSelected);
         })
       },
     );
@@ -472,7 +470,6 @@ class _HomeScreenState extends State<HomeScreen> {
       selectedItem: _airportTo,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -499,6 +496,7 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airToSelected = value!.iApId;
           _airportTo = value;
+          print(airToSelected);
         })
       },
     );

@@ -4,6 +4,7 @@ import 'package:projectsem4/view/information/screen.dart';
 import 'package:projectsem4/view/login.dart';
 import 'package:introduction_slider/introduction_slider.dart';
 import 'package:projectsem4/ulits/constraint.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,12 +21,14 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          fontFamily: "Montserrat-Regular",
-        ),
-        // home: _intoductionslide(context));
-        home: const BottomScreen());
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: "Montserrat-Regular",
+      ),
+      // home: _intoductionslide(context));
+      home: const Login(),
+      builder: EasyLoading.init(),
+    );
   }
 
   IntroductionSlider _intoductionslide(BuildContext context) {

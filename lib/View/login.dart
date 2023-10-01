@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/bottomnavi/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 // ignore: must_be_immutable
 class Login extends StatefulWidget {
@@ -14,6 +15,19 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    EasyLoading.instance
+      ..maskType = EasyLoadingMaskType.black
+      ..loadingStyle = EasyLoadingStyle.custom
+      ..textColor = Colors.black
+      ..backgroundColor = Colors.transparent
+      ..indicatorColor = Colors.white
+      ..boxShadow = <BoxShadow>[]
+      ..indicatorWidget = Image.asset('assets/image/flight.png', scale: 3);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,9 +100,12 @@ class _LoginState extends State<Login> {
                     child: const Text('Login',
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 17)),
-                    onPressed: () {
+                    onPressed: () async {
+                      await EasyLoading.show();
+                      EasyLoading.dismiss();
                       Route route = MaterialPageRoute(
-                          builder: (context) => const BottomScreen(), fullscreenDialog: true);
+                          builder: (context) => const BottomScreen(),
+                          fullscreenDialog: true);
                       Navigator.push(context, route);
                     },
                   ),
