@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/choose_seat/widgets/seat_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
+import 'package:projectsem4/view/information/screen.dart';
 
 class ChooseSeetScreen extends StatefulWidget {
   const ChooseSeetScreen({super.key});
@@ -125,22 +126,30 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
           padding: const EdgeInsets.only(
             bottom: 30,
           ),
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
-            ),
-            decoration: BoxDecoration(
-                color: AppConstraint.mainColor,
-                borderRadius: BorderRadius.circular(30)),
-            child: const Center(
-              child: Text(
-                'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+          child: InkWell(
+            onTap: () {
+              Route route = MaterialPageRoute(
+                  builder: (context) => const InformationScreen(),
+                  fullscreenDialog: true);
+              Navigator.push(context, route);
+            },
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+              ),
+              decoration: BoxDecoration(
+                  color: AppConstraint.mainColor,
+                  borderRadius: BorderRadius.circular(30)),
+              child: const Center(
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

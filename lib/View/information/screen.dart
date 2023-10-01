@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:projectsem4/View/confirm/confirm_screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class InformationScreen extends StatefulWidget {
@@ -14,8 +15,8 @@ class _InformationScreenState extends State<InformationScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppConstraint.mainColor,
-        title: const Text('Passenger information',
-            style: TextStyle(fontFamily: AppConstraint.fontFamilyBold)),
+        title: const Text('PASSENGER INFORMATION',
+            style: TextStyle(fontSize: 16,fontFamily: AppConstraint.fontFamilyBold)),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -116,21 +117,29 @@ class _InformationScreenState extends State<InformationScreen> {
           padding: const EdgeInsets.only(
             bottom: 30,
           ),
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
-            ),
-            decoration: BoxDecoration(
-                color: AppConstraint.mainColor, borderRadius: BorderRadius.circular(30)),
-            child: const Center(
-              child: Text(
-                'Next',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+          child: InkWell(
+            onTap: () {
+              Route route = MaterialPageRoute(
+                  builder: (context) => const ConfirmScreen(),
+                  fullscreenDialog: true);
+              Navigator.push(context, route);
+            },
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+              ),
+              decoration: BoxDecoration(
+                  color: AppConstraint.mainColor, borderRadius: BorderRadius.circular(30)),
+              child: const Center(
+                child: Text(
+                  'Next',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),

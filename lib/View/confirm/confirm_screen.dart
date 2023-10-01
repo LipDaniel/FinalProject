@@ -1,7 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
-import 'package:projectsem4/View/confim/widgets/info_widget.dart';
-import 'package:projectsem4/View/confim/widgets/time_price_widget.dart';
+import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
+import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -119,7 +119,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                 borderRadius: BorderRadius.circular(30)),
             child: const Center(
               child: Text(
-                'Next',
+                'Checkout',
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 16,
