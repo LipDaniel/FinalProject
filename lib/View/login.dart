@@ -20,9 +20,13 @@ class _LoginState extends State<Login> {
   void initState() {
     super.initState();
     EasyLoading.instance
-      ..backgroundColor = Colors.blue
-      ..indicatorWidget = Image.asset('assets/image/plane.gif')
-      ..indicatorColor = AppConstraint.mainColor;
+      ..maskType = EasyLoadingMaskType.black
+      ..loadingStyle = EasyLoadingStyle.custom
+      ..textColor = Colors.black
+      ..backgroundColor = Colors.transparent
+      ..indicatorColor = Colors.white
+      ..boxShadow = <BoxShadow>[]
+      ..indicatorWidget = Image.asset('assets/image/flight.png', scale: 3);
   }
 
   @override
@@ -97,9 +101,8 @@ class _LoginState extends State<Login> {
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 17)),
                     onPressed: () async {
-                      await EasyLoading.show(
-                          maskType: EasyLoadingMaskType.black);
-                      // EasyLoading.dismiss();
+                      await EasyLoading.show();
+                      EasyLoading.dismiss();
                       Route route = MaterialPageRoute(
                           builder: (context) => const BottomScreen(),
                           fullscreenDialog: true);

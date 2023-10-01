@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> _amountList = ['0', '1', '2', '3', '4'];
   final List<String> _lstOptionRadio = ['One way', 'Round trip'];
-  final List<String> _airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
   final List<String> _seatClassList = [
     'Economy',
     'Special economy',
@@ -36,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
   AirportModel? _airportTo;
   String? _selectedRadio;
   List<AirportModel> lstAir = [];
-  List<String> lstCity = [];
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
