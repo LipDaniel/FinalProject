@@ -13,6 +13,7 @@ class AirportModel {
   String? sCityName;
   bool? bCityStatus;
   String? sApFullName;
+  String? sCtName;
   dynamic nBackground;
   String? sField;
 
@@ -31,6 +32,7 @@ class AirportModel {
       this.sCityName,
       this.bCityStatus,
       this.sApFullName,
+      this.sCtName,
       this.nBackground,
       this.sField});
 
@@ -49,6 +51,7 @@ class AirportModel {
     sCityName = json['_city_name'];
     bCityStatus = json['_city_status'];
     sApFullName = json['_ap_full_name'];
+    sCtName = json['_ct_name'];
     nBackground = json['_background'];
     sField = json['_field'];
   }
@@ -69,12 +72,10 @@ class AirportModel {
     data['_city_name'] = this.sCityName;
     data['_city_status'] = this.bCityStatus;
     data['_ap_full_name'] = this.sApFullName;
+    data['_ct_name'] = this.sCtName;
     data['_background'] = this.nBackground;
     data['_field'] = this.sField;
     return data;
   }
 
-  airportAsString(){
-    return this.sApFullName;
-  }
 }

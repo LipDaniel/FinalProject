@@ -428,7 +428,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DropdownSearch<AirportModel> _dropDownSearchFrom() {
     return DropdownSearch<AirportModel>(
-      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCityName}',
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCtName}',
       selectedItem: _airportFrom,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
@@ -466,7 +466,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DropdownSearch<AirportModel> _dropDownSearchTo() {
     return DropdownSearch<AirportModel>(
-      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCityName}',
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCtName}',
       selectedItem: _airportTo,
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
