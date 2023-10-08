@@ -16,7 +16,7 @@ class ApiService {
 
   Future<dynamic> get(String url, {dynamic params, Options? options}) async {
     try {
-      var response = await dio.get(ApiConfig.baseUrl + url, options: options);
+      var response = await dio.get(ApiConfig.baseUrl + url, queryParameters: params);
       if (response.statusCode == 200) {
         var data = response.data;
         return data;
@@ -39,10 +39,10 @@ class ApiService {
 
         return data;
       } else {
-        print('Request failed with status: ${response.statusCode}');
+        throw Exception('Request failed with status: ${response.statusCode}');
       }
     } catch (error) {
-      print('Error: $error');
+      throw Exception('Error: $error');
     }
   }
 }

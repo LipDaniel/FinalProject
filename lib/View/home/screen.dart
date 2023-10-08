@@ -1,12 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/flight_list/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
-import 'package:projectsem4/repository/airport/airport_respo.dart';
-import 'package:projectsem4/view/flight_list/screen.dart';
+import 'package:projectsem4/model/seatclass_model.dart';
+import 'package:projectsem4/repository/airport_repo.dart';
+import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,12 +22,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final List<String> _amountList = ['0', '1', '2', '3', '4'];
   final List<String> _lstOptionRadio = ['One way', 'Round trip'];
-  final List<String> _seatClassList = [
-    'Economy',
-    'Special economy',
-    'Business',
-    'First class'
-  ];
   final TextEditingController _adultAmount = TextEditingController();
   final TextEditingController _childrenAmount = TextEditingController();
   final TextEditingController _babyAmount = TextEditingController();
@@ -34,7 +32,10 @@ class _HomeScreenState extends State<HomeScreen> {
   AirportModel? _airportFrom;
   AirportModel? _airportTo;
   String? _selectedRadio;
+  int? _seatClass;
+  SeatClassModel? _seatSelected;
   List<AirportModel> lstAir = [];
+  List<SeatClassModel> lstClass = [];
 
   double calculateFormHeight(screen, header, bottom) {
     return (screen - header - bottom) - 10;
@@ -48,9 +49,31 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void handleSearchFlight() async {
+    await EasyLoading.show();
+    final Map<String, dynamic> body = {
+      "_fl_from_id": airFromSelected,
+      "_fl_to_id": airToSelected,
+      "_fl_take_off": _departInput.text,
+      "_fl_return_date": _returnInput.text,
+      "_tc_id": _seatClass,
+      "_pas_quantity": int.parse(_babyAmount.text) +
+          int.parse(_adultAmount.text) +
+          int.parse(_childrenAmount.text)
+    };
+    var response = await FlightRepository.getFlight(body);
+    if (response is List) {
+      EasyLoading.dismiss();
+      Route route =
+          MaterialPageRoute(builder: (context) => const FlightListScreen());
+      Navigator.push(context, route);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    AppConstraint.initLoading;
     _selectedRadio = _lstOptionRadio[0];
     _adultAmount.text = "0";
     _childrenAmount.text = "0";
@@ -63,6 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   fetch() async {
     lstAir = await AirPortRepository.getAirPort();
+    lstClass = await SeatClassRepository.getSeatClass();
     setState(() {});
   }
 
@@ -148,11 +172,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.sizeOf(context).width,
                 height: 40.0,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Route route = MaterialPageRoute(
-                        builder: (context) => const FlightListScreen());
-                    Navigator.push(context, route);
-                  },
+                  onPressed: () => handleSearchFlight(),
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -313,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 lastDate: DateTime(2030));
             if (pickedDate != null) {
               String formattedDate =
-                  DateFormat('dd-MM-yyyy').format(pickedDate);
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
               setState(() {
                 _returnInput.text =
                     formattedDate; //set output date to TextField value.
@@ -345,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 lastDate: DateTime(2030));
             if (pickedDate != null) {
               String formattedDate =
-                  DateFormat('dd-MM-yyyy').format(pickedDate);
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
               setState(() {
                 _departInput.text = formattedDate;
               });
@@ -406,12 +426,14 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  DropdownSearch<String> _dropDownSeatClass() {
-    return DropdownSearch<String>(
+  DropdownSearch<SeatClassModel> _dropDownSeatClass() {
+    return DropdownSearch<SeatClassModel>(
+      itemAsString: (SeatClassModel u) => '${u.sTcName!}',
+      selectedItem: _seatSelected,
       popupProps: const PopupProps.modalBottomSheet(
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _seatClassList,
+      items: lstClass,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -422,7 +444,11 @@ class _HomeScreenState extends State<HomeScreen> {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppConstraint.mainColor))),
       ),
-      onChanged: print,
+      onChanged: (value) => {
+        setState(() {
+          _seatClass = value!.iTcId;
+        })
+      },
     );
   }
 
@@ -458,7 +484,6 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airFromSelected = value!.iApId;
           _airportFrom = value;
-          print(airFromSelected);
         })
       },
     );

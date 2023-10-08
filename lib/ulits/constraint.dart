@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/model/seat_model.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AppConstraint {
   static const fontFamilyBold = "Montserrat-Bold";
@@ -12,6 +13,15 @@ class AppConstraint {
   static const colorIcon = Color.fromARGB(255, 167, 166, 166);
   static const colorLabel = Color.fromARGB(255, 161, 161, 161);
   static const baseUrl = 'http://localhost:8080/';
+  static final initLoading = EasyLoading.instance
+    ..maskType = EasyLoadingMaskType.black
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..textColor = Colors.black
+    ..backgroundColor = Colors.transparent
+    ..indicatorColor = Colors.white
+    ..boxShadow = <BoxShadow>[]
+    ..indicatorWidget =
+        Image.asset('assets/image/flight_loading.gif', scale: 1.2);
 }
 
 List<SeatsModel> firtClass = [

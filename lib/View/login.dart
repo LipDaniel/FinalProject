@@ -19,14 +19,7 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    EasyLoading.instance
-      ..maskType = EasyLoadingMaskType.black
-      ..loadingStyle = EasyLoadingStyle.custom
-      ..textColor = Colors.black
-      ..backgroundColor = Colors.transparent
-      ..indicatorColor = Colors.white
-      ..boxShadow = <BoxShadow>[]
-      ..indicatorWidget = Image.asset('assets/image/flight.png', scale: 3);
+    AppConstraint.initLoading;
   }
 
   @override
@@ -102,6 +95,7 @@ class _LoginState extends State<Login> {
                             fontWeight: FontWeight.w900, fontSize: 17)),
                     onPressed: () async {
                       await EasyLoading.show();
+                      await Future.delayed(const Duration(seconds: 2));
                       EasyLoading.dismiss();
                       Route route = MaterialPageRoute(
                           builder: (context) => const BottomScreen(),
