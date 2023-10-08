@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/model/seat_model.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toast/toast.dart';
 
 class AppConstraint {
   static const fontFamilyBold = "Montserrat-Bold";
@@ -20,8 +21,31 @@ class AppConstraint {
     ..backgroundColor = Colors.transparent
     ..indicatorColor = Colors.white
     ..boxShadow = <BoxShadow>[]
-    ..indicatorWidget =
-        Image.asset('assets/image/flight_loading.gif', scale: 1.2);
+    ..indicatorWidget = Image.asset(
+      'assets/image/flight_loading.gif',
+      scale: 1.7,
+    );
+  static errorToast(String title) {
+    Toast.show(title,
+        duration: Toast.lengthLong,
+        gravity: Toast.top,
+        backgroundColor: Color.fromARGB(255, 249, 87, 97).withOpacity(0.9),
+        textStyle: const TextStyle(
+            fontFamily: AppConstraint.fontFamilyBold,
+            color: Colors.white,
+            fontSize: 16));
+  }
+
+  static successToast(String title) {
+    Toast.show(title,
+        duration: Toast.lengthLong,
+        gravity: Toast.top,
+        backgroundColor: Color.fromARGB(255, 153, 252, 142),
+        textStyle: const TextStyle(
+            fontFamily: AppConstraint.fontFamilyBold,
+            color: Colors.white,
+            fontSize: 16));
+  }
 }
 
 List<SeatsModel> firtClass = [

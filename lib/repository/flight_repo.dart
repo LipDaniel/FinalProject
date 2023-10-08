@@ -9,7 +9,7 @@ class FlightRepository {
     try {
       final response = await ApiService().get(ApiConfig.flight, params: body);
       if (response['data'].length != 0) {
-        for (var item in response.data) {
+        for (var item in response['data']) {
           flightLst.add(FlightModel.fromJson(item));
         }
         return flightLst;

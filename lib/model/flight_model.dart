@@ -15,7 +15,7 @@ class FlightModel {
   String? sFlFromAbbreviation;
   String? sFlToAbbreviation;
   dynamic nFlReturnDate;
-  int? iSellPrice;
+  double? iSellPrice;
   int? iTcId;
   String? sFlEstimate;
 

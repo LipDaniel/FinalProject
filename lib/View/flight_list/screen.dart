@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
+import 'package:intl/intl.dart';
 
 class FlightListScreen extends StatefulWidget {
-  const FlightListScreen({super.key});
-
+  const FlightListScreen({super.key, required this.data});
+  final List<FlightModel> data;
   @override
   State<FlightListScreen> createState() => _FlightListScreenState();
 }
@@ -62,30 +64,29 @@ class _FlightListScreenState extends State<FlightListScreen> {
         backgroundColor: AppConstraint.mainColor,
         title: _flightinfo(context),
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 10, bottom: 20),
-        children: [
-          _flightItem("12:30", "14:50", "SGN", "VCS", "Economy Class",
-              "2.590.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("13:30", "15:50", "SGN", "VCS", "Economy Class",
-              "2.850.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("15:30", "16:50", "SGN", "VCS", "Economy Class",
-              "2.780.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("17:30", "19:50", "SGN", "VCS", "Economy Class",
-              "3.150.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("18:30", "20:50", "SGN", "VCS", "Economy Class",
-              "2.678.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("19:10", "20:20", "SGN", "VCS", "Economy Class",
-              "3.370.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("20:40", "22:00", "SGN", "VCS", "Economy Class",
-              "2.050.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("21:20", "22:30", "SGN", "VCS", "Economy Class",
-              "2.250.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("21:40", "23:00", "SGN", "VCS", "Economy Class",
-              "2.890.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-          _flightItem("22:00", "21:50", "SGN", "VCS", "Economy Class",
-              "3.450.000 đ", "Vietnam Air Services (VASCO)", "2h 40p"),
-        ],
+      body: ListView.builder(
+        itemCount: widget.data.length,
+        itemBuilder: (context, index) {
+          final item = widget.data[index];
+          String price = NumberFormat.currency(
+            symbol: '', // Currency symbol (optional)
+            decimalDigits: 0, // Number of decimal digits (optional)
+          ).format(item.iSellPrice);
+          DateFormat dateFormat = DateFormat("HH:mm");
+          String timeFrom =
+              dateFormat.format(DateTime.parse(item.sFlTakeOff as String));
+          String timeTo =
+              dateFormat.format(DateTime.parse(item.sFlArrival as String));
+          return _flightItem(
+              timeFrom,
+              timeTo,
+              item.sFlFromAbbreviation,
+              item.sFlToAbbreviation,
+              "Economy Class",
+              price + ' đ',
+              item.sCarName,
+              "4h20p");
+        },
       ),
     );
   }

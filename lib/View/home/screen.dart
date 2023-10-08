@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/flight_list/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/repository/airport_repo.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
@@ -11,6 +14,7 @@ import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toast/toast.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -50,29 +54,50 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void handleSearchFlight() async {
+    int amountPassenger = int.parse(_babyAmount.text) +
+        int.parse(_adultAmount.text) +
+        int.parse(_childrenAmount.text);
+    
+    if (airFromSelected == null || airToSelected == null) {
+      AppConstraint.errorToast("Depart or arrival place are required");
+      return;
+    } else if (_departInput.text == '') {
+      AppConstraint.errorToast("Depart date is required");
+      return;
+    } else if (_seatClass == null) {
+      AppConstraint.errorToast("Please choose seat class");
+      return;
+    } else if (amountPassenger == 0) {
+      AppConstraint.errorToast("At least 1 passenger");
+      return;
+    }
+
     await EasyLoading.show();
     final Map<String, dynamic> body = {
       "_fl_from_id": airFromSelected,
       "_fl_to_id": airToSelected,
       "_fl_take_off": _departInput.text,
-      "_fl_return_date": _returnInput.text,
+      "_fl_return_date": _returnInput.text == '' ? null : _returnInput.text,
       "_tc_id": _seatClass,
-      "_pas_quantity": int.parse(_babyAmount.text) +
-          int.parse(_adultAmount.text) +
-          int.parse(_childrenAmount.text)
+      "_pas_quantity": amountPassenger
     };
-    var response = await FlightRepository.getFlight(body);
-    if (response is List) {
+    List<FlightModel> response = await FlightRepository.getFlight(body);
+
+    if (response.isNotEmpty) {
       EasyLoading.dismiss();
       Route route =
-          MaterialPageRoute(builder: (context) => const FlightListScreen());
+          MaterialPageRoute(builder: (context) => FlightListScreen(data: response));
       Navigator.push(context, route);
+    } else {     
+      AppConstraint.errorToast("No data founds");
+      EasyLoading.dismiss();
     }
   }
 
   @override
   void initState() {
     super.initState();
+    ToastContext().init(context);
     AppConstraint.initLoading;
     _selectedRadio = _lstOptionRadio[0];
     _adultAmount.text = "0";
