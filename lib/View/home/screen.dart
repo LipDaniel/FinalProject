@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/flight_list/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/repository/airport_repo.dart';
@@ -24,6 +25,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final BusinessModel model = BusinessModel();
   final List<String> _amountList = ['0', '1', '2', '3', '4'];
   final List<String> _lstOptionRadio = ['One way', 'Round trip'];
   final TextEditingController _adultAmount = TextEditingController();
@@ -57,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
     int amountPassenger = int.parse(_babyAmount.text) +
         int.parse(_adultAmount.text) +
         int.parse(_childrenAmount.text);
-    
+
     if (airFromSelected == null || airToSelected == null) {
       AppConstraint.errorToast("Depart or arrival place are required");
       return;
@@ -67,8 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (_seatClass == null) {
       AppConstraint.errorToast("Please choose seat class");
       return;
-    } else if (amountPassenger == 0) {
-      AppConstraint.errorToast("At least 1 passenger");
+    } else if (int.parse(_adultAmount.text) == 0) {
+      AppConstraint.errorToast("At least 1 adult");
       return;
     }
 
@@ -81,14 +83,25 @@ class _HomeScreenState extends State<HomeScreen> {
       "_tc_id": _seatClass,
       "_pas_quantity": amountPassenger
     };
-    List<FlightModel> response = await FlightRepository.getFlight(body);
+    var response = await FlightRepository.getFlight(body);
+    if (response.length != 0) {
+      // CREATE MODEL
+      model.airport_from_id = airFromSelected;
+      model.airport_to_id = airToSelected;
+      model.adult_amount = int.parse(_adultAmount.text);
+      model.children_amount = int.parse(_childrenAmount.text);
+      model.baby_amount = int.parse(_babyAmount.text);
+      model.depart_date = _departInput.text;
+      model.return_date = _returnInput.text == '' ? null : _returnInput.text;
+      model.seatclass_id = _seatClass;
 
-    if (response.isNotEmpty) {
       EasyLoading.dismiss();
-      Route route =
-          MaterialPageRoute(builder: (context) => FlightListScreen(data: response));
+
+      // PAGE NAVIGATE
+      Route route = MaterialPageRoute(
+          builder: (context) => FlightListScreen(data: response, model: model));
       Navigator.push(context, route);
-    } else {     
+    } else {
       AppConstraint.errorToast("No data founds");
       EasyLoading.dismiss();
     }
@@ -102,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
     _selectedRadio = _lstOptionRadio[0];
     _adultAmount.text = "0";
     _childrenAmount.text = "0";
-    _babyAmount.text = "0";
     _babyAmount.text = "0";
     _departInput.text = "";
     _returnInput.text = "";
@@ -355,7 +367,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 context: context,
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
-                lastDate: DateTime(2030));
+                lastDate: DateTime(2030),
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                        primary: AppConstraint.mainColor
+                      ),
+                    ),
+                    child: child!,
+                  );
+                });
             if (pickedDate != null) {
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -387,7 +409,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 context: context,
                 initialDate: DateTime.now(),
                 firstDate: DateTime.now(),
-                lastDate: DateTime(2030));
+                lastDate: DateTime(2030),
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                          primary: AppConstraint.mainColor),
+                    ),
+                    child: child!,
+                  );
+                });
             if (pickedDate != null) {
               String formattedDate =
                   DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -509,6 +540,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airFromSelected = value!.iApId;
           _airportFrom = value;
+          model.country_from_name = value.sCtName;
+          model.airport_from_code = value.sApAbbreviation;
         })
       },
     );
@@ -546,7 +579,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           airToSelected = value!.iApId;
           _airportTo = value;
-          print(airToSelected);
+          model.country_to_name = value.sCtName;
+          model.airport_to_code = value.sApAbbreviation;
         })
       },
     );

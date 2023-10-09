@@ -1,15 +1,18 @@
+// ignore_for_file: prefer_interpolation_to_compose_strings
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
-import 'package:intl/intl.dart';
 
 class FlightListScreen extends StatefulWidget {
-  const FlightListScreen({super.key, required this.data});
+  const FlightListScreen({super.key, required this.data, required this.model});
   final List<FlightModel> data;
+  final BusinessModel model;
   @override
   State<FlightListScreen> createState() => _FlightListScreenState();
 }
@@ -83,7 +86,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
               item.sFlFromAbbreviation,
               item.sFlToAbbreviation,
               "Economy Class",
-              price + ' đ',
+              '$price đ',
               item.sCarName,
               "4h20p");
         },
@@ -259,41 +262,50 @@ class _FlightListScreenState extends State<FlightListScreen> {
               //
             })
       },
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Column(
             children: [
               Text(
-                "SGN",
-                style: TextStyle(
+                widget.model.airport_from_code.toString(),
+                style: const TextStyle(
                     fontFamily: AppConstraint.fontFamilyBold, fontSize: 27),
               ),
               Text(
-                "Viet Nam",
-                style: TextStyle(fontSize: 15),
+                widget.model.country_from_name.toString(),
+                style: const TextStyle(fontSize: 15),
               )
             ],
           ),
-          SizedBox(width: 5),
-          Icon(Icons.arrow_right_alt),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
+          const Icon(Icons.arrow_right_alt),
+          const SizedBox(width: 5),
           Column(
             children: [
-              Text("VCS",
-                  style: TextStyle(
+              Text(widget.model.airport_to_code.toString(),
+                  style: const TextStyle(
                       fontFamily: AppConstraint.fontFamilyBold, fontSize: 27)),
-              Text("Viet Nam", style: TextStyle(fontSize: 15))
+              Text(widget.model.country_to_name.toString(),
+                  style: const TextStyle(fontSize: 15))
             ],
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Column(
             children: [
-              Text('Thu, 9 SEP, 2023',
-                  style: TextStyle(
+              Text(
+                  DateFormat.yMMMEd().format(
+                      DateTime.parse(widget.model.depart_date as String)),
+                  style: const TextStyle(
                       fontFamily: AppConstraint.fontFamilyBold, fontSize: 20)),
-              Text('2 Adult, 1 Children, 1 Baby',
-                  style: TextStyle(fontSize: 12))
+              Text(
+                  widget.model.adult_amount.toString() +
+                      ' Adult, ' +
+                      widget.model.children_amount.toString() +
+                      " Children, " +
+                      widget.model.baby_amount.toString() +
+                      ' Baby',
+                  style: const TextStyle(fontSize: 12))
             ],
           )
         ],
