@@ -1,17 +1,27 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
-
+// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
+import 'package:projectsem4/repository/flight_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 
 class FlightListScreen extends StatefulWidget {
-  const FlightListScreen({super.key, required this.data, required this.model});
+  const FlightListScreen(
+      {super.key,
+      required this.data,
+      required this.model,
+      required this.airportLst,
+      required this.seatLst});
   final List<FlightModel> data;
+  final List<AirportModel> airportLst;
+  final List<SeatClassModel> seatLst;
   final BusinessModel model;
   @override
   State<FlightListScreen> createState() => _FlightListScreenState();
@@ -19,26 +29,77 @@ class FlightListScreen extends StatefulWidget {
 
 class _FlightListScreenState extends State<FlightListScreen> {
   final List<String> _amountList = ['0', '1', '2', '3', '4'];
-  final List<String> _lstOptionRadio = ['One way', 'Round trip'];
-  final List<String> _airportLs = ['Brazil', 'Motecalo', 'Monaco', 'Maldives'];
-  final List<String> _seatClassList = [
-    'Economy',
-    'Special economy',
-    'Business',
-    'First class'
-  ];
   final TextEditingController _adultAmount = TextEditingController();
   final TextEditingController _childrenAmount = TextEditingController();
   final TextEditingController _babyAmount = TextEditingController();
   final TextEditingController _departInput = TextEditingController();
-  final TextEditingController _returnInput = TextEditingController();
-  String? _airportFrom;
-  String? _airportTo;
-  String? _selectedRadio;
+  int? _airFromSelected;
+  int? _airToSelected;
+  int? _seatClass;
+  AirportModel? _airportFrom;
+  AirportModel? _airportTo;
+  List<AirportModel> lstAir = [];
+  List<SeatClassModel> lstClass = [];
+  String? tmpApCountryFrom;
+  String? tmpApCodeFrom;
+  String? tmpApCountryTo;
+  String? tmpApCodeTo;
+  String? tmpSeat;
+
+  void handleSearchFlight() async {
+    if (int.parse(_adultAmount.text) == 0) {
+      AppConstraint.errorToast("At least 1 adult");
+      return;
+    }
+    int amountPassenger = int.parse(_babyAmount.text) +
+        int.parse(_adultAmount.text) +
+        int.parse(_childrenAmount.text);
+
+    await EasyLoading.show();
+    final Map<String, dynamic> body = {
+      "_fl_from_id": _airFromSelected,
+      "_fl_to_id": _airToSelected,
+      "_fl_take_off": _departInput.text,
+      "_fl_return_date": null,
+      "_tc_id": _seatClass,
+      "_pas_quantity": amountPassenger
+    };
+    // return;
+    var response = await FlightRepository.getFlight(body);
+    if (response.length != 0) {
+      // CREATE MODEL
+      widget.model.airport_from_id = _airFromSelected;
+      widget.model.airport_to_id = _airToSelected;
+      widget.model.adult_amount = int.parse(_adultAmount.text);
+      widget.model.children_amount = int.parse(_childrenAmount.text);
+      widget.model.baby_amount = int.parse(_babyAmount.text);
+      widget.model.depart_date = _departInput.text;
+      widget.model.seatclass_id = _seatClass;
+      widget.model.country_to_name = tmpApCountryTo ?? widget.model.country_to_name;
+      widget.model.airport_to_code = tmpApCodeTo ?? widget.model.airport_to_code;
+      widget.model.country_from_name = tmpApCountryFrom ?? widget.model.country_from_name;
+      widget.model.airport_from_code = tmpApCodeFrom ?? widget.model.airport_from_code;
+      widget.model.seatclass = tmpSeat ?? widget.model.seatclass;
+
+      EasyLoading.dismiss();
+
+      // PAGE NAVIGATE
+      Route route = MaterialPageRoute(
+          builder: (context) => FlightListScreen(
+              data: response,
+              model: widget.model,
+              airportLst: lstAir,
+              seatLst: lstClass));
+      Navigator.push(context, route);
+    } else {
+      AppConstraint.errorToast("No data founds");
+      EasyLoading.dismiss();
+    }
+  }
 
   void swapAirPort() {
     setState(() {
-      String? tmp = _airportFrom;
+      AirportModel? tmp = _airportFrom;
       _airportFrom = _airportTo;
       _airportTo = tmp;
     });
@@ -47,13 +108,23 @@ class _FlightListScreenState extends State<FlightListScreen> {
   @override
   void initState() {
     super.initState();
-    _selectedRadio = _lstOptionRadio[0];
-    _adultAmount.text = "0";
-    _childrenAmount.text = "0";
-    _babyAmount.text = "0";
-    _babyAmount.text = "0";
-    _departInput.text = "";
-    _returnInput.text = "";
+    lstAir = widget.airportLst;
+    lstClass = widget.seatLst;
+
+    _airFromSelected = lstAir
+        .firstWhere((element) => element.iApId == widget.model.airport_from_id)
+        .iApId;
+    _airToSelected = lstAir
+        .firstWhere((element) => element.iApId == widget.model.airport_to_id)
+        .iApId;
+    _seatClass = lstClass
+        .firstWhere((element) => element.iTcId == widget.model.seatclass_id)
+        .iTcId;
+
+    _adultAmount.text = widget.model.adult_amount.toString();
+    _childrenAmount.text = widget.model.children_amount.toString();
+    _babyAmount.text = widget.model.baby_amount.toString();
+    _departInput.text = widget.model.depart_date.toString();
   }
 
   @override
@@ -61,7 +132,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
-        // leading: const Icon(Icons.arrow_back),
+        leading: const Icon(Icons.arrow_back),
         leadingWidth: 15,
         automaticallyImplyLeading: true,
         backgroundColor: AppConstraint.mainColor,
@@ -85,7 +156,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
               timeTo,
               item.sFlFromAbbreviation,
               item.sFlToAbbreviation,
-              "Economy Class",
+              widget.model.seatclass.toString(),
               '$price đ',
               item.sCarName,
               "4h20p");
@@ -96,7 +167,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
 
   Container _searchForm(BuildContext context) {
     return Container(
-      height: MediaQuery.sizeOf(context).height * 0.65,
+      height: MediaQuery.sizeOf(context).height * 0.55,
       decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(40))),
@@ -104,7 +175,6 @@ class _FlightListScreenState extends State<FlightListScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
         child: Column(
           children: [
-            _radioButton(),
             const SizedBox(height: 10),
             Expanded(
                 flex: 2,
@@ -127,7 +197,6 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   ],
                 )),
             _departDate(),
-            _returnDate(),
             Expanded(
               child: _dropDownSeatClass(),
             ),
@@ -148,7 +217,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
               width: MediaQuery.sizeOf(context).width,
               height: 40.0,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => handleSearchFlight(),
                 style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
@@ -433,38 +502,6 @@ class _FlightListScreenState extends State<FlightListScreen> {
             })),
       );
 
-  Expanded _returnDate() {
-    return Expanded(
-        flex: 1,
-        child: TextField(
-          controller: _returnInput,
-          readOnly: true,
-          decoration: const InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppConstraint.colorInput)),
-              labelText: 'Return',
-              labelStyle: TextStyle(color: AppConstraint.colorLabel),
-              prefixIcon: Icon(Icons.calendar_month),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppConstraint.mainColor))),
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
-                lastDate: DateTime(2030));
-            if (pickedDate != null) {
-              String formattedDate =
-                  DateFormat('dd-MM-yyyy').format(pickedDate);
-              setState(() {
-                _returnInput.text =
-                    formattedDate; //set output date to TextField value.
-              });
-            } else {}
-          },
-        ));
-  }
-
   Expanded _departDate() {
     return Expanded(
         flex: 1,
@@ -482,12 +519,21 @@ class _FlightListScreenState extends State<FlightListScreen> {
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
-                initialDate: DateTime.now(),
+                initialDate: DateTime.parse(widget.model.depart_date.toString()),
                 firstDate: DateTime.now(),
-                lastDate: DateTime(2030));
+                lastDate: DateTime(2030),
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                          primary: AppConstraint.mainColor),
+                    ),
+                    child: child!,
+                  );
+                });
             if (pickedDate != null) {
               String formattedDate =
-                  DateFormat('dd-MM-yyyy').format(pickedDate);
+                  DateFormat('yyyy-MM-dd').format(pickedDate);
               setState(() {
                 _departInput.text = formattedDate;
               });
@@ -496,62 +542,15 @@ class _FlightListScreenState extends State<FlightListScreen> {
         ));
   }
 
-  Widget _radioButton() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Radio(
-                value: _lstOptionRadio[0],
-                groupValue: _selectedRadio,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedRadio = value.toString();
-                  });
-                },
-              ),
-              Text(
-                _lstOptionRadio[0],
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Row(
-            children: [
-              Radio(
-                value: _lstOptionRadio[1],
-                groupValue: _selectedRadio,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedRadio = value.toString();
-                  });
-                },
-              ),
-              Text(
-                _lstOptionRadio[1],
-                style:
-                    const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-              )
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  DropdownSearch<String> _dropDownSeatClass() {
-    return DropdownSearch<String>(
+  DropdownSearch<SeatClassModel> _dropDownSeatClass() {
+    return DropdownSearch<SeatClassModel>(
+      itemAsString: (SeatClassModel u) => u.sTcName!,
+      selectedItem: lstClass
+          .firstWhere((item) => item.iTcId == widget.model.seatclass_id),
       popupProps: const PopupProps.modalBottomSheet(
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _seatClassList,
+      items: lstClass,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -562,16 +561,25 @@ class _FlightListScreenState extends State<FlightListScreen> {
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: AppConstraint.mainColor))),
       ),
-      onChanged: print,
+      onChanged: (value) => {
+        setState(() {
+          _seatClass = value!.iTcId;
+          tmpSeat = value.sTcName != 'First Class' &&
+                  value.sTcName != 'Special Economy'
+              ? "${value.sTcName} Class"
+              : value.sTcName;
+        })
+      },
     );
   }
 
-  DropdownSearch<String> _dropDownSearchFrom() {
-    return DropdownSearch<String>(
-      selectedItem: _airportFrom,
+  DropdownSearch<AirportModel> _dropDownSearchFrom() {
+    return DropdownSearch<AirportModel>(
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCtName}',
+      selectedItem: lstAir
+          .firstWhere((item) => item.iApId == widget.model.airport_from_id),
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -581,9 +589,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: AppConstraint.mainColor)))),
         showSearchBox: true,
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _airportLs,
+      items: lstAir,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -597,17 +605,21 @@ class _FlightListScreenState extends State<FlightListScreen> {
       onChanged: (value) => {
         setState(() {
           _airportFrom = value;
+          _airFromSelected = value!.iApId;
+          tmpApCountryFrom = value.sCtName;
+          tmpApCodeFrom = value.sApAbbreviation;
         })
       },
     );
   }
 
-  DropdownSearch<String> _dropDownSearchTo() {
-    return DropdownSearch<String>(
-      selectedItem: _airportTo,
+  DropdownSearch<AirportModel> _dropDownSearchTo() {
+    return DropdownSearch<AirportModel>(
+      itemAsString: (AirportModel u) => '${u.sApFullName!} - ${u.sCtName}',
+      selectedItem:
+          lstAir.firstWhere((item) => item.iApId == widget.model.airport_to_id),
       popupProps: const PopupProps.modalBottomSheet(
         searchFieldProps: TextFieldProps(
-            autofocus: true,
             decoration: InputDecoration(
                 labelStyle: TextStyle(color: AppConstraint.colorLabel),
                 enabledBorder: UnderlineInputBorder(
@@ -617,9 +629,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                 focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: AppConstraint.mainColor)))),
         showSearchBox: true,
-        showSelectedItems: true,
+        showSelectedItems: false,
       ),
-      items: _airportLs,
+      items: lstAir,
       dropdownDecoratorProps: const DropDownDecoratorProps(
         dropdownSearchDecoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
@@ -633,6 +645,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
       onChanged: (value) => {
         setState(() {
           _airportTo = value;
+          _airToSelected = value!.iApId;
+          tmpApCountryTo = value.sCtName;
+          tmpApCodeTo = value.sApAbbreviation;
         })
       },
     );

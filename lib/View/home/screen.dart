@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:projectsem4/View/flight_list/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/business_model.dart';
-import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/repository/airport_repo.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
@@ -83,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
       "_tc_id": _seatClass,
       "_pas_quantity": amountPassenger
     };
+
     var response = await FlightRepository.getFlight(body);
     if (response.length != 0) {
       // CREATE MODEL
@@ -99,7 +99,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // PAGE NAVIGATE
       Route route = MaterialPageRoute(
-          builder: (context) => FlightListScreen(data: response, model: model));
+          builder: (context) => FlightListScreen(
+              data: response,
+              model: model,
+              airportLst: lstAir,
+              seatLst: lstClass));
       Navigator.push(context, route);
     } else {
       AppConstraint.errorToast("No data founds");
@@ -372,8 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return Theme(
                     data: Theme.of(context).copyWith(
                       colorScheme: const ColorScheme.light(
-                        primary: AppConstraint.mainColor
-                      ),
+                          primary: AppConstraint.mainColor),
                     ),
                     child: child!,
                   );
@@ -484,7 +487,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   DropdownSearch<SeatClassModel> _dropDownSeatClass() {
     return DropdownSearch<SeatClassModel>(
-      itemAsString: (SeatClassModel u) => '${u.sTcName!}',
+      itemAsString: (SeatClassModel u) => u.sTcName!,
       selectedItem: _seatSelected,
       popupProps: const PopupProps.modalBottomSheet(
         showSelectedItems: false,
@@ -503,6 +506,10 @@ class _HomeScreenState extends State<HomeScreen> {
       onChanged: (value) => {
         setState(() {
           _seatClass = value!.iTcId;
+          model.seatclass = value.sTcName != 'First Class' &&
+                  value.sTcName != 'Special Economy'
+              ? "${value.sTcName} Class"
+              : value.sTcName;
         })
       },
     );
