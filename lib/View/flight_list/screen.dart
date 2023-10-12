@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously
+// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -13,16 +13,16 @@ import 'package:intl/intl.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 
 class FlightListScreen extends StatefulWidget {
-  const FlightListScreen(
+  FlightListScreen(
       {super.key,
       required this.data,
       required this.model,
       required this.airportLst,
       required this.seatLst});
-  final List<FlightModel> data;
-  final List<AirportModel> airportLst;
-  final List<SeatClassModel> seatLst;
-  final BusinessModel model;
+  List<FlightModel> data = [];
+  List<AirportModel> airportLst = [];
+  List<SeatClassModel> seatLst = [];
+  BusinessModel model = BusinessModel();
   @override
   State<FlightListScreen> createState() => _FlightListScreenState();
 }
@@ -68,29 +68,29 @@ class _FlightListScreenState extends State<FlightListScreen> {
     var response = await FlightRepository.getFlight(body);
     if (response.length != 0) {
       // CREATE MODEL
-      widget.model.airport_from_id = _airFromSelected;
-      widget.model.airport_to_id = _airToSelected;
-      widget.model.adult_amount = int.parse(_adultAmount.text);
-      widget.model.children_amount = int.parse(_childrenAmount.text);
-      widget.model.baby_amount = int.parse(_babyAmount.text);
-      widget.model.depart_date = _departInput.text;
-      widget.model.seatclass_id = _seatClass;
-      widget.model.country_to_name = tmpApCountryTo ?? widget.model.country_to_name;
-      widget.model.airport_to_code = tmpApCodeTo ?? widget.model.airport_to_code;
-      widget.model.country_from_name = tmpApCountryFrom ?? widget.model.country_from_name;
-      widget.model.airport_from_code = tmpApCodeFrom ?? widget.model.airport_from_code;
-      widget.model.seatclass = tmpSeat ?? widget.model.seatclass;
+      BusinessModel newModel = BusinessModel();
+      newModel.airport_from_id = _airFromSelected;
+      newModel.airport_to_id = _airToSelected;
+      newModel.adult_amount = int.parse(_adultAmount.text);
+      newModel.children_amount = int.parse(_childrenAmount.text);
+      newModel.baby_amount = int.parse(_babyAmount.text);
+      newModel.depart_date = _departInput.text;
+      newModel.seatclass_id = _seatClass;
+      newModel.country_to_name = tmpApCountryTo ?? widget.model.country_to_name;
+      newModel.airport_to_code = tmpApCodeTo ?? widget.model.airport_to_code;
+      newModel.country_from_name = tmpApCountryFrom ?? widget.model.country_from_name;
+      newModel.airport_from_code = tmpApCodeFrom ?? widget.model.airport_from_code;
+      newModel.seatclass = tmpSeat ?? widget.model.seatclass;
 
       EasyLoading.dismiss();
 
-      // PAGE NAVIGATE
-      Route route = MaterialPageRoute(
-          builder: (context) => FlightListScreen(
-              data: response,
-              model: widget.model,
-              airportLst: lstAir,
-              seatLst: lstClass));
-      Navigator.push(context, route);
+      setState(() {
+        widget.data = response;
+        widget.model = newModel;
+        widget.airportLst = lstAir;
+        widget.seatLst = lstClass;
+      });
+      Navigator.of(context, rootNavigator: true).pop('dialog');
     } else {
       AppConstraint.errorToast("No data founds");
       EasyLoading.dismiss();
