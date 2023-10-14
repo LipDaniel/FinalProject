@@ -73,7 +73,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "--vm-service-host=0.0.0.0"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>
