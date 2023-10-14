@@ -1,11 +1,15 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/choose_seat/widgets/seat_widget.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
 
 class ChooseSeetScreen extends StatefulWidget {
-  const ChooseSeetScreen({super.key});
-
+  ChooseSeetScreen({super.key, required this.model, required this.flightId});
+  BusinessModel model = BusinessModel();
+  int flightId = 0;
   @override
   State<ChooseSeetScreen> createState() => _ChooseSeetScreenState();
 }
@@ -54,8 +58,8 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
         Column(
           children: [
             Container(
-              height: 45,
-              width: 45,
+              height: 35,
+              width: 35,
               decoration: BoxDecoration(
                   color: Colors.grey, borderRadius: BorderRadius.circular(6)),
             ),
@@ -74,8 +78,8 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
         Column(
           children: [
             Container(
-              height: 45,
-              width: 45,
+              height: 35,
+              width: 35,
               decoration: BoxDecoration(
                   color: AppConstraint.mainColor,
                   borderRadius: BorderRadius.circular(6)),
@@ -95,8 +99,8 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
         Column(
           children: [
             Container(
-              height: 45,
-              width: 45,
+              height: 35,
+              width: 35,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   color: Colors.white,

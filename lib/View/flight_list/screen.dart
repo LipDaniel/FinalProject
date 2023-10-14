@@ -78,8 +78,10 @@ class _FlightListScreenState extends State<FlightListScreen> {
       newModel.seatclass_id = _seatClass;
       newModel.country_to_name = tmpApCountryTo ?? widget.model.country_to_name;
       newModel.airport_to_code = tmpApCodeTo ?? widget.model.airport_to_code;
-      newModel.country_from_name = tmpApCountryFrom ?? widget.model.country_from_name;
-      newModel.airport_from_code = tmpApCodeFrom ?? widget.model.airport_from_code;
+      newModel.country_from_name =
+          tmpApCountryFrom ?? widget.model.country_from_name;
+      newModel.airport_from_code =
+          tmpApCodeFrom ?? widget.model.airport_from_code;
       newModel.seatclass = tmpSeat ?? widget.model.seatclass;
 
       EasyLoading.dismiss();
@@ -103,6 +105,13 @@ class _FlightListScreenState extends State<FlightListScreen> {
       _airportFrom = _airportTo;
       _airportTo = tmp;
     });
+  }
+
+  void handleChooseSeat(int id) {
+    Route route = MaterialPageRoute(
+        builder: (context) =>
+            ChooseSeetScreen(model: widget.model, flightId: id));
+    Navigator.push(context, route);
   }
 
   @override
@@ -152,6 +161,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
           String timeTo =
               dateFormat.format(DateTime.parse(item.sFlArrival as String));
           return _flightItem(
+              item.iFlId,
               timeFrom,
               timeTo,
               item.sFlFromAbbreviation,
@@ -236,7 +246,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
   }
 
   Container _flightItem(
-      timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
+      id, timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
     return Container(
         decoration: BoxDecoration(
             color: AppConstraint.colorSlogan,
@@ -244,70 +254,68 @@ class _FlightListScreenState extends State<FlightListScreen> {
         height: 120,
         padding: const EdgeInsets.all(12.0),
         child: InkWell(
-          onTap: () {
-            Route route = MaterialPageRoute(
-                builder: (context) => const ChooseSeetScreen());
-            Navigator.push(context, route);
-          },
+          onTap: () => handleChooseSeat(id),
           child: Column(
             children: [
-              Row(
-                // crossAxisAlignment: CrossAxisAlignment.center
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Image.asset('assets/image/logo-airline.png', width: 35),
-                  const SizedBox(width: 10),
-                  Column(children: [
-                    Text(
-                      timeFrom,
-                      style: const TextStyle(
-                          fontFamily: AppConstraint.fontFamilyBold,
-                          fontSize: 20,
-                          letterSpacing: 2),
+              Expanded(
+                child: Row(
+                  // crossAxisAlignment: CrossAxisAlignment.center
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Image.asset('assets/image/logo-airline.png', width: 35),
+                    const SizedBox(width: 10),
+                    Column(children: [
+                      Text(
+                        timeFrom,
+                        style: const TextStyle(
+                            fontFamily: AppConstraint.fontFamilyBold,
+                            fontSize: 20,
+                            letterSpacing: 2),
+                      ),
+                      Text(
+                        from,
+                        style: const TextStyle(fontSize: 17, letterSpacing: 2),
+                      )
+                    ]),
+                    const SizedBox(width: 10),
+                    Column(
+                      children: [
+                        Image.asset('assets/image/arrow.png',
+                            width: 60, height: 25, fit: BoxFit.fill),
+                        Text(flightTime,
+                            style: const TextStyle(
+                                color: AppConstraint.colorLabel, fontSize: 11))
+                      ],
                     ),
-                    Text(
-                      from,
-                      style: const TextStyle(fontSize: 17, letterSpacing: 2),
-                    )
-                  ]),
-                  const SizedBox(width: 10),
-                  Column(
-                    children: [
-                      Image.asset('assets/image/arrow.png',
-                          width: 60, height: 25, fit: BoxFit.fill),
-                      Text(flightTime,
-                          style: const TextStyle(
-                              color: AppConstraint.colorLabel, fontSize: 11))
-                    ],
-                  ),
-                  const SizedBox(width: 10),
-                  Column(children: [
-                    Text(
-                      timeTo,
-                      style: const TextStyle(
-                          fontFamily: AppConstraint.fontFamilyBold,
-                          fontSize: 20,
-                          letterSpacing: 2),
+                    const SizedBox(width: 10),
+                    Column(children: [
+                      Text(
+                        timeTo,
+                        style: const TextStyle(
+                            fontFamily: AppConstraint.fontFamilyBold,
+                            fontSize: 20,
+                            letterSpacing: 2),
+                      ),
+                      Text(
+                        to,
+                        style: const TextStyle(fontSize: 17, letterSpacing: 2),
+                      )
+                    ]),
+                    const SizedBox(width: 8),
+                    Column(
+                      children: [
+                        Text(seatClass,
+                            style:
+                                const TextStyle(color: AppConstraint.colorLabel, fontSize: 12)),
+                        Text(price,
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 217, 111, 104),
+                                fontFamily: AppConstraint.fontFamilyBold,
+                                fontSize: 18))
+                      ],
                     ),
-                    Text(
-                      to,
-                      style: const TextStyle(fontSize: 17, letterSpacing: 2),
-                    )
-                  ]),
-                  const SizedBox(width: 15),
-                  Column(
-                    children: [
-                      Text(seatClass,
-                          style:
-                              const TextStyle(color: AppConstraint.colorLabel)),
-                      Text(price,
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 217, 111, 104),
-                              fontFamily: AppConstraint.fontFamilyBold,
-                              fontSize: 18))
-                    ],
-                  ),
-                ],
+                  ],
+                ),
               ),
               const SizedBox(height: 15),
               Text("Operated by $airlines",
@@ -519,7 +527,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
-                initialDate: DateTime.parse(widget.model.depart_date.toString()),
+                initialDate:
+                    DateTime.parse(widget.model.depart_date.toString()),
                 firstDate: DateTime.now(),
                 lastDate: DateTime(2030),
                 builder: (context, child) {

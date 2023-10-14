@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
-import 'package:projectsem4/ulits/enum_app.dart';
 
 class SeatWidget extends StatefulWidget {
   const SeatWidget({super.key});
@@ -56,9 +55,9 @@ class _SeatWidgetState extends State<SeatWidget> {
                 fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
-            height: 20,
+            height: 10,
           ),
-          _seatsType(firtClass, SeatsType.firtClass),
+          _seatsType(firtClass, "First Class"),
           const SizedBox(
             height: 20,
           ),
@@ -67,7 +66,7 @@ class _SeatWidgetState extends State<SeatWidget> {
     );
   }
 
-  Column _seatsType(List<SeatsModel> seats, SeatsType seatsType) {
+  Column _seatsType(List<SeatsModel> seats, String seatsType) {
     return Column(
       children: [
         Container(
@@ -76,7 +75,7 @@ class _SeatWidgetState extends State<SeatWidget> {
               color: AppConstraint.mainColor,
               borderRadius: BorderRadius.circular(40)),
           child: Text(
-            seatsType.value.toUpperCase(),
+            seatsType.toUpperCase(),
             style: const TextStyle(
                 fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
           ),
