@@ -2,7 +2,6 @@ import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/auth/login.dart';
 import 'package:projectsem4/ulits/constraint.dart';
-import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -60,21 +59,21 @@ class _RegisterState extends State<Register> {
                             Border.all(color: Colors.black.withOpacity(0.13))),
                     child: Stack(
                       children: [
-                        InternationalPhoneNumberInput(
-                          onInputChanged: (value) {},
-                          cursorColor: Colors.black,
-                          formatInput: false,
-                          selectorConfig: const SelectorConfig(
-                              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                              leadingPadding: 10.0),
-                          inputDecoration: InputDecoration(
-                              contentPadding:
-                                  const EdgeInsets.only(bottom: 13, left: 10),
-                              border: InputBorder.none,
-                              hintText: "Phone Number",
-                              hintStyle: TextStyle(
-                                  color: Colors.grey.shade500, fontSize: 16)),
-                        ),
+                        // InternationalPhoneNumberInput(
+                        //   onInputChanged: (value) {},
+                        //   cursorColor: Colors.black,
+                        //   formatInput: false,
+                        //   selectorConfig: const SelectorConfig(
+                        //       selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                        //       leadingPadding: 10.0),
+                        //   inputDecoration: InputDecoration(
+                        //       contentPadding:
+                        //           const EdgeInsets.only(bottom: 13, left: 10),
+                        //       border: InputBorder.none,
+                        //       hintText: "Phone Number",
+                        //       hintStyle: TextStyle(
+                        //           color: Colors.grey.shade500, fontSize: 16)),
+                        // ),
                         Positioned(
                           left: 90,
                           top: 8,

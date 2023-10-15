@@ -3,13 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/choose_seat/widgets/seat_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
 
 class ChooseSeetScreen extends StatefulWidget {
-  ChooseSeetScreen({super.key, required this.model, required this.flightId});
+  ChooseSeetScreen({super.key, required this.model, required this.data});
   BusinessModel model = BusinessModel();
-  int flightId = 0;
+  List<SeatModel>? data;
   @override
   State<ChooseSeetScreen> createState() => _ChooseSeetScreenState();
 }

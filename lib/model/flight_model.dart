@@ -64,25 +64,25 @@ class FlightModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_fl_id'] = this.iFlId;
-    data['_fl_from_id'] = this.iFlFromId;
-    data['_fl_to_id'] = this.iFlToId;
-    data['_fl_estimate_take_off'] = this.sFlEstimateTakeOff;
-    data['_fl_estimate_arrival'] = this.sFlEstimateArrival;
-    data['_fl_take_off'] = this.sFlTakeOff;
-    data['_fl_arrival'] = this.sFlArrival;
-    data['_car_id'] = this.iCarId;
-    data['_car_name'] = this.sCarName;
-    data['_car_icon'] = this.nCarIcon;
-    data['_pl_code'] = this.nPlCode;
-    data['_fl_from_name'] = this.sFlFromName;
-    data['_fl_to_name'] = this.sFlToName;
-    data['_fl_from_abbreviation'] = this.sFlFromAbbreviation;
-    data['_fl_to_abbreviation'] = this.sFlToAbbreviation;
-    data['_fl_return_date'] = this.nFlReturnDate;
-    data['_sell_price'] = this.iSellPrice;
-    data['_tc_id'] = this.iTcId;
-    data['_fl_estimate'] = this.sFlEstimate;
+    data['_fl_id'] = iFlId;
+    data['_fl_from_id'] = iFlFromId;
+    data['_fl_to_id'] = iFlToId;
+    data['_fl_estimate_take_off'] = sFlEstimateTakeOff;
+    data['_fl_estimate_arrival'] = sFlEstimateArrival;
+    data['_fl_take_off'] = sFlTakeOff;
+    data['_fl_arrival'] = sFlArrival;
+    data['_car_id'] = iCarId;
+    data['_car_name'] = sCarName;
+    data['_car_icon'] = nCarIcon;
+    data['_pl_code'] = nPlCode;
+    data['_fl_from_name'] = sFlFromName;
+    data['_fl_to_name'] = sFlToName;
+    data['_fl_from_abbreviation'] = sFlFromAbbreviation;
+    data['_fl_to_abbreviation'] = sFlToAbbreviation;
+    data['_fl_return_date'] = nFlReturnDate;
+    data['_sell_price'] = iSellPrice;
+    data['_tc_id'] = iTcId;
+    data['_fl_estimate'] = sFlEstimate;
     return data;
   }
 }

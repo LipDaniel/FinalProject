@@ -4,9 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/services/api_service.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
@@ -107,11 +109,29 @@ class _FlightListScreenState extends State<FlightListScreen> {
     });
   }
 
-  void handleChooseSeat(int id) {
-    Route route = MaterialPageRoute(
-        builder: (context) =>
-            ChooseSeetScreen(model: widget.model, flightId: id));
-    Navigator.push(context, route);
+  void handleChooseSeat(
+      int id, String timeFrom, String timeTo, String airLine) async {
+    EasyLoading.show();
+    Map<String, dynamic> request = {
+      '_fl_id': id,
+      '_tc_id': widget.model.seatclass_id
+    };
+    FlightInfoModel response = await FlightRepository.getSeatList(request);
+    if (response != null) {
+      widget.model.plane_code = response.sPlCode;
+      widget.model.plane_name = response.sPtName;
+      widget.model.time_from = timeFrom;
+      widget.model.time_to = timeTo;
+      widget.model.airline = airLine;
+      Route route = MaterialPageRoute(
+          builder: (context) =>
+              ChooseSeetScreen(model: widget.model, data: response.lFlSeats));
+      Navigator.push(context, route);
+      EasyLoading.dismiss();
+    } else {
+      AppConstraint.errorToast("Something wrong in server");
+      EasyLoading.dismiss();
+    }
   }
 
   @override
@@ -254,12 +274,11 @@ class _FlightListScreenState extends State<FlightListScreen> {
         height: 120,
         padding: const EdgeInsets.all(12.0),
         child: InkWell(
-          onTap: () => handleChooseSeat(id),
+          onTap: () => handleChooseSeat(id, timeFrom, timeTo, airlines),
           child: Column(
             children: [
               Expanded(
                 child: Row(
-                  // crossAxisAlignment: CrossAxisAlignment.center
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Image.asset('assets/image/logo-airline.png', width: 35),
@@ -305,8 +324,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
                     Column(
                       children: [
                         Text(seatClass,
-                            style:
-                                const TextStyle(color: AppConstraint.colorLabel, fontSize: 12)),
+                            style: const TextStyle(
+                                color: AppConstraint.colorLabel, fontSize: 12)),
                         Text(price,
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 217, 111, 104),

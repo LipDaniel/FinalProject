@@ -13,6 +13,12 @@ class BusinessModel {
   String? return_date;
   String? seatclass;
 
+  String? plane_code;
+  String? plane_name;
+  String? time_to;
+  String? time_from;
+  String? airline;
+
   BusinessModel(
     {this.airport_from_id,
     this.airport_from_code,
@@ -26,5 +32,8 @@ class BusinessModel {
     this.depart_date,
     this.return_date,
     this.seatclass_id,
-    this.seatclass});
+    this.seatclass,
+    this.plane_code,
+    this.plane_name,
+    this.airline});
 }

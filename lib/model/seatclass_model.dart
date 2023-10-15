@@ -31,14 +31,14 @@ class SeatClassModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_tc_id'] = this.iTcId;
-    data['_tc_index'] = this.iTcIndex;
-    data['_tc_name'] = this.sTcName;
-    data['_tc_icon'] = this.sTcIcon;
-    data['_tc_created_date'] = this.sTcCreatedDate;
-    data['_tc_updated_date'] = this.sTcUpdatedDate;
-    data['_tc_status'] = this.bTcStatus;
-    data['_field'] = this.sField;
+    data['_tc_id'] = iTcId;
+    data['_tc_index'] = iTcIndex;
+    data['_tc_name'] = sTcName;
+    data['_tc_icon'] = sTcIcon;
+    data['_tc_created_date'] = sTcCreatedDate;
+    data['_tc_updated_date'] = sTcUpdatedDate;
+    data['_tc_status'] = bTcStatus;
+    data['_field'] = sField;
     return data;
   }
 }

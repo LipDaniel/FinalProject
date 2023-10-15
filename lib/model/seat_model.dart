@@ -1,12 +1,27 @@
-import 'package:equatable/equatable.dart';
+class SeatModel {
+  String? sCode;
+  int? iIndex;
+  String? sClass;
+  bool? bStatus;
+  int? iClassId;
 
-class SeatsModel extends Equatable {
-  final String? id;
+  SeatModel({this.sCode, this.iIndex, this.sClass, this.bStatus, this.iClassId});
 
-  const SeatsModel({
-    this.id,
-  });
+  SeatModel.fromJson(Map<String, dynamic> json) {
+    sCode = json['_code'];
+    iIndex = json['_index'];
+    sClass = json['_class'];
+    bStatus = json['_status'];
+    iClassId = json['_class_id'];
+  }
 
-  @override
-  List<Object?> get props => [id];
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['_code'] = sCode;
+    data['_index'] = iIndex;
+    data['_class'] = sClass;
+    data['_status'] = bStatus;
+    data['_class_id'] = iClassId;
+    return data;
+  }
 }
