@@ -5,6 +5,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/flightinfo_model.dart';
+import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
@@ -125,7 +126,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
       widget.model.airline = airLine;
       Route route = MaterialPageRoute(
           builder: (context) =>
-              ChooseSeetScreen(model: widget.model, data: response.lFlSeats));
+              ChooseSeetScreen(model: widget.model, data: response.lFlSeats as List<SeatModel>));
       Navigator.push(context, route);
       EasyLoading.dismiss();
     } else {

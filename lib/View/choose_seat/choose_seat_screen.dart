@@ -1,7 +1,6 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
-import 'package:projectsem4/View/choose_seat/widgets/seat_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
@@ -10,12 +9,22 @@ import 'package:projectsem4/view/information/screen.dart';
 class ChooseSeetScreen extends StatefulWidget {
   ChooseSeetScreen({super.key, required this.model, required this.data});
   BusinessModel model = BusinessModel();
-  List<SeatModel>? data;
+  List<SeatModel> data = [];
   @override
   State<ChooseSeetScreen> createState() => _ChooseSeetScreenState();
 }
 
 class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
+  SeatModel? seatSelected;
+  List<SeatModel> lstSelected = [];
+  List<SeatModel> newSeats = [];
+
+  @override
+  void initState() {
+    super.initState();
+    widget.data = widget.data.where((element) => !element.sCode!.contains('G')).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +51,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
             const SizedBox(
               height: 20,
             ),
-            const SeatWidget(),
+            _seatWidget(),
             const SizedBox(
               height: 50,
             ),
@@ -123,6 +132,147 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
     );
   }
 
+  Container _seatWidget() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      width: MediaQuery.sizeOf(context).width,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                blurRadius: 10,
+                spreadRadius: 1)
+          ],
+          borderRadius: BorderRadius.circular(30)),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          Image.asset(
+            'assets/image/logo-airline.png',
+            height: 40,
+          ),
+          Text(
+            widget.model.airline.toString(),
+            style: const TextStyle(
+                fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          _seatsType(widget.data, widget.model.seatclass.toString()),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Column _seatsType(List<SeatModel> seats, String seatsType) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+          decoration: BoxDecoration(
+              color: AppConstraint.mainColor,
+              borderRadius: BorderRadius.circular(40)),
+          child: Text(
+            seatsType.toUpperCase(),
+            style: const TextStyle(
+                fontSize: 14, color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 10, bottom: 10),
+          child: Wrap(
+              children: seats.map((e) {
+            double margin = 10;
+            if (e.sCode!.contains('C')) {
+              margin = 40;
+            }
+            return InkWell(
+                onTap: () => __onChooseSeats(e),
+                child: e.bStatus == true
+                    ? Container(
+                        margin: EdgeInsets.only(right: margin, bottom: 10),
+                        height: MediaQuery.sizeOf(context).width / 10,
+                        width: MediaQuery.sizeOf(context).width / 10,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(10)),
+                        child: Center(
+                          child: Text(
+                            e.sCode!,
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                    : lstSelected.contains(e)
+                        ? Container(
+                            margin: EdgeInsets.only(right: margin, bottom: 10),
+                            height: MediaQuery.sizeOf(context).width / 10,
+                            width: MediaQuery.sizeOf(context).width / 10,
+                            decoration: BoxDecoration(
+                                color: AppConstraint.mainColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                e.sCode!,
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )
+                        : Container(
+                            margin: EdgeInsets.only(right: margin, bottom: 10),
+                            height: MediaQuery.sizeOf(context).width / 10,
+                            width: MediaQuery.sizeOf(context).width / 10,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                              child: Text(
+                                e.sCode!,
+                                style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ));
+          }).toList()),
+        )
+      ],
+    );
+  }
+
+  __onChooseSeats(SeatModel seatsModel) {
+    setState(() {
+      int passengerTotal = widget.model.adult_amount!.toInt() + widget.model.children_amount!.toInt() + widget.model.baby_amount!.toInt();
+
+      if (seatsModel.bStatus == false) {
+        if (lstSelected.contains(seatsModel)) {
+          lstSelected.remove(seatsModel);
+        } else {
+          if(lstSelected.length < passengerTotal){
+            lstSelected.add(seatsModel);
+          }
+        }
+      }
+    });
+  }
+
   Widget _btn() {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -133,10 +283,10 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
           ),
           child: InkWell(
             onTap: () {
-              Route route = MaterialPageRoute(
-                  builder: (context) => const InformationScreen(),
-                  fullscreenDialog: true);
-              Navigator.push(context, route);
+              // Route route = MaterialPageRoute(
+              //     builder: (context) => const InformationScreen(),
+              //     fullscreenDialog: true);
+              // Navigator.push(context, route);
             },
             child: Container(
               width: double.infinity,

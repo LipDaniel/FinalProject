@@ -46,4 +46,15 @@ class AppConstraint {
             color: Colors.white,
             fontSize: 16));
   }
+
+    static warningToast(String title) {
+    Toast.show(title,
+        duration: Toast.lengthLong,
+        gravity: Toast.top,
+        backgroundColor: Color.fromARGB(255, 234, 153, 39),
+        textStyle: const TextStyle(
+            fontFamily: AppConstraint.fontFamilyBold,
+            color: Colors.white,
+            fontSize: 16));
+  }
 }
