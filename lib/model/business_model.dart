@@ -1,4 +1,5 @@
 class BusinessModel {
+  int? fl_id;
   int? airport_from_id;
   int? airport_to_id;
   int? adult_amount;
@@ -12,6 +13,7 @@ class BusinessModel {
   String? airport_from_code;
   String? return_date;
   String? seatclass;
+  List<String>? seatList;
 
   String? plane_code;
   String? plane_name;
@@ -20,20 +22,22 @@ class BusinessModel {
   String? airline;
 
   BusinessModel(
-    {this.airport_from_id,
-    this.airport_from_code,
-    this.country_from_name,
-    this.airport_to_id,
-    this.airport_to_code,
-    this.country_to_name,
-    this.adult_amount,
-    this.children_amount,
-    this.baby_amount,
-    this.depart_date,
-    this.return_date,
-    this.seatclass_id,
-    this.seatclass,
-    this.plane_code,
-    this.plane_name,
-    this.airline});
+      {this.fl_id,
+      this.airport_from_id,
+      this.airport_from_code,
+      this.country_from_name,
+      this.airport_to_id,
+      this.airport_to_code,
+      this.country_to_name,
+      this.adult_amount,
+      this.children_amount,
+      this.baby_amount,
+      this.depart_date,
+      this.return_date,
+      this.seatclass_id,
+      this.seatclass,
+      this.plane_code,
+      this.plane_name,
+      this.airline,
+      this.seatList});
 }

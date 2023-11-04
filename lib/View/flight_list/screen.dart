@@ -119,14 +119,15 @@ class _FlightListScreenState extends State<FlightListScreen> {
     };
     FlightInfoModel response = await FlightRepository.getSeatList(request);
     if (response != null) {
+      widget.model.fl_id = id;
       widget.model.plane_code = response.sPlCode;
       widget.model.plane_name = response.sPtName;
       widget.model.time_from = timeFrom;
       widget.model.time_to = timeTo;
       widget.model.airline = airLine;
       Route route = MaterialPageRoute(
-          builder: (context) =>
-              ChooseSeetScreen(model: widget.model, data: response.lFlSeats as List<SeatModel>));
+          builder: (context) => ChooseSeetScreen(
+              model: widget.model, data: response.lFlSeats as List<SeatModel>));
       Navigator.push(context, route);
       EasyLoading.dismiss();
     } else {

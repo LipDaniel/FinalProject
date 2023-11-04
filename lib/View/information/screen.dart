@@ -1,10 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/confirm/confirm_screen.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class InformationScreen extends StatefulWidget {
-  const InformationScreen({super.key});
-
+  InformationScreen({super.key, required this.model});
+  BusinessModel model;
   @override
   State<InformationScreen> createState() => _InformationScreenState();
 }
@@ -16,22 +19,24 @@ class _InformationScreenState extends State<InformationScreen> {
       appBar: AppBar(
         backgroundColor: AppConstraint.mainColor,
         title: const Text('PASSENGER INFORMATION',
-            style: TextStyle(fontSize: 16,fontFamily: AppConstraint.fontFamilyBold)),
+            style: TextStyle(
+                fontSize: 16, fontFamily: AppConstraint.fontFamilyBold)),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _passengerForm(),
-            _passengerForm(),
-            const SizedBox(height: 100)
-          ],
-        ),
+        child: Column(children: [
+          ...widget.model.seatList!.map((item) {
+            return _passengerForm(item);
+          }).toList(),
+          const SizedBox(
+            height: 100.0, // Customize the height as needed
+          ),
+        ]),
       ),
       bottomSheet: _btn(),
     );
   }
 
-  Container _passengerForm() {
+  Container _passengerForm(String seat) {
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         decoration: BoxDecoration(
@@ -49,7 +54,7 @@ class _InformationScreenState extends State<InformationScreen> {
           Row(children: [
             Expanded(flex: 15, child: _textField('Full name')),
             const SizedBox(width: 15),
-            _seat()
+            _seat(seat)
           ]),
           const SizedBox(height: 20),
           Row(children: [
@@ -79,16 +84,16 @@ class _InformationScreenState extends State<InformationScreen> {
         ]));
   }
 
-  Expanded _seat() {
-    return const Expanded(
+  Expanded _seat(String seat) {
+    return Expanded(
         flex: 2,
         child: Column(
           children: [
-            Text('Seat',
+            const Text('Seat',
                 style:
                     TextStyle(fontSize: 15, color: AppConstraint.colorLabel)),
-            Text('A7',
-                style: TextStyle(
+            Text(seat,
+                style: const TextStyle(
                     fontSize: 25, fontFamily: AppConstraint.fontFamilyBold))
           ],
         ));
@@ -131,7 +136,8 @@ class _InformationScreenState extends State<InformationScreen> {
                 vertical: 15,
               ),
               decoration: BoxDecoration(
-                  color: AppConstraint.mainColor, borderRadius: BorderRadius.circular(30)),
+                  color: AppConstraint.mainColor,
+                  borderRadius: BorderRadius.circular(30)),
               child: const Center(
                 child: Text(
                   'Next',

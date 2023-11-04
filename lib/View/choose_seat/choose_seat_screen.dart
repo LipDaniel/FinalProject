@@ -1,8 +1,10 @@
 // ignore_for_file: must_be_immutable, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/seat_model.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
 
@@ -22,7 +24,26 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
   @override
   void initState() {
     super.initState();
-    widget.data = widget.data.where((element) => !element.sCode!.contains('G')).toList();
+    widget.data =
+        widget.data.where((element) => !element.sCode!.contains('G')).toList();
+  }
+
+  void handleChooseSeats() async {
+    await EasyLoading.show();
+    List<String?> tcCode = lstSelected.map((e) => e.sCode).toList();
+    Map<String, dynamic> params = {
+      "_fl_id": widget.model.fl_id as int,
+      "_tc_id": widget.model.seatclass_id,
+      '_tc_code': tcCode, // Convert the LinkedList to JSON string
+    };
+    var response = await SeatClassRepository.checkSeat(params);
+    if (response == true) {
+      widget.model.seatList = lstSelected.map((e) => e.sCode).cast<String>().toList();
+      Route route = MaterialPageRoute(
+          builder: (context) => InformationScreen(model: widget.model));
+      Navigator.push(context, route);
+      await EasyLoading.dismiss();
+    }
   }
 
   @override
@@ -259,13 +280,15 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
 
   __onChooseSeats(SeatModel seatsModel) {
     setState(() {
-      int passengerTotal = widget.model.adult_amount!.toInt() + widget.model.children_amount!.toInt() + widget.model.baby_amount!.toInt();
+      int passengerTotal = widget.model.adult_amount!.toInt() +
+          widget.model.children_amount!.toInt() +
+          widget.model.baby_amount!.toInt();
 
       if (seatsModel.bStatus == false) {
         if (lstSelected.contains(seatsModel)) {
           lstSelected.remove(seatsModel);
         } else {
-          if(lstSelected.length < passengerTotal){
+          if (lstSelected.length < passengerTotal) {
             lstSelected.add(seatsModel);
           }
         }
@@ -282,12 +305,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
             bottom: 30,
           ),
           child: InkWell(
-            onTap: () {
-              // Route route = MaterialPageRoute(
-              //     builder: (context) => const InformationScreen(),
-              //     fullscreenDialog: true);
-              // Navigator.push(context, route);
-            },
+            onTap: () => handleChooseSeats(),
             child: Container(
               width: double.infinity,
               margin: const EdgeInsets.symmetric(horizontal: 20),

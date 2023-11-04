@@ -16,4 +16,18 @@ class SeatClassRepository {
       throw Exception(e);
     }
   }
+
+  static checkSeat(Map<String, dynamic> params) async {
+    try {
+      final response =
+          await ApiService().get(ApiConfig.checkseat, params: params);
+      if (response['fail'].isEmpty) {
+        return response['isSuccess'];
+      } else {
+        print('2');
+      }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }
