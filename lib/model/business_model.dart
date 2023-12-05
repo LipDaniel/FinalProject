@@ -1,3 +1,5 @@
+import 'package:projectsem4/model/passenger_model.dart';
+
 class BusinessModel {
   int? fl_id;
   int? airport_from_id;
@@ -13,6 +15,7 @@ class BusinessModel {
   String? airport_from_code;
   String? return_date;
   String? seatclass;
+  double? price;
   List<String>? seatList;
 
   String? plane_code;
@@ -20,10 +23,12 @@ class BusinessModel {
   String? time_to;
   String? time_from;
   String? airline;
+  List<PassengerModel>? passenger_list;
 
   BusinessModel(
       {this.fl_id,
       this.airport_from_id,
+      this.price,
       this.airport_from_code,
       this.country_from_name,
       this.airport_to_id,
@@ -39,5 +44,6 @@ class BusinessModel {
       this.plane_code,
       this.plane_name,
       this.airline,
-      this.seatList});
+      this.seatList,
+      this.passenger_list});
 }

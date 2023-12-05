@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable
+// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable, unnecessary_null_comparison
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -111,7 +111,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
   }
 
   void handleChooseSeat(
-      int id, String timeFrom, String timeTo, String airLine) async {
+      int id, String timeFrom, String timeTo, String airLine, double price) async {
     EasyLoading.show();
     Map<String, dynamic> request = {
       '_fl_id': id,
@@ -125,6 +125,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
       widget.model.time_from = timeFrom;
       widget.model.time_to = timeTo;
       widget.model.airline = airLine;
+      widget.model.price = price;
       Route route = MaterialPageRoute(
           builder: (context) => ChooseSeetScreen(
               model: widget.model, data: response.lFlSeats as List<SeatModel>));
@@ -173,10 +174,6 @@ class _FlightListScreenState extends State<FlightListScreen> {
         itemCount: widget.data.length,
         itemBuilder: (context, index) {
           final item = widget.data[index];
-          String price = NumberFormat.currency(
-            symbol: '', // Currency symbol (optional)
-            decimalDigits: 0, // Number of decimal digits (optional)
-          ).format(item.iSellPrice);
           DateFormat dateFormat = DateFormat("HH:mm");
           String timeFrom =
               dateFormat.format(DateTime.parse(item.sFlTakeOff as String));
@@ -189,7 +186,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
               item.sFlFromAbbreviation,
               item.sFlToAbbreviation,
               widget.model.seatclass.toString(),
-              '$price đ',
+              item.iSellPrice,
               item.sCarName,
               "4h20p");
         },
@@ -267,8 +264,11 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Container _flightItem(
-      id, timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
+  Container _flightItem(id, timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
+     String priced = NumberFormat.currency(
+      symbol: '', // Currency symbol (optional)
+      decimalDigits: 0, // Number of decimal digits (optional)
+    ).format(price);
     return Container(
         decoration: BoxDecoration(
             color: AppConstraint.colorSlogan,
@@ -276,7 +276,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
         height: 120,
         padding: const EdgeInsets.all(12.0),
         child: InkWell(
-          onTap: () => handleChooseSeat(id, timeFrom, timeTo, airlines),
+          onTap: () => handleChooseSeat(id, timeFrom, timeTo, airlines, price),
           child: Column(
             children: [
               Expanded(
@@ -328,7 +328,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
                         Text(seatClass,
                             style: const TextStyle(
                                 color: AppConstraint.colorLabel, fontSize: 12)),
-                        Text(price,
+                        Text('$priced đ',
                             style: const TextStyle(
                                 color: Color.fromARGB(255, 217, 111, 104),
                                 fontFamily: AppConstraint.fontFamilyBold,

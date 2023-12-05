@@ -40,7 +40,7 @@ class AppConstraint {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: Color.fromARGB(255, 153, 252, 142),
+        backgroundColor: Color.fromARGB(255, 153, 252, 142).withOpacity(0.9),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
@@ -51,7 +51,7 @@ class AppConstraint {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: Color.fromARGB(255, 234, 153, 39),
+        backgroundColor: Color.fromARGB(255, 234, 153, 39).withOpacity(0.8),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,

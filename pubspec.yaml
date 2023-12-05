@@ -47,6 +47,7 @@ dependencies:
   toast: ^0.3.0
   flutter_animator: ^3.2.2
   iconsax: ^0.0.8
+  country_picker: ^2.0.22
 dev_dependencies:
   flutter_test:
     sdk: flutter

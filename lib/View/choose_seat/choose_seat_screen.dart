@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unrelated_type_equality_checks
+// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -29,8 +29,13 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
   }
 
   void handleChooseSeats() async {
-    await EasyLoading.show();
     List<String?> tcCode = lstSelected.map((e) => e.sCode).toList();
+    bool check_enough = is_seat_enough(tcCode);
+    if (!check_enough){
+      AppConstraint.warningToast('Please select the correct number of seats');
+      return;
+    }
+    await EasyLoading.show();
     Map<String, dynamic> params = {
       "_fl_id": widget.model.fl_id as int,
       "_tc_id": widget.model.seatclass_id,
@@ -44,6 +49,15 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
       Navigator.push(context, route);
       await EasyLoading.dismiss();
     }
+  }
+
+  bool is_seat_enough(List<String?> tcCode) {
+    int? amount = widget.model.baby_amount! + widget.model.adult_amount! + widget.model.children_amount!;
+    int seatSelected = tcCode.length;
+    if (amount != seatSelected){
+        return false;
+    }
+    return true;
   }
 
   @override

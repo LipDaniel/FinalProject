@@ -1,8 +1,12 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:projectsem4/model/passenger_model.dart';
 
 class InforWidget extends StatelessWidget {
-  const InforWidget({super.key});
-
+  InforWidget({super.key, this.seat, this.passenger});
+  String? seat;
+  PassengerModel? passenger;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -13,12 +17,12 @@ class InforWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 5),
-              child: _item(title: 'Full name', content: 'Mr. Danel'),
+              child: _item(title: 'Full name', content: '${passenger!.title} ${passenger!.name}'),
             ),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Seat',
                   style: TextStyle(
                       fontFamily: 'Montserrat-Bold',
@@ -26,12 +30,12 @@ class InforWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.grey),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 4,
                 ),
                 Text(
-                  'A7',
-                  style: TextStyle(
+                  seat.toString(),
+                  style: const TextStyle(
                       fontFamily: 'Montserrat-Bold',
                       fontSize: 30,
                       color: Colors.black),
@@ -46,10 +50,10 @@ class InforWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(flex: 3, child: _item(title: 'Address', content: '153')),
+            Expanded(flex: 5, child: _item(title: 'Country', content: '${passenger!.country}')),
             Expanded(
-                flex: 6,
-                child: _item(title: 'Street', content: 'Hoàng Văn Thụ')),
+                flex: 5,
+                child: _item(title: 'National', content: '${passenger!.national}')),
           ],
         ),
         const SizedBox(
@@ -58,15 +62,15 @@ class InforWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(flex: 3, child: _item(title: 'City', content: 'HCMC')),
+            Expanded(flex: 5, child: _item(title: 'Citizen ID / Passport', content: '${passenger!.passport}')),
             Expanded(
-                flex: 6, child: _item(title: 'Passcode', content: '10030')),
+                flex: 5, child: _item(title: 'Expire date', content: '${passenger!.expire_date}')),
           ],
         ),
         const SizedBox(
           height: 10,
         ),
-        _item(title: 'Citizen ID / Passport', content: '079097006234'),
+        _item(title: 'Date of birth', content: '${passenger!.birth}'),
         const SizedBox(
           height: 10,
         ),
@@ -75,9 +79,9 @@ class InforWidget extends StatelessWidget {
           children: [
             Expanded(
                 flex: 5,
-                child: _item(title: 'Checked baggage (kg)', content: '2.5')),
+                child: _item(title: 'Checked baggage (kg)', content: '${passenger!.checked_baggage != '' ? passenger!.checked_baggage : 0}')),
             Expanded(
-                flex: 5, child: _item(title: 'Cabin baggage', content: '10.5')),
+                flex: 5, child: _item(title: 'Cabin baggage (kg)', content: '${passenger!.cabin_baggage != '' ? passenger!.cabin_baggage : 0}')),
           ],
         ),
       ],

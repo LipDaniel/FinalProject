@@ -1,12 +1,15 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class ConfirmScreen extends StatefulWidget {
-  const ConfirmScreen({super.key});
-
+  ConfirmScreen({super.key, required this.model});
+  BusinessModel model;
   @override
   State<ConfirmScreen> createState() => _ConfirmScreenState();
 }
@@ -47,47 +50,45 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   borderRadius: BorderRadius.circular(30)),
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                    child: Column(
+                  ...widget.model.passenger_list!.asMap().entries.map((entry) {
+                    final index = entry.key;
+                    final item = entry.value;
+                    final isLastItem = index == widget.model.passenger_list!.length - 1;
+                    final seat = widget.model.seatList;
+                    return Column(
                       children: [
-                        InforWidget(),
-                        SizedBox(
-                          height: 20,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 25, vertical: 10),
+                          child: Column(
+                            children: [
+                              InforWidget(seat: seat![index], passenger: item),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TimeAndPriceWidget(passenger: item, model: widget.model),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
+                          ),
                         ),
-                        TimeAndPriceWidget(),
-                        SizedBox(
-                          height: 20,
-                        ),
+                        if (!isLastItem)
+                          DottedLine(
+                            direction: Axis.horizontal,
+                            lineLength: double.infinity,
+                            lineThickness: 2,
+                            dashLength: 17,
+                            dashColor: Colors.grey.withOpacity(0.5),
+                            dashGapLength: 8,
+                          ),
+                        if (!isLastItem)
+                          const SizedBox(
+                            height: 5,
+                          ),
                       ],
-                    ),
-                  ),
-                  DottedLine(
-                    direction: Axis.horizontal,
-                    lineLength: double.infinity,
-                    lineThickness: 2,
-                    dashLength: 17,
-                    dashColor: Colors.grey.withOpacity(0.5),
-                    dashGapLength: 8,
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                    child: Column(
-                      children: [
-                        InforWidget(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        TimeAndPriceWidget(),
-                        SizedBox(
-                          height: 20,
-                        ),
-                      ],
-                    ),
-                  ),
+                    );
+                  }).toList(),
                 ],
               ),
             ),

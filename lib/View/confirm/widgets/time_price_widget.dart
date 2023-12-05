@@ -1,13 +1,35 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/passenger_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class TimeAndPriceWidget extends StatelessWidget {
-  const TimeAndPriceWidget({
+  TimeAndPriceWidget({
     super.key,
+    this.passenger,
+    this.model
   });
+  PassengerModel? passenger;
+  BusinessModel? model;
+
+  String formatMoney(int money){
+    String priced = NumberFormat.currency(
+      symbol: '', // Currency symbol (optional)
+      decimalDigits: 0, // Number of decimal digits (optional)
+    ).format(money);
+    return '$priced đ';
+  }
 
   @override
   Widget build(BuildContext context) {
+    int priceEachTicket = model!.price!.toInt();
+    int checkedBaggagePrice = (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000;
+    int cabinBaggagePrice = (int.parse(passenger!.cabin_baggage!.substring(0, 2))) * 10000;
+    int totalPriceEach = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -19,18 +41,18 @@ class TimeAndPriceWidget extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Column(
+                    Column(
                       children: [
                         Text(
-                          'SGN',
-                          style: TextStyle(
+                          model!.airport_from_code.toString(),
+                          style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 24,
                               color: AppConstraint.mainColor),
                         ),
                         Text(
-                          '1:00 PM',
-                          style: TextStyle(
+                          model!.time_from.toString(),
+                          style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 12,
                               color: AppConstraint.mainColor),
@@ -50,18 +72,18 @@ class TimeAndPriceWidget extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    const Column(
+                    Column(
                       children: [
                         Text(
-                          'BER',
-                          style: TextStyle(
+                          model!.airport_to_code.toString(),
+                          style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 24,
                               color: AppConstraint.mainColor),
                         ),
                         Text(
-                          '2:30 PM',
-                          style: TextStyle(
+                          model!.time_to.toString(),
+                          style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 12,
                               color: AppConstraint.mainColor),
@@ -73,16 +95,17 @@ class TimeAndPriceWidget extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                const Text(
-                  'Fri, 13 Sep, 2023',
-                  style: TextStyle(
+                Text(
+                  DateFormat.yMMMEd().format(
+                      DateTime.parse(model!.depart_date.toString())),
+                  style: const TextStyle(
                       fontFamily: 'Montserrat-Bold',
                       fontSize: 16,
                       color: AppConstraint.mainColor),
                 )
               ],
             )),
-        const Expanded(
+        Expanded(
             flex: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -90,59 +113,59 @@ class TimeAndPriceWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Tax',
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Text(
-                          '\$51',
-                          style: TextStyle(
-                              fontFamily: 'Montserrat-Bold',
-                              fontSize: 16,
-                              color: Colors.black),
-                        )
-                      ],
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
+                        const Text(
                           'Price',
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 10,
                         ),
                         Text(
-                          '\$59',
-                          style: TextStyle(
+                          formatMoney(priceEachTicket),
+                          style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
-                              fontSize: 16,
+                              fontSize: 12,
+                              color: Colors.black),
+                        )
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Baggage',
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          formatMoney(checkedBaggagePrice + cabinBaggagePrice),
+                          style: const TextStyle(
+                              fontFamily: 'Montserrat-Bold',
+                              fontSize: 12,
                               color: Colors.black),
                         )
                       ],
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 5,
                 ),
                 Text(
-                  '\$110',
-                  style: TextStyle(
-                      fontSize: 35,
+                  formatMoney(totalPriceEach),
+                  style: const TextStyle(
+                      fontSize: 20,
                       fontFamily: 'Montserrat-Bold',
                       color: AppConstraint.mainColor),
                 ),
