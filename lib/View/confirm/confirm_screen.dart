@@ -1,10 +1,12 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, unused_local_variable
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/passenger_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -15,6 +17,24 @@ class ConfirmScreen extends StatefulWidget {
 }
 
 class _ConfirmScreenState extends State<ConfirmScreen> {
+  
+  String totalPrice(){
+    var total = 0;
+    List<PassengerModel>? passengers = widget.model.passenger_list;
+    for (var item in passengers!) {
+      int priceEachTicket = widget.model.price!.toInt();
+      int checkedBaggagePrice = item.checked_baggage != '' ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000 : 0;
+      int cabinBaggagePrice = item.cabin_baggage != '' ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000 : 0;
+      int subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+      total += subtotal;
+    }
+    String priced = NumberFormat.currency(
+      symbol: '', // Currency symbol (optional)
+      decimalDigits: 0, // Number of decimal digits (optional)
+    ).format(total);
+    return '$priced đ';
+  } 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +73,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                   ...widget.model.passenger_list!.asMap().entries.map((entry) {
                     final index = entry.key;
                     final item = entry.value;
-                    final isLastItem = index == widget.model.passenger_list!.length - 1;
+                    final isLastItem =
+                        index == widget.model.passenger_list!.length - 1;
                     final seat = widget.model.seatList;
                     return Column(
                       children: [
@@ -66,7 +87,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                               const SizedBox(
                                 height: 20,
                               ),
-                              TimeAndPriceWidget(passenger: item, model: widget.model),
+                              TimeAndPriceWidget(
+                                  passenger: item, model: widget.model),
                               const SizedBox(
                                 height: 20,
                               ),
@@ -93,7 +115,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
               ),
             ),
             const SizedBox(
-              height: 100,
+              height: 120,
             ),
           ],
         ),
@@ -105,9 +127,34 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    blurRadius: 10,
+                    spreadRadius: 15,
+                    blurStyle: BlurStyle.normal)
+              ],
+              color: const Color.fromARGB(255, 243, 242, 242),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('TOTAL',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+              Text(totalPrice(),
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+            ],
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.only(
-            bottom: 30,
+            bottom: 20,
           ),
           child: Container(
             width: double.infinity,
@@ -115,9 +162,11 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             padding: const EdgeInsets.symmetric(
               vertical: 15,
             ),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 color: AppConstraint.mainColor,
-                borderRadius: BorderRadius.circular(30)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))),
             child: const Center(
               child: Text(
                 'Checkout',

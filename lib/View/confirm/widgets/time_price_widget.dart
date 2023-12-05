@@ -26,8 +26,8 @@ class TimeAndPriceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int priceEachTicket = model!.price!.toInt();
-    int checkedBaggagePrice = (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000;
-    int cabinBaggagePrice = (int.parse(passenger!.cabin_baggage!.substring(0, 2))) * 10000;
+    int checkedBaggagePrice = passenger!.checked_baggage! != '' ? (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000 : 0;
+    int cabinBaggagePrice = passenger!.cabin_baggage! != '' ? (int.parse(passenger!.cabin_baggage!.substring(0, 2))) * 10000 : 0;
     int totalPriceEach = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
 
     return Row(
