@@ -1,6 +1,9 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:flutter/material.dart';
 import 'package:projectsem4/model/seat_model.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:toast/toast.dart';
 
 class AppConstraint {
@@ -25,11 +28,17 @@ class AppConstraint {
       'assets/image/flight_loading.gif',
       scale: 1.7,
     );
+
+  static Future<bool> checkSeat(Map<String, dynamic> params) async {
+    bool response = await SeatClassRepository.checkSeat(params);
+    return response;
+  } 
+
   static errorToast(String title) {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: Color.fromARGB(255, 249, 87, 97).withOpacity(0.9),
+        backgroundColor: const Color.fromARGB(255, 249, 87, 97).withOpacity(0.9),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
@@ -40,18 +49,18 @@ class AppConstraint {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: Color.fromARGB(255, 153, 252, 142).withOpacity(0.9),
+        backgroundColor: const Color.fromARGB(255, 153, 252, 142).withOpacity(0.9),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
             fontSize: 16));
   }
 
-    static warningToast(String title) {
+  static warningToast(String title) {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: Color.fromARGB(255, 234, 153, 39).withOpacity(0.8),
+        backgroundColor: const Color.fromARGB(255, 234, 153, 39).withOpacity(0.8),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,

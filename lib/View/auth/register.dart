@@ -1,5 +1,6 @@
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:projectsem4/View/auth/login.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
@@ -11,6 +12,23 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lasNameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  void handleRegisterSubmit(){
+    Map<String, dynamic> params = {
+      "_cus_first_name": firstNameController.text,
+      "_cus_last_name": lasNameController.text,
+      "_cus_emal": emailController.text,
+      "_cus_phone": phoneController.text,
+      "_cus_password": passwordController.text
+    };
+
+    print(params);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +36,7 @@ class _RegisterState extends State<Register> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.only(right: 30, left: 30),
               width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -27,7 +45,7 @@ class _RegisterState extends State<Register> {
                       "https://ouch-cdn2.icons8.com/kQoUOOANZvS258QGQr73eYz78IWO65f-_Q-rjkScBEA/rs:fit:368:410/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9zdmcvODgx/Lzk5ZWI5NTg3LTYy/OWUtNGIzYi1hOWJj/LTZjYjJmZDQ5YTA0/Zi5zdmc.png",
                       width: 280,
                       fit: BoxFit.cover),
-                  const SizedBox(height: 50),
+                  const SizedBox(height: 20),
                   FadeInDown(
                     child: const Text("REGISTER",
                         style: TextStyle(
@@ -43,61 +61,52 @@ class _RegisterState extends State<Register> {
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.grey.shade700)),
                   )),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 10),
                   FadeInDown(
-                      child: Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                              color: Color(0xffeeeeee),
-                              blurRadius: 10,
-                              offset: Offset(0, 4))
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                        border:
-                            Border.all(color: Colors.black.withOpacity(0.13))),
-                    child: Stack(
-                      children: [
-                        // InternationalPhoneNumberInput(
-                        //   onInputChanged: (value) {},
-                        //   cursorColor: Colors.black,
-                        //   formatInput: false,
-                        //   selectorConfig: const SelectorConfig(
-                        //       selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                        //       leadingPadding: 10.0),
-                        //   inputDecoration: InputDecoration(
-                        //       contentPadding:
-                        //           const EdgeInsets.only(bottom: 13, left: 10),
-                        //       border: InputBorder.none,
-                        //       hintText: "Phone Number",
-                        //       hintStyle: TextStyle(
-                        //           color: Colors.grey.shade500, fontSize: 16)),
-                        // ),
-                        Positioned(
-                          left: 90,
-                          top: 8,
-                          bottom: 8,
-                          child: Container(
-                            height: 40,
-                            width: 1,
-                            color: Colors.black.withOpacity(0.13),
-                          ),
-                        ),
-                      ],
-                    ),
+                      child: Column(
+                    children: [
+                      _textField(
+                          'First name',
+                          const Icon(Iconsax.user,
+                              color: Colors.black, size: 18),
+                          firstNameController),
+                      const SizedBox(height: 10),
+                      _textField(
+                          'Last name',
+                          const Icon(Iconsax.user,
+                              color: Colors.black, size: 18),
+                          lasNameController),
+                      const SizedBox(height: 10),
+                      _textField(
+                          'Email',
+                          const Icon(Iconsax.sms_notification,
+                              color: Colors.black, size: 18),
+                          emailController),
+                      const SizedBox(height: 10),
+                      _textField(
+                          'Phone',
+                          const Icon(Iconsax.call,
+                              color: Colors.black, size: 18),
+                          phoneController),
+                      const SizedBox(height: 10),
+                      _textField(
+                          'Password',
+                          const Icon(Iconsax.key,
+                              color: Colors.black, size: 18),
+                          passwordController),
+                    ],
                   )),
-                  const SizedBox(height: 150),
+                  const SizedBox(height: 20),
                   FadeInDown(
                       child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () => handleRegisterSubmit(),
                     color: Colors.black,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5)),
                     padding: const EdgeInsets.symmetric(
                         vertical: 15, horizontal: 30),
                     minWidth: double.infinity,
-                    child: const Text("Send OTP",
+                    child: const Text("Register",
                         style: TextStyle(
                             color: Colors.white,
                             fontFamily: AppConstraint.fontFamilyBold)),
@@ -108,11 +117,13 @@ class _RegisterState extends State<Register> {
                     children: [
                       Text("Already have an account?",
                           style: TextStyle(color: Colors.grey.shade700)),
-                      TextButton(onPressed: () {
-                        Route route = MaterialPageRoute(
+                      TextButton(
+                          onPressed: () {
+                            Route route = MaterialPageRoute(
                                 builder: (context) => const Login());
                             Navigator.push(context, route);
-                      }, child: const Text("Login"))
+                          },
+                          child: const Text("Login"))
                     ],
                   ))
                 ],
@@ -120,5 +131,46 @@ class _RegisterState extends State<Register> {
             ),
           ),
         ));
+  }
+
+  TextField _textField(
+      String text, Icon icon, TextEditingController controller) {
+    bool isPassword = text == 'Password' ? true : false;
+    return TextField(
+      obscureText: isPassword,
+      cursorColor: Colors.black,
+      decoration: InputDecoration(
+        contentPadding: const EdgeInsets.all(0.0),
+        labelText: text,
+        hintText: text,
+        hintStyle: const TextStyle(
+          color: Colors.grey,
+          fontSize: 14.0,
+        ),
+        labelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 14.0,
+          fontWeight: FontWeight.w400,
+        ),
+        prefixIcon: icon,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.grey.shade200, width: 2),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        floatingLabelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 18.0,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.black, width: 1.5),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      onChanged: (value) {
+        setState(() {
+          controller.text = value;
+        });
+      },
+    );
   }
 }

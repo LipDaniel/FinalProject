@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names
+// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -41,7 +41,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
       "_tc_id": widget.model.seatclass_id,
       '_tc_code': tcCode, // Convert the LinkedList to JSON string
     };
-    var response = await SeatClassRepository.checkSeat(params);
+    var response = await AppConstraint.checkSeat(params);
     if (response == true) {
       widget.model.seatList = lstSelected.map((e) => e.sCode).cast<String>().toList();
       Route route = MaterialPageRoute(
