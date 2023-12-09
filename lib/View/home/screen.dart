@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, must_be_immutable
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +7,7 @@ import 'package:projectsem4/View/flight_list/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
-import 'package:projectsem4/repository/airport_repo.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
-import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/view/home/widgets/header_widget.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -17,7 +15,10 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toast/toast.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.listAir, required this.listClass});
+ 
+  final List<AirportModel> listAir;
+  final List<SeatClassModel> listClass;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -122,13 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _babyAmount.text = "0";
     _departInput.text = "";
     _returnInput.text = "";
-    fetch();
-  }
-
-  fetch() async {
-    lstAir = await AirPortRepository.getAirPort();
-    lstClass = await SeatClassRepository.getSeatClass();
-    setState(() {});
+    lstAir = widget.listAir;
+    lstClass = widget.listClass;
   }
 
   @override

@@ -1,7 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/View/auth/register.dart';
 import 'package:projectsem4/View/bottomnavi/screen.dart';
+import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/seatclass_model.dart';
+import 'package:projectsem4/repository/airport_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:iconsax/iconsax.dart';
 import 'dart:async';
@@ -18,6 +24,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  List<AirportModel> lstAir = [];
+  List<SeatClassModel> lstClass = [];
   int activeIndex = 0;
 
   @override
@@ -25,13 +33,24 @@ class _LoginState extends State<Login> {
     Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
         activeIndex++;
-
         if (activeIndex == 4) activeIndex = 0;
       });
     });
     super.initState();
     AppConstraint.initLoading;
   }
+
+  Future<void> handleLogin() async {
+    await EasyLoading.show();
+    lstAir = await AirPortRepository.getAirPort();
+    lstClass = await SeatClassRepository.getSeatClass();
+
+    await Future.delayed(const Duration(seconds: 2));
+    Route route = MaterialPageRoute(builder: (context) => BottomScreen(listAir: lstAir, listClass: lstClass));
+    Navigator.push(context, route);
+    await EasyLoading.dismiss();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -203,14 +222,7 @@ class _LoginState extends State<Login> {
               height: 30,
             ),
             MaterialButton(
-              onPressed: () async {
-                await EasyLoading.show();
-                await Future.delayed(const Duration(seconds: 2));
-                Route route = MaterialPageRoute(
-                    builder: (context) => const BottomScreen());
-                Navigator.push(context, route);
-                await EasyLoading.dismiss();
-              },
+              onPressed: () => handleLogin(),
               height: 45,
               color: AppConstraint.mainColor,
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 50),

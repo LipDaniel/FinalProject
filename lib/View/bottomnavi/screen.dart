@@ -1,21 +1,29 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
+import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/view/profile/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class BottomScreen extends StatefulWidget {
-  const BottomScreen({super.key});
+  BottomScreen({super.key, required this.listAir, required this.listClass});
+  List<AirportModel> listAir;
+  List<SeatClassModel> listClass;
 
-  
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    NotificationScreen(),
-    Text(
-      'My Wallet',
-    ),
-    ProfileScreen()
-  ];
+  static List<Widget> getWidgetOptions(
+      List<AirportModel> listAir, List<SeatClassModel> listClass) {
+    return [
+      HomeScreen(listAir: listAir, listClass: listClass),
+      const NotificationScreen(),
+      const Text(
+        'My Wallet',
+      ),
+      const ProfileScreen()
+    ];
+  }
 
   @override
   State<BottomScreen> createState() => _BottomScreenState();
@@ -34,7 +42,8 @@ class _BottomScreenState extends State<BottomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: BottomScreen._widgetOptions.elementAt(_selectedIndex),
+        child: BottomScreen.getWidgetOptions(widget.listAir, widget.listClass)
+            .elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
