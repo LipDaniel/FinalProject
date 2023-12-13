@@ -2,16 +2,27 @@ import 'package:projectsem4/services/api_config.dart';
 import 'package:projectsem4/services/api_service.dart';
 
 class AuthenticateRepository {
-  static getFlight(Map<String, dynamic> body) async {
+  static register(Map<String, dynamic> body) async {
     // List<FlightModel> flightLst = [];
 
     try {
-      final response = await ApiService().get(ApiConfig.register, params: body);
+      final response = await ApiService().post(ApiConfig.register, body: body);
       return response;
-      // if (response['data'].length != 0) {
-      //   for (var item in response['data']) {
-      //     flightLst.add(FlightModel.fromJson(item));
-      //   }
+      // if (response['isSuccess'] == true) {
+      //   return flightLst;
+      // } else {
+      //   return response['data'];
+      // }
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static login(Map<String, dynamic> body) async {
+    try{
+      final response = await ApiService().post(ApiConfig.login, body: body);
+      return response;
+      // if (response['isSuccess'] == true) {
       //   return flightLst;
       // } else {
       //   return response['data'];

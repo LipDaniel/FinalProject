@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -7,6 +7,7 @@ import 'package:projectsem4/View/bottomnavi/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/repository/airport_repo.dart';
+import 'package:projectsem4/repository/authenticate_repo.dart';
 import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:iconsax/iconsax.dart';
@@ -22,7 +23,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController phoneController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   List<AirportModel> lstAir = [];
   List<SeatClassModel> lstClass = [];
@@ -41,12 +42,24 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> handleLogin() async {
+    if (emailController.text == '' || passwordController.text == '') {
+      return;
+    }
+    Map<String, dynamic> args = {
+      '_cus_email': emailController.text,
+      '_cus_password': passwordController.text
+    };
+    final response = await AuthenticateRepository.login(args);
+    print(response);
+    return;
     await EasyLoading.show();
     lstAir = await AirPortRepository.getAirPort();
     lstClass = await SeatClassRepository.getSeatClass();
 
     await Future.delayed(const Duration(seconds: 2));
-    Route route = MaterialPageRoute(builder: (context) => BottomScreen(listAir: lstAir, listClass: lstClass));
+    Route route = MaterialPageRoute(
+        builder: (context) =>
+            BottomScreen(listAir: lstAir, listClass: lstClass));
     Navigator.push(context, route);
     await EasyLoading.dismiss();
   }
@@ -134,6 +147,7 @@ class _LoginState extends State<Login> {
             ),
             TextField(
               cursorColor: Colors.black,
+              controller: emailController,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.all(0.0),
                 labelText: 'Email',
@@ -170,6 +184,7 @@ class _LoginState extends State<Login> {
               height: 20,
             ),
             TextField(
+              controller: passwordController,
               cursorColor: Colors.black,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.all(0.0),

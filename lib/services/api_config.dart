@@ -4,6 +4,7 @@ class ApiConfig {
   static const seatClass = '/ticketclass/gets';
   static const flight = '/flight/gets';
   static const register = '/customer/register';
+  static const login = '/customer/login';
   static const flightinfo = '/flight/info';
   static const checkseat = '/ticket/check';
 }

@@ -1,7 +1,12 @@
+// ignore_for_file: unused_local_variable, avoid_print
+
+import 'dart:math';
+
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:projectsem4/View/auth/login.dart';
+import 'package:projectsem4/repository/authenticate_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class Register extends StatefulWidget {
@@ -18,17 +23,35 @@ class _RegisterState extends State<Register> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  void handleRegisterSubmit(){
+  Future<void> handleRegisterSubmit() async {
+    if (!validateForm()) {
+      AppConstraint.errorToast('Please fill required fields');
+      return;
+    }
     Map<String, dynamic> params = {
       "_cus_first_name": firstNameController.text,
       "_cus_last_name": lasNameController.text,
-      "_cus_emal": emailController.text,
+      "_cus_email": emailController.text,
       "_cus_phone": phoneController.text,
       "_cus_password": passwordController.text
     };
-
     print(params);
+    var response = await AuthenticateRepository.register(params);
+    print(response);
   }
+
+  bool validateForm() {
+    bool check = true;
+    if (firstNameController.text == '' ||
+        lasNameController.text == '' ||
+        phoneController.text == '' ||
+        emailController.text == '' ||
+        firstNameController.text == '') {
+      check = false;
+    }
+    return check;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
