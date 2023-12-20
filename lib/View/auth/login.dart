@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print
+// ignore_for_file: use_build_context_synchronously, avoid_print, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -12,7 +12,8 @@ import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:iconsax/iconsax.dart';
 import 'dart:async';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toast/toast.dart';
+import 'package:momo_vn/momo_vn.dart';
 
 // ignore: must_be_immutable
 class Login extends StatefulWidget {
@@ -29,16 +30,32 @@ class _LoginState extends State<Login> {
   List<SeatClassModel> lstClass = [];
   int activeIndex = 0;
 
+  late MomoVn _momoPay;
+  late PaymentResponse _momoPaymentResult;
+  late String _paymentStatus;
+
   @override
   void initState() {
+    super.initState();
+    _momoPay = MomoVn();
+    _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
+    _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
+    initPlatformState();
+
+    ToastContext().init(context);
+    AppConstraint.initLoading;
     Timer.periodic(const Duration(seconds: 5), (timer) {
       setState(() {
         activeIndex++;
         if (activeIndex == 4) activeIndex = 0;
       });
     });
-    super.initState();
     AppConstraint.initLoading;
+  }
+
+  Future<void> initPlatformState() async {
+    if (!mounted) return;
+    setState(() {});
   }
 
   Future<void> handleLogin() async {
@@ -49,10 +66,15 @@ class _LoginState extends State<Login> {
       '_cus_email': emailController.text,
       '_cus_password': passwordController.text
     };
-    final response = await AuthenticateRepository.login(args);
-    print(response);
-    return;
     await EasyLoading.show();
+    final response = await AuthenticateRepository.login(args);
+    if (response == false) {
+      await EasyLoading.dismiss();
+      await AppConstraint.errorToast(
+          'Wrong email or password. Please try agian');
+      return;
+    }
+    storeUserInfo(response);
     lstAir = await AirPortRepository.getAirPort();
     lstClass = await SeatClassRepository.getSeatClass();
 
@@ -60,8 +82,17 @@ class _LoginState extends State<Login> {
     Route route = MaterialPageRoute(
         builder: (context) =>
             BottomScreen(listAir: lstAir, listClass: lstClass));
-    Navigator.push(context, route);
+    Navigator.pushReplacement(context, route);
     await EasyLoading.dismiss();
+  }
+
+  void storeUserInfo(params) async {
+    AppConstraint.saveData('id', params['_cus_id'].toString());
+    AppConstraint.saveData('token', params['_cus_token']);
+    AppConstraint.saveData('fname', params['_cus_first_name']);
+    AppConstraint.saveData('lname', params['_cus_last_name']);
+    AppConstraint.saveData('email', params['_cus_email']);
+    AppConstraint.saveData('phone', params['_cus_phone']);
   }
 
   @override
@@ -185,6 +216,7 @@ class _LoginState extends State<Login> {
             ),
             TextField(
               controller: passwordController,
+              obscureText: true,
               cursorColor: Colors.black,
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.all(0.0),
@@ -222,7 +254,28 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    MomoPaymentInfo options = MomoPaymentInfo(
+                        merchantName: "TTN",
+                        appScheme: "MOxx",
+                        merchantCode: 'MOxx',
+                        partnerCode: 'Mxx',
+                        amount: 60000,
+                        orderId: '12321312',
+                        orderLabel: 'Gói combo',
+                        merchantNameLabel: "HLGD",
+                        fee: 10,
+                        description: 'Thanh toán combo',
+                        username: '01234567890',
+                        partner: 'merchant',
+                        extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
+                        isTestMode: true);
+                    try {
+                      _momoPay.open(options);
+                    } catch (e) {
+                      debugPrint(e.toString());
+                    }
+                  },
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(
@@ -282,5 +335,42 @@ class _LoginState extends State<Login> {
         ),
       ),
     ));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _momoPay.clear();
+  }
+
+  void _setState() {
+    _paymentStatus = 'Đã chuyển thanh toán';
+    if (_momoPaymentResult.isSuccess == true) {
+      _paymentStatus += "\nTình trạng: Thành công.";
+      _paymentStatus += "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra!;
+      _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
+    } else {
+      _paymentStatus += "\nTình trạng: Thất bại.";
+      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
+      _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
+    }
+  }
+
+  void _handlePaymentSuccess(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    AppConstraint.successToast(
+        "THÀNH CÔNG: " + response.phoneNumber.toString());
+  }
+
+  void _handlePaymentError(PaymentResponse response) {
+    setState(() {
+      _momoPaymentResult = response;
+      _setState();
+    });
+    AppConstraint.successToast("THẤT BẠI: " + response.message.toString());
   }
 }

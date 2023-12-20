@@ -7,6 +7,7 @@ import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/view/profile/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BottomScreen extends StatefulWidget {
   BottomScreen({super.key, required this.listAir, required this.listClass});
@@ -30,12 +31,31 @@ class BottomScreen extends StatefulWidget {
 }
 
 class _BottomScreenState extends State<BottomScreen> {
+  late String _fname;
+  late String _lname;
+  late String _welcomeMessage;
   int _selectedIndex = 0;
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    _fname = await AppConstraint.loadData('fname') ?? '';
+    _lname = await AppConstraint.loadData('lname') ?? '';
+
+    setState(() {
+      _welcomeMessage = 'Welcome $_fname $_lname!';
+    });
+
+    AppConstraint.successToast(_welcomeMessage);
   }
 
   @override

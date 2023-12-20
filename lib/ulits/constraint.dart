@@ -1,9 +1,9 @@
 // ignore_for_file: unused_local_variable
 
 import 'package:flutter/material.dart';
-import 'package:projectsem4/model/seat_model.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projectsem4/repository/seat_repo.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 
 class AppConstraint {
@@ -65,5 +65,17 @@ class AppConstraint {
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
             fontSize: 16));
+  }
+
+  // Save data to SharedPreferences
+  static saveData(String key, String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(key, value);
+  }
+
+// Retrieve data from SharedPreferences
+  static Future<String?> loadData(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
   }
 }

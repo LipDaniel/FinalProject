@@ -48,6 +48,8 @@ dependencies:
   flutter_animator: ^3.2.2
   iconsax: ^0.0.8
   country_picker: ^2.0.22
+  shared_preferences: ^2.2.2
+  momo_vn: ^2.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

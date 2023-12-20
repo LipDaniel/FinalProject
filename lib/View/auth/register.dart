@@ -1,13 +1,14 @@
-// ignore_for_file: unused_local_variable, avoid_print
-
-import 'dart:math';
+// ignore_for_file: unused_local_variable, avoid_print, use_build_context_synchronously
 
 import 'package:flutter_animator/flutter_animator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:projectsem4/View/auth/login.dart';
 import 'package:projectsem4/repository/authenticate_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:toast/toast.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -25,9 +26,10 @@ class _RegisterState extends State<Register> {
 
   Future<void> handleRegisterSubmit() async {
     if (!validateForm()) {
-      AppConstraint.errorToast('Please fill required fields');
+      AppConstraint.errorToast("Please fill required fields");
       return;
     }
+    await EasyLoading.show();
     Map<String, dynamic> params = {
       "_cus_first_name": firstNameController.text,
       "_cus_last_name": lasNameController.text,
@@ -35,9 +37,16 @@ class _RegisterState extends State<Register> {
       "_cus_phone": phoneController.text,
       "_cus_password": passwordController.text
     };
-    print(params);
     var response = await AuthenticateRepository.register(params);
-    print(response);
+    if (response != "Success") {
+      await AppConstraint.errorToast(response);
+      await EasyLoading.dismiss();
+      return;
+    }
+    AppConstraint.successToast('Successfully registration');
+    EasyLoading.dismiss();
+    Route route = MaterialPageRoute(builder: (context) => const Login());
+    Navigator.push(context, route);
   }
 
   bool validateForm() {
@@ -50,6 +59,13 @@ class _RegisterState extends State<Register> {
       check = false;
     }
     return check;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    ToastContext().init(context);
+    AppConstraint.initLoading;
   }
 
   @override

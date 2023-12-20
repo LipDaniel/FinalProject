@@ -9,7 +9,6 @@ import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
-import 'package:projectsem4/services/api_service.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';

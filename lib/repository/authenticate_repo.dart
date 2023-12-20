@@ -7,26 +7,23 @@ class AuthenticateRepository {
 
     try {
       final response = await ApiService().post(ApiConfig.register, body: body);
-      return response;
-      // if (response['isSuccess'] == true) {
-      //   return flightLst;
-      // } else {
-      //   return response['data'];
-      // }
+      if (response['data'] == null) {
+        return response['mes'];
+      } else {
+        return "Success";
+      }
     } catch (e) {
       throw Exception(e);
     }
   }
 
   static login(Map<String, dynamic> body) async {
-    try{
+    try {
       final response = await ApiService().post(ApiConfig.login, body: body);
-      return response;
-      // if (response['isSuccess'] == true) {
-      //   return flightLst;
-      // } else {
-      //   return response['data'];
-      // }
+      if (response['data'] == null) {
+        return false;
+      }
+      return response['data'];
     } catch (e) {
       throw Exception(e);
     }
