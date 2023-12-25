@@ -8,4 +8,5 @@ class PassengerModel{
   String? expire_date;
   String? checked_baggage;
   String? cabin_baggage;
+  String? seat;
 }

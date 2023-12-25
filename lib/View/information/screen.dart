@@ -36,15 +36,16 @@ class _InformationScreenState extends State<InformationScreen> {
     List<PassengerModel> passengers = [];
     for (var i = 0; i < formControllers.length; i++) {
       PassengerModel passenger = PassengerModel(); 
-        passenger.title = formControllers[i][0].text;
-        passenger.name = formControllers[i][1].text;
-        passenger.birth = formControllers[i][2].text;
-        passenger.country = formControllers[i][3].text;
-        passenger.national = formControllers[i][4].text;
-        passenger.passport = formControllers[i][5].text;
-        passenger.expire_date = formControllers[i][6].text;
-        passenger.checked_baggage = formControllers[i][7].text;
-        passenger.cabin_baggage = formControllers[i][8].text; 
+      passenger.title = formControllers[i][0].text;
+      passenger.name = formControllers[i][1].text;
+      passenger.birth = formControllers[i][2].text;
+      passenger.country = formControllers[i][3].text;
+      passenger.national = formControllers[i][4].text;
+      passenger.passport = formControllers[i][5].text;
+      passenger.expire_date = formControllers[i][6].text;
+      passenger.checked_baggage = formControllers[i][7].text;
+      passenger.cabin_baggage = formControllers[i][8].text;
+      passenger.seat = widget.model.seatList?[i];
 
       passengers.add(passenger);
     }

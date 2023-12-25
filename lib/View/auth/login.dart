@@ -37,11 +37,6 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
-    _momoPay = MomoVn();
-    _momoPay.on(MomoVn.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _momoPay.on(MomoVn.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    initPlatformState();
-
     ToastContext().init(context);
     AppConstraint.initLoading;
     Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -254,28 +249,7 @@ class _LoginState extends State<Login> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 TextButton(
-                  onPressed: () async {
-                    MomoPaymentInfo options = MomoPaymentInfo(
-                        merchantName: "TTN",
-                        appScheme: "MOxx",
-                        merchantCode: 'MOxx',
-                        partnerCode: 'Mxx',
-                        amount: 60000,
-                        orderId: '12321312',
-                        orderLabel: 'Gói combo',
-                        merchantNameLabel: "HLGD",
-                        fee: 10,
-                        description: 'Thanh toán combo',
-                        username: '01234567890',
-                        partner: 'merchant',
-                        extra: "{\"key1\":\"value1\",\"key2\":\"value2\"}",
-                        isTestMode: true);
-                    try {
-                      _momoPay.open(options);
-                    } catch (e) {
-                      debugPrint(e.toString());
-                    }
-                  },
+                  onPressed: () => {},
                   child: const Text(
                     'Forgot Password?',
                     style: TextStyle(
@@ -335,42 +309,5 @@ class _LoginState extends State<Login> {
         ),
       ),
     ));
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _momoPay.clear();
-  }
-
-  void _setState() {
-    _paymentStatus = 'Đã chuyển thanh toán';
-    if (_momoPaymentResult.isSuccess == true) {
-      _paymentStatus += "\nTình trạng: Thành công.";
-      _paymentStatus += "\nSố điện thoại: " + _momoPaymentResult.phoneNumber.toString();
-      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra!;
-      _paymentStatus += "\nToken: " + _momoPaymentResult.token.toString();
-    } else {
-      _paymentStatus += "\nTình trạng: Thất bại.";
-      _paymentStatus += "\nExtra: " + _momoPaymentResult.extra.toString();
-      _paymentStatus += "\nMã lỗi: " + _momoPaymentResult.status.toString();
-    }
-  }
-
-  void _handlePaymentSuccess(PaymentResponse response) {
-    setState(() {
-      _momoPaymentResult = response;
-      _setState();
-    });
-    AppConstraint.successToast(
-        "THÀNH CÔNG: " + response.phoneNumber.toString());
-  }
-
-  void _handlePaymentError(PaymentResponse response) {
-    setState(() {
-      _momoPaymentResult = response;
-      _setState();
-    });
-    AppConstraint.successToast("THẤT BẠI: " + response.message.toString());
   }
 }

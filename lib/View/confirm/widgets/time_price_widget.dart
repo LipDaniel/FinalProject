@@ -7,15 +7,11 @@ import 'package:projectsem4/model/passenger_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class TimeAndPriceWidget extends StatelessWidget {
-  TimeAndPriceWidget({
-    super.key,
-    this.passenger,
-    this.model
-  });
+  TimeAndPriceWidget({super.key, this.passenger, this.model});
   PassengerModel? passenger;
   BusinessModel? model;
 
-  String formatMoney(int money){
+  String formatMoney(num money) {
     String priced = NumberFormat.currency(
       symbol: '', // Currency symbol (optional)
       decimalDigits: 0, // Number of decimal digits (optional)
@@ -23,12 +19,44 @@ class TimeAndPriceWidget extends StatelessWidget {
     return '$priced đ';
   }
 
+  String passengerClassification(String? birthDateStr) {
+    DateTime currentDate = DateTime.now();
+    DateTime birthDate = DateFormat('dd-MM-yyyy').parse(birthDateStr!);
+    int age = currentDate.year - birthDate.year;
+    if (currentDate.month < birthDate.month ||
+        (currentDate.month == birthDate.month &&
+            currentDate.day < birthDate.day)) {
+      age--;
+    }
+    if (age > 12) {
+      return "Adult";
+    } else {
+      if (age > 2 && age <= 12) {
+        return "Children";
+      } else {
+        return "Baby";
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    int priceEachTicket = model!.price!.toInt();
-    int checkedBaggagePrice = passenger!.checked_baggage! != '' ? (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000 : 0;
-    int cabinBaggagePrice = passenger!.cabin_baggage! != '' ? (int.parse(passenger!.cabin_baggage!.substring(0, 2))) * 10000 : 0;
-    int totalPriceEach = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+    var isPassenger = passengerClassification(passenger!.birth); 
+    // int priceEachTicket = model!.price!.toInt();
+      num priceEachTicket = isPassenger == 'Adult'
+        ? model!.price!.toInt()
+        : isPassenger == 'Children'
+            ? model!.price!.toInt() / 100 * 50
+            : model!.price!.toInt() / 100 * 20;
+
+    int checkedBaggagePrice = passenger!.checked_baggage! != ''
+        ? (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000
+        : 0;
+    int cabinBaggagePrice = passenger!.cabin_baggage! != ''
+        ? (int.parse(passenger!.cabin_baggage!.substring(0, 2))) * 10000
+        : 0;
+    num totalPriceEach =
+        priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,8 +124,8 @@ class TimeAndPriceWidget extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  DateFormat.yMMMEd().format(
-                      DateTime.parse(model!.depart_date.toString())),
+                  DateFormat.yMMMEd()
+                      .format(DateTime.parse(model!.depart_date.toString())),
                   style: const TextStyle(
                       fontFamily: 'Montserrat-Bold',
                       fontSize: 16,

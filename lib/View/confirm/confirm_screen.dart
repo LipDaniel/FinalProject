@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unused_local_variable
+// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -17,23 +17,117 @@ class ConfirmScreen extends StatefulWidget {
 }
 
 class _ConfirmScreenState extends State<ConfirmScreen> {
-  
-  String totalPrice(){
-    var total = 0;
+  late String userId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    userId = await AppConstraint.loadData('id') ?? '';
+  }
+
+  String passengerClassification(String? birthDateStr){
+    DateTime currentDate = DateTime.now();
+    DateTime birthDate = DateFormat('dd-MM-yyyy').parse(birthDateStr!);
+    int age = currentDate.year - birthDate.year;
+    if (currentDate.month < birthDate.month ||
+        (currentDate.month == birthDate.month &&
+            currentDate.day < birthDate.day)) {
+      age--;
+    }
+    if (age > 12){
+      return "Adult";
+    } else {
+      if( age > 2 && age <= 12 ){
+        return "Children";
+      } else {
+        return "Baby";
+      }
+    }
+  }
+
+  handleCreateJson() { 
+    var request = {
+      "bill": {
+        "_bil_cus_id": userId,
+        "_bil_payment": totalPrice(),
+        "_bil_fl_id": widget.model.fl_id,
+        "_bil_payment_code": ""
+      },
+      "tickets": []
+    };
     List<PassengerModel>? passengers = widget.model.passenger_list;
     for (var item in passengers!) {
-      int priceEachTicket = widget.model.price!.toInt();
-      int checkedBaggagePrice = item.checked_baggage != '' ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000 : 0;
-      int cabinBaggagePrice = item.cabin_baggage != '' ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000 : 0;
-      int subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+      var isPassenger = passengerClassification(item.birth); 
+      num priceEachTicket = isPassenger == 'Adult' ? widget.model.price!.toInt() : isPassenger == 'Children' ? widget.model.price!.toInt() / 100 * 50 : widget.model.price!.toInt() / 100 * 20;
+      int checkedBaggagePrice = item.checked_baggage != ''
+          ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
+          : 0;
+      int cabinBaggagePrice = item.cabin_baggage != ''
+          ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000
+          : 0;
+      num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+      var passenger_tiket = {
+        "_tk_payment": subtotal,
+        "_tk_full_name": item.name,
+        "_tk_dob": item.birth,
+        "_tk_nationality": item.national,
+        "_tk_passport": item.passport,
+        "_tk_country": item.country,
+        "_tk_passport_expired": item.expire_date,
+        "_tk_title": item.title,
+        "_tk_pas_id": isPassenger == 'Adult' ? 1 : isPassenger == 'Children' ? 2 : 3,
+        "_tk_guardian_id": isPassenger == 'Baby' || isPassenger == 'Children' ? '': 0,
+        "_tk_seat": item.seat,
+        "_tk_tc_id": widget.model.seatclass_id
+      };
+      var tickets = request["tickets"] as List<dynamic>;
+      tickets.add(passenger_tiket);
+    }
+
+    return request;
+  }
+  void handleInsertBill() async {
+    var body = handleCreateJson();
+    print(body);
+  }
+
+  num totalPrice() {
+    num total = 0;
+    List<PassengerModel>? passengers = widget.model.passenger_list;
+    for (var item in passengers!) {
+      var isPassenger = passengerClassification(item.birth); 
+      num priceEachTicket = isPassenger == 'Adult'
+          ? widget.model.price!.toInt()
+          : isPassenger == 'Children'
+              ? widget.model.price!.toInt() / 100 * 50
+              : widget.model.price!.toInt() / 100 * 20;
+      int checkedBaggagePrice = item.checked_baggage != ''
+          ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
+          : 0;
+      int cabinBaggagePrice = item.cabin_baggage != ''
+          ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000
+          : 0;
+      num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
       total += subtotal;
     }
     String priced = NumberFormat.currency(
       symbol: '', // Currency symbol (optional)
       decimalDigits: 0, // Number of decimal digits (optional)
     ).format(total);
+    return total;
+  }
+
+  String formatPrice(){
+    String priced = NumberFormat.currency(
+      symbol: '', // Currency symbol (optional)
+      decimalDigits: 0, // Number of decimal digits (optional)
+    ).format(totalPrice());
     return '$priced đ';
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,33 +241,37 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             children: [
               const Text('TOTAL',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-              Text(totalPrice(),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15))
+              Text(formatPrice(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 15))
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            bottom: 20,
-          ),
-          child: Container(
-            width: double.infinity,
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
+        InkWell(
+          onTap: () => handleInsertBill(),
+          child: Padding(
+            padding: const EdgeInsets.only(
+              bottom: 20,
             ),
-            decoration: const BoxDecoration(
-                color: AppConstraint.mainColor,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30))),
-            child: const Center(
-              child: Text(
-                'Checkout',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+            child: Container(
+              width: double.infinity,
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(
+                vertical: 15,
+              ),
+              decoration: const BoxDecoration(
+                  color: AppConstraint.mainColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30))),
+              child: const Center(
+                child: Text(
+                  'Checkout',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
