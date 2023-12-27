@@ -18,7 +18,13 @@ class InformationScreen extends StatefulWidget {
 }
 
 class _InformationScreenState extends State<InformationScreen> {
-  final List<String> _bagageList = ['', '10 kg - 100.000', '20 kg - 200.000', '30 kg - 300.000', '50 kg - 500.000'];
+  final List<String> _bagageList = [
+    '',
+    '10 kg - 100.000',
+    '20 kg - 200.000',
+    '30 kg - 300.000',
+    '50 kg - 500.000'
+  ];
   final List<String> _titleList = ['Mr.', 'Ms.', 'Mrs.'];
   List<List<TextEditingController>> formControllers = [];
 
@@ -35,7 +41,7 @@ class _InformationScreenState extends State<InformationScreen> {
     await EasyLoading.show();
     List<PassengerModel> passengers = [];
     for (var i = 0; i < formControllers.length; i++) {
-      PassengerModel passenger = PassengerModel(); 
+      PassengerModel passenger = PassengerModel();
       passenger.title = formControllers[i][0].text;
       passenger.name = formControllers[i][1].text;
       passenger.birth = formControllers[i][2].text;
@@ -50,7 +56,7 @@ class _InformationScreenState extends State<InformationScreen> {
       passengers.add(passenger);
     }
     widget.model.passenger_list = passengers;
-    if(validateForm(passengers) == false){  
+    if (validateForm(passengers) == false) {
       AppConstraint.errorToast("PLease fill out into validate input");
       await EasyLoading.dismiss();
       return;
@@ -62,22 +68,42 @@ class _InformationScreenState extends State<InformationScreen> {
     await EasyLoading.dismiss();
   }
 
-  bool validateForm(List<PassengerModel> passengeForms){
+  bool validateForm(List<PassengerModel> passengeForms) {
     var check = true;
-    for (PassengerModel item in passengeForms){
-      if(
-        item.name == '' ||
-        item.birth == '' ||
-        item.country == '' ||
-        item.national == '' ||
-        item.passport == '' ||
-        item.expire_date == ''
-      ){
+    for (PassengerModel item in passengeForms) {
+      if (item.name == '' ||
+          item.birth == '' ||
+          item.country == '' ||
+          item.national == '') {
+        check = false;
+        return check;
+      }
+      if (passengerClassification(item.birth) == "Adult" && item.passport == '') {
         check = false;
         return check;
       }
     }
     return check;
+  }
+
+  String passengerClassification(String? birthDateStr) {
+    DateTime currentDate = DateTime.now();
+    DateTime birthDate = DateFormat('dd-MM-yyyy').parse(birthDateStr!);
+    int age = currentDate.year - birthDate.year;
+    if (currentDate.month < birthDate.month ||
+        (currentDate.month == birthDate.month &&
+            currentDate.day < birthDate.day)) {
+      age--;
+    }
+    if (age > 12) {
+      return "Adult";
+    } else {
+      if (age > 2 && age <= 12) {
+        return "Children";
+      } else {
+        return "Baby";
+      }
+    }
   }
 
   @override
@@ -122,9 +148,7 @@ class _InformationScreenState extends State<InformationScreen> {
         padding: const EdgeInsets.all(25),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Expanded(
-                flex: 2,
-                child: _title(context, controllers[0])),
+            Expanded(flex: 2, child: _title(context, controllers[0])),
             const SizedBox(width: 5),
             Expanded(flex: 14, child: _textField('Full name', controllers[1])),
             const SizedBox(width: 15),
@@ -148,9 +172,7 @@ class _InformationScreenState extends State<InformationScreen> {
                 flex: 5,
                 child: _textField('Citizen ID / Passport', controllers[5])),
             const SizedBox(width: 15),
-            Expanded(
-                flex: 5,
-                child: _textField('Expire date', controllers[6]))
+            Expanded(flex: 5, child: _textField('Expire date', controllers[6]))
           ]),
           const SizedBox(height: 20),
           Row(children: [
@@ -196,7 +218,7 @@ class _InformationScreenState extends State<InformationScreen> {
 
   CupertinoTextField _title(
       BuildContext context, TextEditingController controller) {
-      controller.text = controller.text == '' ? _titleList[0] : controller.text;
+    controller.text = controller.text == '' ? _titleList[0] : controller.text;
     return CupertinoTextField(
         controller: controller,
         padding: const EdgeInsets.only(top: 15.5, bottom: 0.0),
@@ -254,7 +276,9 @@ class _InformationScreenState extends State<InformationScreen> {
           scrollController: scrollController,
           itemExtent: 64,
           onSelectedItemChanged: (value) => setState(() {
-            controller.text = _bagageList[value] != '' ? '${_bagageList[value].substring(0,2)} kg' : '';
+            controller.text = _bagageList[value] != ''
+                ? '${_bagageList[value].substring(0, 2)} kg'
+                : '';
           }),
           children: List<Widget>.generate(_bagageList.length, (int index) {
             return Center(
@@ -337,16 +361,19 @@ class _InformationScreenState extends State<InformationScreen> {
     }
     return TextField(
         onChanged: (value) => {
-          if(labelInput == 'Expire date'){
-            if (value.length > 7) {
-              controller.text = value.substring(0, 5)
-            } else if (value.length == 2) {
-              controller.text = '${value.substring(0, 2)} / ${value.substring(2)}'
-            } else if (value.length == 4 && value[3] == '/') {
-              controller.text = value.substring(0, 2)
-            }
-          }
-        },
+              if (labelInput == 'Expire date')
+                {
+                  if (value.length > 7)
+                    {controller.text = value.substring(0, 5)}
+                  else if (value.length == 2)
+                    {
+                      controller.text =
+                          '${value.substring(0, 2)} / ${value.substring(2)}'
+                    }
+                  else if (value.length == 4 && value[3] == '/')
+                    {controller.text = value.substring(0, 2)}
+                }
+            },
         controller: controller,
         scrollPadding: const EdgeInsets.all(2),
         cursorColor: AppConstraint.colorLabel,
