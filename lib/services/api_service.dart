@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:projectsem4/services/api_config.dart';
 
@@ -16,7 +18,8 @@ class ApiService {
 
   Future<dynamic> get(String url, {dynamic params, Options? options}) async {
     try {
-      var response = await dio.get(ApiConfig.baseUrl + url, queryParameters: params);
+      var response =
+          await dio.get(ApiConfig.baseUrl + url, queryParameters: params);
       if (response.statusCode == 200) {
         var data = response.data;
         return data;
@@ -36,7 +39,6 @@ class ApiService {
 
       if (response.statusCode == 200) {
         var data = response.data;
-
         return data;
       } else {
         throw Exception('Request failed with status: ${response.statusCode}');

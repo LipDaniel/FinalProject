@@ -57,7 +57,6 @@ class _InformationScreenState extends State<InformationScreen> {
     }
     widget.model.passenger_list = passengers;
     if (validateForm(passengers) == false) {
-      AppConstraint.errorToast("PLease fill out into validate input");
       await EasyLoading.dismiss();
       return;
     }
@@ -76,10 +75,12 @@ class _InformationScreenState extends State<InformationScreen> {
           item.country == '' ||
           item.national == '') {
         check = false;
+        AppConstraint.errorToast("PLease fill out into required input");
         return check;
       }
-      if (passengerClassification(item.birth) == "Adult" && item.passport == '') {
+      if (passengerClassification(item.birth) == "Adult" && (item.passport == '' || item.expire_date == '')) {
         check = false;
+        AppConstraint.errorToast("Passport / Citizen of Adult is required");
         return check;
       }
     }

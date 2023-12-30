@@ -1,6 +1,7 @@
 // ignore_for_file: must_be_immutable
 
 import 'package:flutter/material.dart';
+import 'package:projectsem4/View/tickets/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/view/home/screen.dart';
@@ -19,9 +20,7 @@ class BottomScreen extends StatefulWidget {
     return [
       HomeScreen(listAir: listAir, listClass: listClass),
       const NotificationScreen(),
-      const Text(
-        'My Wallet',
-      ),
+      const TicketsScreen(),
       const ProfileScreen()
     ];
   }

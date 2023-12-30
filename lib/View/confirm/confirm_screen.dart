@@ -2,11 +2,13 @@
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/passenger_model.dart';
+import 'package:projectsem4/repository/bill_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -29,7 +31,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     userId = await AppConstraint.loadData('id') ?? '';
   }
 
-  String passengerClassification(String? birthDateStr){
+  String passengerClassification(String? birthDateStr) {
     DateTime currentDate = DateTime.now();
     DateTime birthDate = DateFormat('dd-MM-yyyy').parse(birthDateStr!);
     int age = currentDate.year - birthDate.year;
@@ -38,10 +40,10 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
             currentDate.day < birthDate.day)) {
       age--;
     }
-    if (age > 12){
+    if (age > 12) {
       return "Adult";
     } else {
-      if( age > 2 && age <= 12 ){
+      if (age > 2 && age <= 12) {
         return "Children";
       } else {
         return "Baby";
@@ -49,20 +51,25 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     }
   }
 
-  handleCreateJson() { 
-    var request = {
-      "bill": {
+  handleCreateJson() {
+    var data = {
+      "_bil": {
         "_bil_cus_id": userId,
         "_bil_payment": totalPrice(),
+        "_bil_payment_type": "",
         "_bil_fl_id": widget.model.fl_id,
         "_bil_payment_code": ""
       },
-      "tickets": []
+      "_tickets": []
     };
     List<PassengerModel>? passengers = widget.model.passenger_list;
     for (var item in passengers!) {
-      var isPassenger = passengerClassification(item.birth); 
-      num priceEachTicket = isPassenger == 'Adult' ? widget.model.price!.toInt() : isPassenger == 'Children' ? widget.model.price!.toInt() / 100 * 50 : widget.model.price!.toInt() / 100 * 20;
+      var isPassenger = passengerClassification(item.birth);
+      num priceEachTicket = isPassenger == 'Adult'
+          ? widget.model.price!.toInt()
+          : isPassenger == 'Children'
+              ? widget.model.price!.toInt() / 100 * 50
+              : widget.model.price!.toInt() / 100 * 20;
       int checkedBaggagePrice = item.checked_baggage != ''
           ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
           : 0;
@@ -79,27 +86,48 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_tk_country": item.country,
         "_tk_passport_expired": item.expire_date,
         "_tk_title": item.title,
-        "_tk_pas_id": isPassenger == 'Adult' ? 1 : isPassenger == 'Children' ? 2 : 3,
-        "_tk_guardian_id": isPassenger == 'Baby' || isPassenger == 'Children' ? '': 0,
+        "_tk_pas_id": isPassenger == 'Adult'
+            ? 1
+            : isPassenger == 'Children'
+                ? 2
+                : 3,
+        "_tk_guardian_id":
+            isPassenger == 'Baby' || isPassenger == 'Children' ? '' : 0,
         "_tk_seat": item.seat,
-        "_tk_tc_id": widget.model.seatclass_id
+        "_tk_return_type": 1,
+        "_tk_tc_id": widget.model.seatclass_id,
+        "_tk_cabin": 0,
+        "_tk_free_cabin": 0,
+        "_tk_checked": 0,
+        "_tk_free_checked": 0
       };
-      var tickets = request["tickets"] as List<dynamic>;
+      var tickets = data["_tickets"] as List<dynamic>;
+
       tickets.add(passenger_tiket);
     }
 
-    return request;
+    return data;
   }
+
   void handleInsertBill() async {
-    var body = handleCreateJson();
-    print(body);
+    await EasyLoading.show();
+    var data = handleCreateJson();
+    var response = await BillRepository.insertBill(data);
+    if (response == 'Create ticket successfully') {
+      await AppConstraint.successToast(response);
+      await EasyLoading.dismiss();
+    } else {
+      await AppConstraint.errorToast(response);
+      await EasyLoading.dismiss();
+      return;
+    }
   }
 
   num totalPrice() {
     num total = 0;
     List<PassengerModel>? passengers = widget.model.passenger_list;
     for (var item in passengers!) {
-      var isPassenger = passengerClassification(item.birth); 
+      var isPassenger = passengerClassification(item.birth);
       num priceEachTicket = isPassenger == 'Adult'
           ? widget.model.price!.toInt()
           : isPassenger == 'Children'
@@ -121,7 +149,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     return total;
   }
 
-  String formatPrice(){
+  String formatPrice() {
     String priced = NumberFormat.currency(
       symbol: '', // Currency symbol (optional)
       decimalDigits: 0, // Number of decimal digits (optional)

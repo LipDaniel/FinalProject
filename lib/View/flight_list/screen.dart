@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable, unnecessary_null_comparison
+// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable, unnecessary_null_comparison, avoid_print
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
