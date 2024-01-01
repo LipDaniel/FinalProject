@@ -1,4 +1,6 @@
-// ignore_for_file: use_build_context_synchronously, avoid_print, unused_field
+// ignore_for_file: use_build_context_synchronously, avoid_print, unused_field, unnecessary_null_comparison
+
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -69,25 +71,29 @@ class _LoginState extends State<Login> {
           'Wrong email or password. Please try agian');
       return;
     }
-    storeUserInfo(response);
     lstAir = await AirPortRepository.getAirPort();
     lstClass = await SeatClassRepository.getSeatClass();
+    if(lstAir.isNotEmpty && lstClass.isNotEmpty){
+      storeUserInfo(response, lstAir, lstClass);
+    }
 
     await Future.delayed(const Duration(seconds: 2));
     Route route = MaterialPageRoute(
         builder: (context) =>
-            BottomScreen(listAir: lstAir, listClass: lstClass));
+            BottomScreen());
     Navigator.pushReplacement(context, route);
     await EasyLoading.dismiss();
   }
 
-  void storeUserInfo(params) async {
+  void storeUserInfo(params, lstAir, lstClass) async {
     AppConstraint.saveData('id', params['_cus_id'].toString());
     AppConstraint.saveData('token', params['_cus_token']);
     AppConstraint.saveData('fname', params['_cus_first_name']);
     AppConstraint.saveData('lname', params['_cus_last_name']);
     AppConstraint.saveData('email', params['_cus_email']);
     AppConstraint.saveData('phone', params['_cus_phone']);
+    AppConstraint.saveData('lstAir', jsonEncode(lstAir));
+    AppConstraint.saveData('lstClass', jsonEncode(lstClass));
   }
 
   @override

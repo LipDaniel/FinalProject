@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:projectsem4/View/bottomnavi/screen.dart';
+import 'package:projectsem4/View/tickets/screen.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/flightinfo_model.dart';

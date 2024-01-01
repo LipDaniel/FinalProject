@@ -1,9 +1,10 @@
-// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print
+// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print, use_build_context_synchronously
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/bottomnavi/screen.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
@@ -116,6 +117,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     if (response == 'Create ticket successfully') {
       await AppConstraint.successToast(response);
       await EasyLoading.dismiss();
+      Route route = MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
+      Navigator.push(context, route);
     } else {
       await AppConstraint.errorToast(response);
       await EasyLoading.dismiss();

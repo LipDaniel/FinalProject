@@ -15,10 +15,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:toast/toast.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.listAir, required this.listClass});
- 
-  final List<AirportModel> listAir;
-  final List<SeatClassModel> listClass;
+  const HomeScreen({super.key, this.listAir, this.listClass});
+  final List<AirportModel>? listAir;
+  final List<SeatClassModel>? listClass;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -123,8 +122,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _babyAmount.text = "0";
     _departInput.text = "";
     _returnInput.text = "";
-    lstAir = widget.listAir;
-    lstClass = widget.listClass;
+    lstAir = widget.listAir!;
+    lstClass = widget.listClass!;
   }
 
   @override
@@ -366,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
                 initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
+                firstDate: DateTime(2000),
                 lastDate: DateTime(2030),
                 builder: (context, child) {
                   return Theme(
@@ -407,7 +406,7 @@ class _HomeScreenState extends State<HomeScreen> {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
                 initialDate: DateTime.now(),
-                firstDate: DateTime.now(),
+                firstDate: DateTime(2000),
                 lastDate: DateTime(2030),
                 builder: (context, child) {
                   return Theme(
