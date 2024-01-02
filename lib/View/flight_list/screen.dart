@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable, unnecessary_null_comparison, avoid_print
+// ignore_for_file: prefer_interpolation_to_compose_strings, use_build_context_synchronously, must_be_immutable, unnecessary_null_comparison, avoid_print, unnecessary_cast, non_constant_identifier_names
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -175,21 +175,17 @@ class _FlightListScreenState extends State<FlightListScreen> {
         itemCount: widget.data.length,
         itemBuilder: (context, index) {
           final item = widget.data[index];
-          DateFormat dateFormat = DateFormat("HH:mm");
-          String timeFrom =
-              dateFormat.format(DateTime.parse(item.sFlTakeOff as String));
-          String timeTo =
-              dateFormat.format(DateTime.parse(item.sFlArrival as String));
+          List<String> time = formatTime(item.sFlTakeOff as String, item.sFlArrival as String);
           return _flightItem(
               item.iFlId,
-              timeFrom,
-              timeTo,
+              time[1],
+              time[2],
               item.sFlFromAbbreviation,
               item.sFlToAbbreviation,
               widget.model.seatclass.toString(),
               item.iSellPrice,
               item.sCarName,
-              "4h20p");
+              time[0]);
         },
       ),
     );
@@ -683,4 +679,22 @@ class _FlightListScreenState extends State<FlightListScreen> {
       },
     );
   }
+
+  List<String> formatTime(String time_from, String time_to){
+    DateFormat dateFormat = DateFormat("HH:mm");
+    DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    DateTime timeFromFormat = inputFormat.parse(time_from as String);
+    DateTime timeToFormat = inputFormat.parse(time_to as String);
+    Duration difference = timeToFormat.difference(timeFromFormat);
+    int hours = difference.inHours;
+    int minutes = difference.inMinutes.remainder(60);
+    String formattedResult = "${hours}h${minutes}m";
+    String timeFrom =
+        dateFormat.format(DateTime.parse(time_from));
+    String timeTo =
+        dateFormat.format(DateTime.parse(time_to as String));
+    return [formattedResult, timeFrom, timeTo];
+  }
+  
 }
+

@@ -68,6 +68,10 @@ class _TicketsScreenState extends State<TicketsScreen> {
         ]);
       }).toList();
     }
+    String priced = NumberFormat.currency(
+      symbol: '', // Currency symbol (optional)
+      decimalDigits: 0, // Number of decimal digits (optional)
+    ).format(data.iBilPayment);
 
     DateFormat dateFormat = DateFormat("HH:mm a");
     String timeFrom = dateFormat
@@ -217,7 +221,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     'assets/image/visa.png',
                     height: 30,
                   ),
-                  const Text('5.700.000 VND',
+                  Text('$priced VND',
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
