@@ -92,6 +92,8 @@ class _LoginState extends State<Login> {
     AppConstraint.saveData('lname', params['_cus_last_name']);
     AppConstraint.saveData('email', params['_cus_email']);
     AppConstraint.saveData('phone', params['_cus_phone']);
+    AppConstraint.saveData('dob', params['_cus_dob']);
+    AppConstraint.saveData('avatar', params['_cus_avatar']);
     AppConstraint.saveData('lstAir', jsonEncode(lstAir));
     AppConstraint.saveData('lstClass', jsonEncode(lstClass));
   }

@@ -32,13 +32,14 @@ class AppConstraint {
   static Future<bool> checkSeat(Map<String, dynamic> params) async {
     bool response = await SeatClassRepository.checkSeat(params);
     return response;
-  } 
+  }
 
   static errorToast(String title) {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: const Color.fromARGB(255, 249, 87, 97).withOpacity(0.9),
+        backgroundColor:
+            const Color.fromARGB(255, 249, 87, 97).withOpacity(0.9),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
@@ -49,7 +50,8 @@ class AppConstraint {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: const Color.fromARGB(255, 153, 252, 142).withOpacity(0.9),
+        backgroundColor:
+            const Color.fromARGB(255, 153, 252, 142).withOpacity(0.9),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
@@ -60,7 +62,8 @@ class AppConstraint {
     Toast.show(title,
         duration: Toast.lengthLong,
         gravity: Toast.top,
-        backgroundColor: const Color.fromARGB(255, 234, 153, 39).withOpacity(0.8),
+        backgroundColor:
+            const Color.fromARGB(255, 234, 153, 39).withOpacity(0.8),
         textStyle: const TextStyle(
             fontFamily: AppConstraint.fontFamilyBold,
             color: Colors.white,
@@ -77,5 +80,19 @@ class AppConstraint {
   static Future<String?> loadData(String key) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(key);
+  }
+
+  static Future<void> removeData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('id');
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('phone');
+    await prefs.remove('lname');
+    await prefs.remove('fname');
+    await prefs.remove('dob');
+    await prefs.remove('avatar');
+    await prefs.remove('lstAir');
+    await prefs.remove('lstClass');
   }
 }

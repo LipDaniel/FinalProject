@@ -50,6 +50,7 @@ dependencies:
   country_picker: ^2.0.22
   shared_preferences: ^2.2.2
   momo_vn: ^2.0.2
+  image_picker: ^1.0.5
 dev_dependencies:
   flutter_test:
     sdk: flutter

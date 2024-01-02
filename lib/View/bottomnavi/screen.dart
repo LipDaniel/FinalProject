@@ -3,12 +3,12 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:projectsem4/View/setting/screen.dart';
 import 'package:projectsem4/View/tickets/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
-import 'package:projectsem4/view/profile/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class BottomScreen extends StatefulWidget {
@@ -23,7 +23,7 @@ class BottomScreen extends StatefulWidget {
           listClass: listClass! as List<SeatClassModel>),
       const NotificationScreen(),
       const TicketsScreen(),
-      const ProfileScreen()
+      const SettingScreen()
     ];
   }
 
@@ -95,7 +95,7 @@ class _BottomScreenState extends State<BottomScreen> {
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
+            icon: Icon(Icons.account_circle),
             label: '',
           ),
         ],

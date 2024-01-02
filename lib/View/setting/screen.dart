@@ -1,16 +1,74 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:projectsem4/View/auth/login.dart';
+import 'package:projectsem4/View/setting/profile.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
+class SettingScreen extends StatefulWidget {
+  const SettingScreen({
     super.key,
   });
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<SettingScreen> createState() => _SettingScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _SettingScreenState extends State<SettingScreen> {
+  late String fname = '';
+  late String lname = '';
+  late String email = '';
+  late String phone = '';
+  late String dob = '';
+  late String avatar = '';
+  Map<String, dynamic>? userInfo;
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    String firstName = await AppConstraint.loadData('fname') ?? '';
+    String lastName = await AppConstraint.loadData('lname') ?? '';
+    String userEmail = await AppConstraint.loadData('email') ?? '';
+    String userPhone = await AppConstraint.loadData('phone') ?? '';
+    String userDob = await AppConstraint.loadData('dob') ?? '';
+    String userAvatar = await AppConstraint.loadData('avatar') ?? '';
+
+    setState(() {
+      fname = firstName;
+      lname = lastName;
+      email = userEmail;
+      phone = userPhone;
+      dob = userDob;
+      avatar = userAvatar;
+      userInfo = {
+        'fname': fname,
+        'lname': lname,
+        'email': email,
+        'phone': phone,
+        'dob': dob,
+        'avatar': avatar
+      };
+    });
+  }
+
+  void handleLogout() async {
+    await EasyLoading.show();
+    await Future.delayed(const Duration(seconds: 2));
+    await AppConstraint.removeData();
+    Route route = MaterialPageRoute(builder: (context) => const Login());
+    Navigator.push(context, route);
+    await EasyLoading.dismiss();
+  }
+
+  void handleEditProfile() {
+    Route route = MaterialPageRoute(builder: (context) => ProfileScreen(userInfo: userInfo));
+    Navigator.push(context, route);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +81,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               const SizedBox(
                 height: 50,
               ),
-              const Text('Cài đặt',
+              const Text('Setting',
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
               const SizedBox(
                 height: 20,
@@ -57,20 +115,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           const SizedBox(
                             width: 10,
                           ),
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Lipdaniel',
+                                Text('$fname $lname',
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                                 Text(
-                                  'iaoht.dev@gmail.com',
-                                  style: TextStyle(
+                                  email,
+                                  style: const TextStyle(
                                       color: AppConstraint.colorSlogan),
                                 ),
                               ],
@@ -82,12 +140,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       width: 20,
                     ),
-                    const Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        )),
                   ],
                 ),
               ),
@@ -95,65 +147,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 25,
               ),
               _item(
-                title: 'Tài khoản',
+                title: 'Account',
                 data: Column(
                   children: [
                     __itemSetting(
-                        onTap: () {},
-                        title: 'Thông tin cá nhân',
-                        subTitle: 'Chỉ sửa thông tin tài khoản của bạn',
+                        onTap: () => handleEditProfile(),
+                        title: 'Profile',
+                        subTitle: 'Edit your information account',
                         icon: const Icon(Icons.supervised_user_circle)),
                     const SizedBox(
                       height: 20,
                     ),
                     __itemSetting(
                         title: 'Face ID / Touch ID',
-                        subTitle: 'Quản lý cách đăng nhập của bạn',
+                        subTitle: 'Login authenticate management',
                         icon: const Icon(Icons.lock)),
                     const SizedBox(
                       height: 20,
                     ),
                     __itemSetting(
-                      title: 'Xác thực hai lớp',
-                      subTitle:
-                          'Bảo mật thêm tài khoản của bạn để đảm bảo an toàn',
-                      icon: const Icon(Icons.verified_user),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    __itemSetting(
-                      title: 'Nâng cấp tài khoản',
-                      subTitle: 'Nâng cấp tài khoản để thêm nhiều ưu đãi',
+                      title: 'Upgrade',
+                      subTitle: 'Upgrade your account to get more promotion',
                       icon: const Icon(Icons.airplane_ticket),
                     ),
                   ],
                 ),
               ),
               _item(
-                title: 'Hệ thống',
+                title: 'System',
                 data: Column(
                   children: [
                     __itemSetting(
-                      title: 'Hỗ trợ & Báo cáo',
-                      subTitle: 'Chỉ sửa thông tin tài khoản của bạn',
+                      title: 'Support & Report',
                       icon: const Icon(Icons.support_agent),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
                     __itemSetting(
-                        title: 'Về chúng tôi',
-                        subTitle: 'Quản lý cách đăng nhập của bạn',
+                        title: 'About',
                         icon: const Icon(Icons.info)),
                     const SizedBox(
                       height: 20,
                     ),
                     __itemSetting(
-                        title: 'Đăng xuất',
-                        subTitle: 'Đăng xuất tài khoản của bạn',
+                        title: 'Logout',
                         icon: const Icon(Icons.logout),
-                        onTap: () {},
+                        onTap: () => handleLogout(),
                         suffix: Container()),
                   ],
                 ),
@@ -198,7 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget __itemSetting(
       {required String title,
-      required String subTitle,
+      String? subTitle,
       required Icon icon,
       Function()? onTap,
       Widget? suffix}) {
@@ -209,12 +249,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           Expanded(
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: AppConstraint.mainColor.withOpacity(0.2),
+                        color: title == 'Logout'
+                            ? Color.fromARGB(255, 240, 91, 91).withOpacity(0.5)
+                            : AppConstraint.mainColor.withOpacity(0.2),
                         shape: BoxShape.circle),
                     child: icon),
                 const SizedBox(
@@ -229,14 +271,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        subTitle,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      if (subTitle != null)
+                        const SizedBox(
+                          height: 5,
+                        ),
+                      if (subTitle != null)
+                        Text(
+                          subTitle,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                     ],
                   ),
                 )
