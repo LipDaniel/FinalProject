@@ -7,6 +7,8 @@ import 'package:projectsem4/View/setting/screen.dart';
 import 'package:projectsem4/View/tickets/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
+import 'package:projectsem4/model/ticket_model.dart';
+import 'package:projectsem4/repository/bill_repo.dart';
 import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
@@ -15,18 +17,6 @@ class BottomScreen extends StatefulWidget {
   BottomScreen({super.key, this.tab});
   int? tab;
 
-  static List<Widget> getWidgetOptions(
-      List<dynamic>? listAir, List<dynamic>? listClass) {
-    return [
-      HomeScreen(
-          listAir: listAir! as List<AirportModel>,
-          listClass: listClass! as List<SeatClassModel>),
-      const NotificationScreen(),
-      const TicketsScreen(),
-      const SettingScreen()
-    ];
-  }
-
   @override
   State<BottomScreen> createState() => _BottomScreenState();
 }
@@ -34,10 +24,25 @@ class BottomScreen extends StatefulWidget {
 class _BottomScreenState extends State<BottomScreen> {
   late String _fname;
   late String _lname;
+  late String _id = '0';
   late List<AirportModel> lstAir;
   late List<SeatClassModel> lstClass;
   late String _welcomeMessage;
   late int _selectedIndex;
+  late List<TicketsModel> ticketList = [];
+
+  static List<Widget> getWidgetOptions(List<dynamic>? listAir,
+      List<dynamic>? listClass, List<TicketsModel> tickets) {
+    return [
+      HomeScreen(
+          listAir: listAir! as List<AirportModel>,
+          listClass: listClass! as List<SeatClassModel>),
+      const NotificationScreen(),
+      TicketsScreen(ticketList: tickets),
+      const SettingScreen()
+    ];
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -51,9 +56,19 @@ class _BottomScreenState extends State<BottomScreen> {
     _loadUserData();
   }
 
+  Future<void> _getTicketList() async {
+    Map<String, dynamic> params = {'_cus_id': int.parse(_id)};
+
+    var response = await BillRepository.getTicketList(params);
+    setState(() {
+      ticketList = response;
+    });
+  }
+
   Future<void> _loadUserData() async {
     _fname = await AppConstraint.loadData('fname') ?? '';
     _lname = await AppConstraint.loadData('lname') ?? '';
+    var userId = await AppConstraint.loadData('id') ?? '';
 
     var listAirJson = jsonDecode(await AppConstraint.loadData('lstAir') ?? '[]')
         as List<dynamic>;
@@ -68,6 +83,8 @@ class _BottomScreenState extends State<BottomScreen> {
 
     setState(() {
       _welcomeMessage = 'Welcome $_fname $_lname!';
+      _id = userId;
+      _getTicketList();
     });
 
     AppConstraint.successToast(_welcomeMessage);
@@ -77,7 +94,7 @@ class _BottomScreenState extends State<BottomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: BottomScreen.getWidgetOptions(lstAir, lstClass)
+        child: getWidgetOptions(lstAir, lstClass, ticketList)
             .elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
