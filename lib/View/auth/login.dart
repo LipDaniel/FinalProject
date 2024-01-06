@@ -75,14 +75,14 @@ class _LoginState extends State<Login> {
     lstClass = await SeatClassRepository.getSeatClass();
     if(lstAir.isNotEmpty && lstClass.isNotEmpty){
       storeUserInfo(response, lstAir, lstClass);
+      Route route = MaterialPageRoute(builder: (context) => BottomScreen());
+      Navigator.pushReplacement(context, route);
+      await EasyLoading.dismiss();
+    } else {
+      await AppConstraint.errorToast('Something wrong in server');
+      await EasyLoading.dismiss();
+      return;
     }
-
-    await Future.delayed(const Duration(seconds: 2));
-    Route route = MaterialPageRoute(
-        builder: (context) =>
-            BottomScreen());
-    Navigator.pushReplacement(context, route);
-    await EasyLoading.dismiss();
   }
 
   void storeUserInfo(params, lstAir, lstClass) async {

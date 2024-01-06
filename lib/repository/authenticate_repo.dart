@@ -28,4 +28,17 @@ class AuthenticateRepository {
       throw Exception(e);
     }
   }
+
+  static updateProfile(Map<String, dynamic> body) async {
+    try {
+      final response =
+          await ApiService().post(ApiConfig.updateProfile, body: body);
+      if (response['data'] == null){
+        return "Something wrong in server";
+      }
+      return response['data'];        
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

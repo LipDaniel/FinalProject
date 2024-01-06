@@ -10,4 +10,5 @@ class ApiConfig {
   static const checkseat = '/ticket/check';
   static const insertbill = '/bill/insert';
   static const listtickets = '/bill/getbycustomermobile';
+  static const updateProfile = '/customer/update';
 }

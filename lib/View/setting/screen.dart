@@ -16,6 +16,7 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  late String id = '';
   late String fname = '';
   late String lname = '';
   late String email = '';
@@ -30,6 +31,7 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Future<void> _loadUserData() async {
+    String userId = await AppConstraint.loadData('id') ?? '';
     String firstName = await AppConstraint.loadData('fname') ?? '';
     String lastName = await AppConstraint.loadData('lname') ?? '';
     String userEmail = await AppConstraint.loadData('email') ?? '';
@@ -38,6 +40,7 @@ class _SettingScreenState extends State<SettingScreen> {
     String userAvatar = await AppConstraint.loadData('avatar') ?? '';
 
     setState(() {
+      id = userId;
       fname = firstName;
       lname = lastName;
       email = userEmail;
@@ -45,6 +48,7 @@ class _SettingScreenState extends State<SettingScreen> {
       dob = userDob;
       avatar = userAvatar;
       userInfo = {
+        'id': id,
         'fname': fname,
         'lname': lname,
         'email': email,

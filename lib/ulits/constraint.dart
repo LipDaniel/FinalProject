@@ -82,6 +82,18 @@ class AppConstraint {
     return prefs.getString(key);
   }
 
+  static Future<void> removeUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('id');
+    await prefs.remove('token');
+    await prefs.remove('email');
+    await prefs.remove('phone');
+    await prefs.remove('lname');
+    await prefs.remove('fname');
+    await prefs.remove('dob');
+    await prefs.remove('avatar');
+  }
+
   static Future<void> removeData() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('id');
