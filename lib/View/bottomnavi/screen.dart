@@ -31,12 +31,12 @@ class _BottomScreenState extends State<BottomScreen> {
   late int _selectedIndex;
   late List<TicketsModel> ticketList = [];
 
-  static List<Widget> getWidgetOptions(List<dynamic>? listAir,
-      List<dynamic>? listClass, List<TicketsModel> tickets) {
+  static List<Widget> getWidgetOptions(List<dynamic> listAir,
+      List<dynamic> listClass, List<TicketsModel> tickets) {
     return [
       HomeScreen(
-          listAir: listAir! as List<AirportModel>,
-          listClass: listClass! as List<SeatClassModel>),
+          listAir: listAir as List<AirportModel>,
+          listClass: listClass as List<SeatClassModel>),
       const NotificationScreen(),
       TicketsScreen(ticketList: tickets),
       const SettingScreen()
@@ -58,7 +58,6 @@ class _BottomScreenState extends State<BottomScreen> {
 
   Future<void> _getTicketList() async {
     Map<String, dynamic> params = {'_cus_id': int.parse(_id)};
-
     var response = await BillRepository.getTicketList(params);
     setState(() {
       ticketList = response;
@@ -76,12 +75,10 @@ class _BottomScreenState extends State<BottomScreen> {
         jsonDecode(await AppConstraint.loadData('lstClass') ?? '[]')
             as List<dynamic>;
 
-    // Convert each item in the JSON list to AirportModel
-    lstAir = listAirJson.map((json) => AirportModel.fromJson(json)).toList();
-    lstClass =
-        listClassJson.map((json) => SeatClassModel.fromJson(json)).toList();
-
     setState(() {
+      lstClass =
+          listClassJson.map((json) => SeatClassModel.fromJson(json)).toList();
+      lstAir = listAirJson.map((json) => AirportModel.fromJson(json)).toList();
       _welcomeMessage = 'Welcome $_fname $_lname!';
       _id = userId;
       _getTicketList();
