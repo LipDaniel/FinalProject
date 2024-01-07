@@ -9,6 +9,7 @@ import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/ticket_model.dart';
 import 'package:projectsem4/repository/bill_repo.dart';
+import 'package:projectsem4/repository/noti_repo.dart';
 import 'package:projectsem4/view/home/screen.dart';
 import 'package:projectsem4/view/notification/screen.dart';
 import 'package:projectsem4/ulits/constraint.dart';
@@ -64,6 +65,14 @@ class _BottomScreenState extends State<BottomScreen> {
     });
   }
 
+  Future<void> _getNotification() async {
+    Map<String, dynamic> params = {
+      '_noti_cus_id': int.parse(_id),
+      '_noti_type': 2
+    };
+    var noti = await NotificationRepository.getNotification(params);
+  }
+
   Future<void> _loadUserData() async {
     _fname = await AppConstraint.loadData('fname') ?? '';
     _lname = await AppConstraint.loadData('lname') ?? '';
@@ -82,6 +91,7 @@ class _BottomScreenState extends State<BottomScreen> {
       _welcomeMessage = 'Welcome $_fname $_lname!';
       _id = userId;
       _getTicketList();
+      _getNotification();
     });
 
     AppConstraint.successToast(_welcomeMessage);

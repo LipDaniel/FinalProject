@@ -10,6 +10,7 @@ import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/repository/airport_repo.dart';
 import 'package:projectsem4/repository/authenticate_repo.dart';
+import 'package:projectsem4/repository/noti_repo.dart';
 import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:iconsax/iconsax.dart';
@@ -73,7 +74,7 @@ class _LoginState extends State<Login> {
     }
     lstAir = await AirPortRepository.getAirPort();
     lstClass = await SeatClassRepository.getSeatClass();
-    if(lstAir.isNotEmpty && lstClass.isNotEmpty){
+    if (lstAir.isNotEmpty && lstClass.isNotEmpty) {
       storeUserInfo(response, lstAir, lstClass);
       Route route = MaterialPageRoute(builder: (context) => BottomScreen());
       Navigator.pushReplacement(context, route);

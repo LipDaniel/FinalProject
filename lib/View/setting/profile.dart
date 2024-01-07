@@ -83,8 +83,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     ToastContext().init(context);
-    DateTime originalDate = DateTime.parse(widget.userInfo?['dob']);
-    String formattedDate = DateFormat('dd-MM-yyyy').format(originalDate);
+    String formattedDate = '';
+    if (widget.userInfo?['dob'].isNotEmpty ?? true) {
+      DateTime originalDate = DateTime.parse(widget.userInfo?['dob']);
+      formattedDate = DateFormat('dd-MM-yyyy').format(originalDate);
+    }
 
     idController.text = widget.userInfo?['id'];
     fnameController.text = widget.userInfo?['fname'];

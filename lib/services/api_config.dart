@@ -11,4 +11,5 @@ class ApiConfig {
   static const insertbill = '/bill/insert';
   static const listtickets = '/bill/getbycustomermobile';
   static const updateProfile = '/customer/update';
+  static const listNotification = '/noti/gets';
 }
