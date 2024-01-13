@@ -81,7 +81,7 @@ class _BottomScreenState extends State<BottomScreen> {
     var listAirJson = jsonDecode(await AppConstraint.loadData('lstAir') ?? '[]')
         as List<dynamic>;
     var listClassJson =
-        jsonDecode(await AppConstraint.loadData('lstClass') ?? '[]')
+        jsonDecode(await AppConstraint.loadData('lstClass') ?? '[]') 
             as List<dynamic>;
 
     setState(() {

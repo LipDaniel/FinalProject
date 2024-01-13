@@ -49,8 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void swapAirPort() {
     setState(() {
       AirportModel? tmp = _airportFrom;
+      int? airfromTmp = airFromSelected;
       _airportFrom = _airportTo;
       _airportTo = tmp;
+      airFromSelected = airToSelected;
+      airToSelected = airfromTmp;
     });
   }
 
@@ -94,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
       model.depart_date = _departInput.text;
       model.return_date = _returnInput.text == '' ? null : _returnInput.text;
       model.seatclass_id = _seatClass;
+      model.isRoundTrip = _selectedRadio == 'Round trip' ? true : false;
 
       EasyLoading.dismiss();
 
@@ -351,6 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Expanded(
         flex: 1,
         child: TextField(
+          enabled: _selectedRadio == "Round trip" ? true : false,
           controller: _returnInput,
           readOnly: true,
           decoration: const InputDecoration(
@@ -365,7 +370,7 @@ class _HomeScreenState extends State<HomeScreen> {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
                 initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
+                firstDate: DateTime.now(),
                 lastDate: DateTime(2030),
                 builder: (context, child) {
                   return Theme(
@@ -406,7 +411,7 @@ class _HomeScreenState extends State<HomeScreen> {
             DateTime? pickedDate = await showDatePicker(
                 context: context,
                 initialDate: DateTime.now(),
-                firstDate: DateTime(2000),
+                firstDate: DateTime.now(),
                 lastDate: DateTime(2030),
                 builder: (context, child) {
                   return Theme(

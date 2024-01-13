@@ -111,8 +111,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
     });
   }
 
-  void handleChooseSeat(
-      int id, String timeFrom, String timeTo, String airLine, double price) async {
+  void handleChooseSeat(int id, String timeFrom, String timeTo, String airLine,
+      double price) async {
     EasyLoading.show();
     Map<String, dynamic> request = {
       '_fl_id': id,
@@ -127,9 +127,19 @@ class _FlightListScreenState extends State<FlightListScreen> {
       widget.model.time_to = timeTo;
       widget.model.airline = airLine;
       widget.model.price = price;
-      Route route = MaterialPageRoute(
-          builder: (context) => ChooseSeetScreen(
-              model: widget.model, data: response.lFlSeats as List<SeatModel>));
+      Route route;
+      if (widget.model.isRoundTrip == true) {
+        route = MaterialPageRoute(
+            builder: (context) => ChooseSeetScreen(
+                model: widget.model,
+                data: response.lFlSeats as List<SeatModel>));
+      } else {
+        route = MaterialPageRoute(
+            builder: (context) => ChooseSeetScreen(
+                model: widget.model,
+                data: response.lFlSeats as List<SeatModel>));
+      }
+
       Navigator.push(context, route);
       EasyLoading.dismiss();
     } else {
@@ -175,7 +185,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
         itemCount: widget.data.length,
         itemBuilder: (context, index) {
           final item = widget.data[index];
-          List<String> time = formatTime(item.sFlTakeOff as String, item.sFlArrival as String);
+          List<String> time =
+              formatTime(item.sFlTakeOff as String, item.sFlArrival as String);
           return _flightItem(
               item.iFlId,
               time[1],
@@ -261,8 +272,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  Container _flightItem(id, timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
-     String priced = NumberFormat.currency(
+  Container _flightItem(
+      id, timeFrom, timeTo, from, to, seatClass, price, airlines, flightTime) {
+    String priced = NumberFormat.currency(
       symbol: '', // Currency symbol (optional)
       decimalDigits: 0, // Number of decimal digits (optional)
     ).format(price);
@@ -680,7 +692,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
     );
   }
 
-  List<String> formatTime(String time_from, String time_to){
+  List<String> formatTime(String time_from, String time_to) {
     DateFormat dateFormat = DateFormat("HH:mm");
     DateFormat inputFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     DateTime timeFromFormat = inputFormat.parse(time_from as String);
@@ -689,12 +701,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
     int hours = difference.inHours;
     int minutes = difference.inMinutes.remainder(60);
     String formattedResult = "${hours}h${minutes}m";
-    String timeFrom =
-        dateFormat.format(DateTime.parse(time_from));
-    String timeTo =
-        dateFormat.format(DateTime.parse(time_to as String));
+    String timeFrom = dateFormat.format(DateTime.parse(time_from));
+    String timeTo = dateFormat.format(DateTime.parse(time_to as String));
     return [formattedResult, timeFrom, timeTo];
   }
-  
 }
-

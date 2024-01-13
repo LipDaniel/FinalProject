@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:projectsem4/model/passenger_model.dart';
 
 class BusinessModel {
@@ -16,8 +18,9 @@ class BusinessModel {
   String? return_date;
   String? seatclass;
   double? price;
+  bool? isRoundTrip;
   List<String>? seatList;
-
+  List<String>? seatList_return;
   String? plane_code;
   String? plane_name;
   String? time_to;
@@ -44,6 +47,8 @@ class BusinessModel {
       this.plane_code,
       this.plane_name,
       this.airline,
+      this.isRoundTrip,
       this.seatList,
+      this.seatList_return,
       this.passenger_list});
 }
