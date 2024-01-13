@@ -16,7 +16,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: const Text('Notification',
-              style: TextStyle(fontFamily: AppConstraint.fontFamilyBold)),
+              style: TextStyle(
+                  fontFamily: AppConstraint.fontFamilyBold,
+                  color: Colors.white)),
           backgroundColor: AppConstraint.mainColor,
         ),
         body: ListView(
@@ -64,8 +66,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
         decoration: BoxDecoration(
             color: AppConstraint.colorSlogan,
             border: Border.all(color: AppConstraint.colorBox, width: 0.5)),
-        height: 110,
-        padding: const EdgeInsets.all(15.0),
+        height: 105,
+        padding: const EdgeInsets.all(10.0),
         child: const Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -169,6 +169,7 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     // ignore: deprecated_member_use
                     dataRowHeight: 30.0,
                     headingRowHeight: 30.0,
+                    dividerThickness: 0.0,
                     columnSpacing: 20,
                     columns: const [
                       DataColumn(

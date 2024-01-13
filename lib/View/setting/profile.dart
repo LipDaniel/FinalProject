@@ -139,12 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           radius: 80,
                           backgroundImage: AssetImage(avatar),
                           // _image != null ? FileImage(_image!) : null,
-                          child: _image == null
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 80,
-                                )
-                              : null,
+                          child: null,
                         ),
                         const SizedBox(height: 10),
                         ElevatedButton(
@@ -152,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           style: ElevatedButton.styleFrom(
                               backgroundColor: AppConstraint.mainColor),
                           child: const Text('Change',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
+                              style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
                         ),
                         const SizedBox(height: 15),
                         _textField('First name', fnameController),
@@ -183,7 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             child: const Text('SAVE',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                                    fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
                           ),
                         )),
                       ],
