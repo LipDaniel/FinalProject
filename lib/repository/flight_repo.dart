@@ -6,7 +6,6 @@ import 'package:projectsem4/services/api_service.dart';
 class FlightRepository {
   static getFlight(Map<String, dynamic> body) async {
     List<FlightModel> flightLst = [];
-
     try {
       final response = await ApiService().get(ApiConfig.flight, params: body);
       if (response['data'].length != 0) {

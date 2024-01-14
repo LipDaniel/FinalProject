@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:projectsem4/View/bottomnavi/screen.dart';
-import 'package:projectsem4/View/tickets/screen.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
+import 'package:projectsem4/View/flight_list/screen_return.dart';
 import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/airport_model.dart';
 import 'package:projectsem4/model/flightinfo_model.dart';
@@ -14,7 +14,6 @@ import 'package:projectsem4/repository/flight_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:intl/intl.dart';
-import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 
 class FlightListScreen extends StatefulWidget {
   FlightListScreen(
@@ -114,37 +113,56 @@ class _FlightListScreenState extends State<FlightListScreen> {
   void handleChooseSeat(int id, String timeFrom, String timeTo, String airLine,
       double price) async {
     EasyLoading.show();
-    Map<String, dynamic> request = {
-      '_fl_id': id,
-      '_tc_id': widget.model.seatclass_id
-    };
-    FlightInfoModel response = await FlightRepository.getSeatList(request);
-    if (response != null) {
+
+    Route route;
+    if (widget.model.isRoundTrip == true) {
       widget.model.fl_id = id;
-      widget.model.plane_code = response.sPlCode;
-      widget.model.plane_name = response.sPtName;
       widget.model.time_from = timeFrom;
       widget.model.time_to = timeTo;
       widget.model.airline = airLine;
       widget.model.price = price;
-      Route route;
-      if (widget.model.isRoundTrip == true) {
-        route = MaterialPageRoute(
-            builder: (context) => ChooseSeetScreen(
+      final Map<String, dynamic> body = {
+        "_fl_from_id": widget.model.airport_to_id,
+        "_fl_to_id": widget.model.airport_from_id,
+        "_fl_take_off": widget.model.return_date,
+        "_fl_return_date": null,
+        "_tc_id": widget.model.seatclass_id,
+        "_pas_quantity": widget.model.adult_amount! +
+            widget.model.baby_amount! +
+            widget.model.children_amount!
+      };
+      var response = await FlightRepository.getFlight(body);
+      route = MaterialPageRoute(
+          builder: (context) => FlightListReturnScreen(
                 model: widget.model,
-                data: response.lFlSeats as List<SeatModel>));
-      } else {
-        route = MaterialPageRoute(
-            builder: (context) => ChooseSeetScreen(
-                model: widget.model,
-                data: response.lFlSeats as List<SeatModel>));
-      }
-
+                data: response,
+              ));
       Navigator.push(context, route);
       EasyLoading.dismiss();
     } else {
-      AppConstraint.errorToast("Something wrong in server");
-      EasyLoading.dismiss();
+      Map<String, dynamic> request = {
+        '_fl_id': id,
+        '_tc_id': widget.model.seatclass_id
+      };
+      FlightInfoModel response = await FlightRepository.getSeatList(request);
+      if (response != null) {
+        widget.model.fl_id = id;
+        widget.model.plane_code = response.sPlCode;
+        widget.model.plane_name = response.sPtName;
+        widget.model.time_from = timeFrom;
+        widget.model.time_to = timeTo;
+        widget.model.airline = airLine;
+        widget.model.price = price;
+        route = MaterialPageRoute(
+            builder: (context) => ChooseSeetScreen(
+                model: widget.model,
+                data: response.lFlSeats as List<SeatModel>));
+        Navigator.push(context, route);
+        EasyLoading.dismiss();
+      } else {
+        AppConstraint.errorToast("Something wrong in server");
+        EasyLoading.dismiss();
+      }
     }
   }
 
@@ -177,6 +195,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
         toolbarHeight: 80,
         leading: const Icon(Icons.arrow_back),
         leadingWidth: 15,
+        foregroundColor: Colors.white,
         automaticallyImplyLeading: true,
         backgroundColor: AppConstraint.mainColor,
         title: _flightinfo(context),
@@ -377,24 +396,28 @@ class _FlightListScreenState extends State<FlightListScreen> {
               Text(
                 widget.model.airport_from_code.toString(),
                 style: const TextStyle(
-                    fontFamily: AppConstraint.fontFamilyBold, fontSize: 27),
+                    fontFamily: AppConstraint.fontFamilyBold,
+                    fontSize: 27,
+                    color: Colors.white),
               ),
               Text(
                 widget.model.country_from_name.toString(),
-                style: const TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 15, color: Colors.white),
               )
             ],
           ),
           const SizedBox(width: 5),
-          const Icon(Icons.arrow_right_alt),
+          const Icon(Icons.arrow_right_alt, color: Colors.white),
           const SizedBox(width: 5),
           Column(
             children: [
               Text(widget.model.airport_to_code.toString(),
                   style: const TextStyle(
-                      fontFamily: AppConstraint.fontFamilyBold, fontSize: 27)),
+                      fontFamily: AppConstraint.fontFamilyBold,
+                      fontSize: 27,
+                      color: Colors.white)),
               Text(widget.model.country_to_name.toString(),
-                  style: const TextStyle(fontSize: 15))
+                  style: const TextStyle(fontSize: 15, color: Colors.white))
             ],
           ),
           const SizedBox(width: 10),
@@ -404,7 +427,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
                   DateFormat.yMMMEd().format(
                       DateTime.parse(widget.model.depart_date as String)),
                   style: const TextStyle(
-                      fontFamily: AppConstraint.fontFamilyBold, fontSize: 20)),
+                      fontFamily: AppConstraint.fontFamilyBold,
+                      fontSize: 20,
+                      color: Colors.white)),
               Text(
                   widget.model.adult_amount.toString() +
                       ' Adult, ' +
@@ -412,7 +437,7 @@ class _FlightListScreenState extends State<FlightListScreen> {
                       " Children, " +
                       widget.model.baby_amount.toString() +
                       ' Baby',
-                  style: const TextStyle(fontSize: 12))
+                  style: const TextStyle(fontSize: 12, color: Colors.white))
             ],
           )
         ],

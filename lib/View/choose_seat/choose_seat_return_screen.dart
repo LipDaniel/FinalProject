@@ -1,25 +1,23 @@
-// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
+// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
-import 'package:projectsem4/View/choose_seat/choose_seat_return_screen.dart';
 import 'package:projectsem4/model/business_model.dart';
-import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/seat_model.dart';
-import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
 
-class ChooseSeetScreen extends StatefulWidget {
-  ChooseSeetScreen({super.key, required this.model, required this.data});
+class ChooseSeetReturnScreen extends StatefulWidget {
+  ChooseSeetReturnScreen({super.key, required this.model, required this.data});
   BusinessModel model = BusinessModel();
   List<SeatModel> data = [];
   @override
-  State<ChooseSeetScreen> createState() => _ChooseSeetScreenState();
+  State<ChooseSeetReturnScreen> createState() => _ChooseSeetReturnScreenState();
 }
 
-class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
+class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
   SeatModel? seatSelected;
   List<SeatModel> lstSelected = [];
   List<SeatModel> newSeats = [];
@@ -40,7 +38,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
     }
     await EasyLoading.show();
     Map<String, dynamic> params = {
-      "_fl_id": widget.model.fl_id as int,
+      "_fl_id": widget.model.fl_id_return as int,
       "_tc_id": widget.model.seatclass_id,
       '_tc_code': tcCode, // Convert the LinkedList to JSON string
     };
@@ -48,31 +46,10 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
     if (response == true) {
       widget.model.seatList =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
-      if (widget.model.isRoundTrip == true) {
-        Map<String, dynamic> request = {
-          '_fl_id': widget.model.fl_id_return,
-          '_tc_id': widget.model.seatclass_id
-        };
-        FlightInfoModel response = await FlightRepository.getSeatList(request);
-        if (response != null) {
-          widget.model.plane_code_return = response.sPlCode;
-          widget.model.plane_name_return = response.sPtName;
-          Route route = MaterialPageRoute(
-              builder: (context) => ChooseSeetReturnScreen(
-                  model: widget.model,
-                  data: response.lFlSeats as List<SeatModel>));
-          Navigator.push(context, route);
-          await EasyLoading.dismiss();
-        } else {
-          AppConstraint.errorToast("Something wrong in server");
-          EasyLoading.dismiss();
-        }
-      } else {
-        Route route = MaterialPageRoute(
-            builder: (context) => InformationScreen(model: widget.model));
-        Navigator.push(context, route);
-        await EasyLoading.dismiss();
-      }
+      Route route = MaterialPageRoute(
+          builder: (context) => InformationScreen(model: widget.model));
+      Navigator.push(context, route);
+      await EasyLoading.dismiss();
     }
   }
 
@@ -228,7 +205,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
           ),
           Text(
               DateFormat.yMMMMEEEEd()
-                  .format(DateTime.parse(widget.model.depart_date as String)),
+                  .format(DateTime.parse(widget.model.return_date as String)),
               style: const TextStyle(
                   fontSize: 13,
                   color: Colors.black,

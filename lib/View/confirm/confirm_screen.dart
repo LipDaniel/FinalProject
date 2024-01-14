@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print, use_build_context_synchronously
+// ignore_for_file: must_be_immutable, unused_local_variable, avoid_print, use_build_context_synchronously, non_constant_identifier_names
 
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
@@ -59,6 +59,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_bil_payment": totalPrice(),
         "_bil_payment_type": "",
         "_bil_fl_id": widget.model.fl_id,
+        "_bil_fl_return_id": widget.model.isRoundTrip == true ? widget.model.fl_id_return : 0,
         "_bil_payment_code": ""
       },
       "_tickets": []
@@ -145,10 +146,25 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
       total += subtotal;
     }
-    String priced = NumberFormat.currency(
-      symbol: '', // Currency symbol (optional)
-      decimalDigits: 0, // Number of decimal digits (optional)
-    ).format(total);
+    if(widget.model.isRoundTrip == true){
+      for (var item in passengers) {
+        var isPassenger = passengerClassification(item.birth);
+        num priceEachTicket = isPassenger == 'Adult'
+            ? widget.model.price_return!.toInt()
+            : isPassenger == 'Children'
+                ? widget.model.price_return!.toInt() / 100 * 50
+                : widget.model.price_return!.toInt() / 100 * 20;
+        int checkedBaggagePrice = item.checked_baggage != ''
+            ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
+            : 0;
+        int cabinBaggagePrice = item.cabin_baggage != ''
+            ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000
+            : 0;
+        num subtotal =
+            priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+        total += subtotal;
+      }
+    }
     return total;
   }
 

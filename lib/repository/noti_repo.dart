@@ -1,5 +1,3 @@
-import 'package:dio/dio.dart';
-import 'package:projectsem4/model/flight_model.dart';
 import 'package:projectsem4/services/api_config.dart';
 import 'package:projectsem4/services/api_service.dart';
 

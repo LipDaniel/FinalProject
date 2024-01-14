@@ -78,7 +78,8 @@ class _InformationScreenState extends State<InformationScreen> {
         AppConstraint.errorToast("PLease fill out into required input");
         return check;
       }
-      if (passengerClassification(item.birth) == "Adult" && (item.passport == '' || item.expire_date == '')) {
+      if (passengerClassification(item.birth) == "Adult" &&
+          (item.passport == '' || item.expire_date == '')) {
         check = false;
         AppConstraint.errorToast("Passport / Citizen of Adult is required");
         return check;
@@ -112,6 +113,7 @@ class _InformationScreenState extends State<InformationScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppConstraint.mainColor,
+        foregroundColor: Colors.white,
         title: const Text('PASSENGER INFORMATION',
             style: TextStyle(
                 fontSize: 16, fontFamily: AppConstraint.fontFamilyBold)),
@@ -121,7 +123,7 @@ class _InformationScreenState extends State<InformationScreen> {
           ...widget.model.seatList!.map((item) {
             int index = widget.model.seatList!
                 .indexOf(item); // Index of the current form
-            return _passengerForm(item, formControllers[index]);
+            return _passengerForm(item, formControllers[index], index);
           }).toList(),
           const SizedBox(
             height: 100.0, // Customize the height as needed
@@ -133,7 +135,11 @@ class _InformationScreenState extends State<InformationScreen> {
   }
 
   Container _passengerForm(
-      String seat, List<TextEditingController> controllers) {
+      String seat, List<TextEditingController> controllers, int index) {
+        String seats = seat;
+        if(widget.model.isRoundTrip == true){
+          seats = "$seats - ${widget.model.seatList_return?[index]}";
+        }
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         decoration: BoxDecoration(
@@ -153,7 +159,7 @@ class _InformationScreenState extends State<InformationScreen> {
             const SizedBox(width: 5),
             Expanded(flex: 14, child: _textField('Full name', controllers[1])),
             const SizedBox(width: 15),
-            _seat(seat)
+            _seat(seats)
           ]),
           const SizedBox(height: 15),
           _dateOfBirth(controllers[2]),

@@ -20,13 +20,21 @@ class BusinessModel {
   double? price;
   bool? isRoundTrip;
   List<String>? seatList;
-  List<String>? seatList_return;
   String? plane_code;
   String? plane_name;
   String? time_to;
   String? time_from;
   String? airline;
   List<PassengerModel>? passenger_list;
+
+  int? fl_id_return;
+  List<String>? seatList_return;
+  String? time_to_return;
+  String? time_from_return;
+  String? airline_return;
+  double? price_return;
+  String? plane_code_return;
+  String? plane_name_return;
 
   BusinessModel(
       {this.fl_id,
@@ -49,6 +57,13 @@ class BusinessModel {
       this.airline,
       this.isRoundTrip,
       this.seatList,
+      this.passenger_list,
+      this.fl_id_return,
       this.seatList_return,
-      this.passenger_list});
+      this.time_to_return,
+      this.time_from_return,
+      this.airline_return,
+      this.price_return,
+      this.plane_code_return,
+      this.plane_name_return});
 }
