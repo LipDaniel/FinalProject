@@ -3,8 +3,6 @@ import 'package:projectsem4/services/api_service.dart';
 
 class AuthenticateRepository {
   static register(Map<String, dynamic> body) async {
-    // List<FlightModel> flightLst = [];
-
     try {
       final response = await ApiService().post(ApiConfig.register, body: body);
       if (response['data'] == null) {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:projectsem4/View/setting/screen.dart';
 import 'package:projectsem4/View/tickets/screen.dart';
 import 'package:projectsem4/model/airport_model.dart';
+import 'package:projectsem4/model/notification_model.dart';
 import 'package:projectsem4/model/seatclass_model.dart';
 import 'package:projectsem4/model/ticket_model.dart';
 import 'package:projectsem4/repository/bill_repo.dart';
@@ -31,14 +32,15 @@ class _BottomScreenState extends State<BottomScreen> {
   late String _welcomeMessage;
   late int _selectedIndex;
   late List<TicketsModel> ticketList = [];
+  late List<NotificationModel> notiList = [];
 
   static List<Widget> getWidgetOptions(List<dynamic> listAir,
-      List<dynamic> listClass, List<TicketsModel> tickets) {
+      List<dynamic> listClass, List<TicketsModel> tickets, List<NotificationModel> notiList) {
     return [
       HomeScreen(
           listAir: listAir as List<AirportModel>,
           listClass: listClass as List<SeatClassModel>),
-      const NotificationScreen(),
+      NotificationScreen(notiList: notiList),
       TicketsScreen(ticketList: tickets),
       const SettingScreen()
     ];
@@ -70,7 +72,10 @@ class _BottomScreenState extends State<BottomScreen> {
       '_noti_cus_id': int.parse(_id),
       '_noti_type': 2
     };
-    var noti = await NotificationRepository.getNotification(params);
+    var response = await NotificationRepository.getNotification(params);
+    setState(() {
+      notiList = response;
+    });
   }
 
   Future<void> _loadUserData() async {
@@ -81,7 +86,7 @@ class _BottomScreenState extends State<BottomScreen> {
     var listAirJson = jsonDecode(await AppConstraint.loadData('lstAir') ?? '[]')
         as List<dynamic>;
     var listClassJson =
-        jsonDecode(await AppConstraint.loadData('lstClass') ?? '[]') 
+        jsonDecode(await AppConstraint.loadData('lstClass') ?? '[]')
             as List<dynamic>;
 
     setState(() {
@@ -101,7 +106,7 @@ class _BottomScreenState extends State<BottomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: getWidgetOptions(lstAir, lstClass, ticketList)
+        child: getWidgetOptions(lstAir, lstClass, ticketList, notiList)
             .elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(

@@ -30,15 +30,15 @@ class _TicketsScreenState extends State<TicketsScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: EdgeInsets.all(20.0),
           child: Column(
             children: [
-              const Text('Upcoming flighs',
+              Text('Upcoming flighs',
                   style: TextStyle(
                       fontFamily: AppConstraint.fontFamilyRegular,
                       fontSize: 16,
                       fontWeight: FontWeight.bold)),
-              const SizedBox(height: 10),
+              SizedBox(height: 10),
               ...widget.ticketList
                   .where((item) => item.lTickets!.isNotEmpty)
                   .map((item) {
