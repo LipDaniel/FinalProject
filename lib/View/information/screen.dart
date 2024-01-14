@@ -228,7 +228,7 @@ class _InformationScreenState extends State<InformationScreen> {
     controller.text = controller.text == '' ? _titleList[0] : controller.text;
     return CupertinoTextField(
         controller: controller,
-        padding: const EdgeInsets.only(top: 15.5, bottom: 0.0),
+        padding: EdgeInsets.only(top: widget.model.isRoundTrip == true ? 20.5 : 19.5, bottom: 0.0),
         decoration: const BoxDecoration(
             border:
                 Border(bottom: BorderSide(color: AppConstraint.colorInput))),
@@ -309,8 +309,8 @@ class _InformationScreenState extends State<InformationScreen> {
                 style:
                     TextStyle(fontSize: 13, color: AppConstraint.colorLabel)),
             Text(seat,
-                style: const TextStyle(
-                    fontSize: 25, fontFamily: AppConstraint.fontFamilyBold))
+                style: TextStyle(
+                    fontSize: widget.model.isRoundTrip == true ? 16 : 25, fontFamily: AppConstraint.fontFamilyBold))
           ],
         ));
   }

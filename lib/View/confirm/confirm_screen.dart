@@ -52,6 +52,25 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     }
   }
 
+  num calculateSubtotal(
+      String isPassenger, PassengerModel item, bool isRoundTrip) {
+    double? price =
+        isRoundTrip == true ? widget.model.price_return : widget.model.price;
+    num priceEachTicket = isPassenger == 'Adult'
+        ? price!.toInt()
+        : isPassenger == 'Children'
+            ? price!.toInt() / 100 * 50
+            : price!.toInt() / 100 * 20;
+    int checkedBaggagePrice = item.checked_baggage != ''
+        ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
+        : 0;
+    int cabinBaggagePrice = item.cabin_baggage != ''
+        ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000
+        : 0;
+    num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+    return subtotal;
+  }
+
   handleCreateJson() {
     var data = {
       "_bil": {
@@ -59,28 +78,22 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_bil_payment": totalPrice(),
         "_bil_payment_type": "",
         "_bil_fl_id": widget.model.fl_id,
-        "_bil_fl_return_id": widget.model.isRoundTrip == true ? widget.model.fl_id_return : 0,
+        "_bil_fl_return_id":
+            widget.model.isRoundTrip == true ? widget.model.fl_id_return : 0,
         "_bil_payment_code": ""
       },
       "_tickets": []
     };
-    List<PassengerModel>? passengers = widget.model.passenger_list;
+    var passengers = widget.model.passenger_list;
+    var tickets = data["_tickets"] as List<dynamic>;
+    var passengerReturnList = [];
+
+    int index = 0;
     for (var item in passengers!) {
       var isPassenger = passengerClassification(item.birth);
-      num priceEachTicket = isPassenger == 'Adult'
-          ? widget.model.price!.toInt()
-          : isPassenger == 'Children'
-              ? widget.model.price!.toInt() / 100 * 50
-              : widget.model.price!.toInt() / 100 * 20;
-      int checkedBaggagePrice = item.checked_baggage != ''
-          ? (int.parse(item.checked_baggage!.substring(0, 2))) * 10000
-          : 0;
-      int cabinBaggagePrice = item.cabin_baggage != ''
-          ? (int.parse(item.cabin_baggage!.substring(0, 2))) * 10000
-          : 0;
-      num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
+      num subTotal = calculateSubtotal(isPassenger, item, false);
       var passenger_tiket = {
-        "_tk_payment": subtotal,
+        "_tk_payment": subTotal,
         "_tk_full_name": item.name,
         "_tk_dob": item.birth,
         "_tk_nationality": item.national,
@@ -103,11 +116,18 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_tk_checked": 0,
         "_tk_free_checked": 0
       };
-      var tickets = data["_tickets"] as List<dynamic>;
-
       tickets.add(passenger_tiket);
+      if (widget.model.isRoundTrip == true) {
+        num subTotalReturn = calculateSubtotal(isPassenger, item, true);
+        var passenger_ticket_return = Map.from(passenger_tiket);
+        passenger_ticket_return['_tk_payment'] = subTotalReturn;
+        passenger_ticket_return['_tk_seat'] =
+            widget.model.seatList_return![index];
+        passengerReturnList.add(passenger_ticket_return);
+      }
+      index++;
     }
-
+    tickets.addAll(passengerReturnList);
     return data;
   }
 
@@ -118,7 +138,8 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
     if (response == 'Create ticket successfully') {
       await AppConstraint.successToast(response);
       await EasyLoading.dismiss();
-      Route route = MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
+      Route route =
+          MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
       Navigator.push(context, route);
     } else {
       await AppConstraint.errorToast(response);
@@ -146,7 +167,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       num subtotal = priceEachTicket + checkedBaggagePrice + cabinBaggagePrice;
       total += subtotal;
     }
-    if(widget.model.isRoundTrip == true){
+    if (widget.model.isRoundTrip == true) {
       for (var item in passengers) {
         var isPassenger = passengerClassification(item.birth);
         num priceEachTicket = isPassenger == 'Adult'
@@ -217,6 +238,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     final isLastItem =
                         index == widget.model.passenger_list!.length - 1;
                     final seat = widget.model.seatList;
+                    final seat_return = widget.model.seatList_return;
                     return Column(
                       children: [
                         Padding(
@@ -224,12 +246,23 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                               horizontal: 25, vertical: 10),
                           child: Column(
                             children: [
-                              InforWidget(seat: seat![index], passenger: item),
+                              InforWidget(
+                                  seat: seat![index],
+                                  index: index,
+                                  passenger: item,
+                                  model: widget.model),
                               const SizedBox(
-                                height: 20,
+                                height: 10,
                               ),
                               TimeAndPriceWidget(
-                                  passenger: item, model: widget.model),
+                                  passenger: item, model: widget.model, isRoundTrip: false),
+                              if (widget.model.isRoundTrip == true)
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                              if (widget.model.isRoundTrip == true)
+                                TimeAndPriceWidget(
+                                    passenger: item, model: widget.model, isRoundTrip: true,),
                               const SizedBox(
                                 height: 20,
                               ),

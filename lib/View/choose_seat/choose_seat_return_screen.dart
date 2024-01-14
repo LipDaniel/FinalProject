@@ -44,7 +44,7 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
     };
     var response = await AppConstraint.checkSeat(params);
     if (response == true) {
-      widget.model.seatList =
+      widget.model.seatList_return =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
       Route route = MaterialPageRoute(
           builder: (context) => InformationScreen(model: widget.model));

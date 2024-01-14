@@ -7,9 +7,14 @@ import 'package:projectsem4/model/passenger_model.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class TimeAndPriceWidget extends StatelessWidget {
-  TimeAndPriceWidget({super.key, this.passenger, this.model});
+  TimeAndPriceWidget(
+      {super.key,
+      required this.passenger,
+      required this.model,
+      required this.isRoundTrip});
   PassengerModel? passenger;
   BusinessModel? model;
+  bool? isRoundTrip;
 
   String formatMoney(num money) {
     String priced = NumberFormat.currency(
@@ -41,14 +46,18 @@ class TimeAndPriceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var isPassenger = passengerClassification(passenger!.birth); 
-    // int priceEachTicket = model!.price!.toInt();
-      num priceEachTicket = isPassenger == 'Adult'
-        ? model!.price!.toInt()
+    var isPassenger = passengerClassification(passenger!.birth);
+    double? price;
+    if (isRoundTrip == true) {
+      price = model?.price_return;
+    } else {
+      price = model?.price;
+    }
+    num priceEachTicket = isPassenger == 'Adult'
+        ? price!.toInt()
         : isPassenger == 'Children'
-            ? model!.price!.toInt() / 100 * 50
-            : model!.price!.toInt() / 100 * 20;
-
+            ? price!.toInt() / 100 * 50
+            : price!.toInt() / 100 * 20;
     int checkedBaggagePrice = passenger!.checked_baggage! != ''
         ? (int.parse(passenger!.checked_baggage!.substring(0, 2))) * 10000
         : 0;
@@ -64,7 +73,7 @@ class TimeAndPriceWidget extends StatelessWidget {
         Expanded(
             flex: 5,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,14 +81,18 @@ class TimeAndPriceWidget extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          model!.airport_from_code.toString(),
+                          isRoundTrip == true
+                              ? model!.airport_to_code.toString()
+                              : model!.airport_from_code.toString(),
                           style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 24,
                               color: AppConstraint.mainColor),
                         ),
                         Text(
-                          model!.time_from.toString(),
+                          isRoundTrip == true
+                              ? model!.time_to.toString()
+                              : model!.time_from.toString(),
                           style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 12,
@@ -93,24 +106,29 @@ class TimeAndPriceWidget extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 3),
                       child: Image.asset(
-                        'assets/image/icon_arrow_right.png',
-                        scale: 1.5,
+                        'assets/image/arrow.png',
+                        scale: 7.0,
                       ),
                     ),
+                    
                     const SizedBox(
                       width: 10,
                     ),
                     Column(
                       children: [
                         Text(
-                          model!.airport_to_code.toString(),
+                          isRoundTrip == true
+                              ? model!.airport_from_code.toString()
+                              : model!.airport_to_code.toString(),
                           style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 24,
                               color: AppConstraint.mainColor),
                         ),
                         Text(
-                          model!.time_to.toString(),
+                          isRoundTrip == true
+                              ? model!.time_from.toString()
+                              : model!.time_to.toString(),
                           style: const TextStyle(
                               fontFamily: 'Montserrat-Bold',
                               fontSize: 12,
@@ -124,8 +142,9 @@ class TimeAndPriceWidget extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  DateFormat.yMMMEd()
-                      .format(DateTime.parse(model!.depart_date.toString())),
+                  DateFormat.yMMMEd().format(DateTime.parse(isRoundTrip == true
+                      ? model!.return_date.toString()
+                      : model!.depart_date.toString())),
                   style: const TextStyle(
                       fontFamily: 'Montserrat-Bold',
                       fontSize: 16,

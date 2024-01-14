@@ -1,14 +1,18 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/passenger_model.dart';
 
 class InforWidget extends StatelessWidget {
-  InforWidget({super.key, this.seat, this.passenger});
+  InforWidget({super.key, this.seat, this.index, this.passenger, this.model});
   String? seat;
+  int? index;
+  BusinessModel? model;
   PassengerModel? passenger;
   @override
   Widget build(BuildContext context) {
+    seat = model!.isRoundTrip == true ? '$seat - ${model!.seatList_return?[index!]}' : seat;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,14 +34,11 @@ class InforWidget extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Colors.grey),
                 ),
-                const SizedBox(
-                  height: 4,
-                ),
                 Text(
                   seat.toString(),
-                  style: const TextStyle(
+                  style: TextStyle(
                       fontFamily: 'Montserrat-Bold',
-                      fontSize: 30,
+                      fontSize: model!.isRoundTrip == true ? 20 : 30,
                       color: Colors.black),
                 )
               ],
