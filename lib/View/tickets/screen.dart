@@ -18,39 +18,40 @@ class _TicketsScreenState extends State<TicketsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.white,
         backgroundColor: AppConstraint.mainColor,
         elevation: 0,
         title: Text(
           'Tickets'.toUpperCase(),
           style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontFamily: AppConstraint.fontFamilyBold),
+              fontSize: 16, fontFamily: AppConstraint.fontFamilyBold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text('Upcoming flighs',
-                  style: TextStyle(
-                      fontFamily: AppConstraint.fontFamilyRegular,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              ...widget.ticketList
-                  .where((item) => item.lTickets!.isNotEmpty)
-                  .map((item) {
-                return _ticketItem(item);
-              }).toList(),
-              const SizedBox(
-                height: 120,
+      body: widget.ticketList.isEmpty
+          ? _buildEmptyState()
+          : SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(20.0),
+                child: Column(
+                  children: [
+                    Text('Upcoming flighs',
+                        style: TextStyle(
+                            fontFamily: AppConstraint.fontFamilyRegular,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    ...widget.ticketList
+                        .where((item) => item.lTickets!.isNotEmpty)
+                        .map((item) {
+                      return _ticketItem(item);
+                    }).toList(),
+                    const SizedBox(
+                      height: 120,
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -270,6 +271,30 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 fontWeight: FontWeight.bold,
                 color: AppConstraint.mainColor)),
       ],
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.airplane_ticket,
+            size: 80,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 16),
+          Text(
+            'Empty ticket',
+            style: TextStyle(
+              fontFamily: AppConstraint.fontFamilyRegular,
+              fontSize: 18,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -8,15 +8,18 @@ class NotificationModel {
   int? iNotiType;
   int? iNotiStatus;
   int? iNotiStt;
+  String? iNotiCreatedDate;
 
-  NotificationModel(
-      {this.iNotiId,
-      this.iNotiCusId,
-      this.iNotiFlId,
-      this.sNotiDescription,
-      this.iNotiType,
-      this.iNotiStatus,
-      this.iNotiStt});
+  NotificationModel({
+    this.iNotiId,
+    this.iNotiCusId,
+    this.iNotiFlId,
+    this.sNotiDescription,
+    this.iNotiType,
+    this.iNotiStatus,
+    this.iNotiStt,
+    this.iNotiCreatedDate,
+  });
 
   NotificationModel.fromJson(Map<String, dynamic> json) {
     iNotiId = json['_noti_id'];
@@ -26,6 +29,7 @@ class NotificationModel {
     iNotiType = json['_noti_type'];
     iNotiStatus = json['_noti_status'];
     iNotiStt = json['_noti_stt'];
+    iNotiCreatedDate = json['_noti_created_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +41,7 @@ class NotificationModel {
     data['_noti_type'] = this.iNotiType;
     data['_noti_status'] = this.iNotiStatus;
     data['_noti_stt'] = this.iNotiStt;
+    data['_noti_created_date'] = this.iNotiCreatedDate;
     return data;
   }
 }

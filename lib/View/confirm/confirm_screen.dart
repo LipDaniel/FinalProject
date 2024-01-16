@@ -77,9 +77,6 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_bil_cus_id": userId,
         "_bil_payment": totalPrice(),
         "_bil_payment_type": "",
-        "_bil_fl_id": widget.model.fl_id,
-        "_bil_fl_return_id":
-            widget.model.isRoundTrip == true ? widget.model.fl_id_return : 0,
         "_bil_payment_code": ""
       },
       "_tickets": []
@@ -96,6 +93,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         "_tk_payment": subTotal,
         "_tk_full_name": item.name,
         "_tk_dob": item.birth,
+        "_tk_fl_id": widget.model.fl_id,
         "_tk_nationality": item.national,
         "_tk_passport": item.passport,
         "_tk_country": item.country,
@@ -121,8 +119,9 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         num subTotalReturn = calculateSubtotal(isPassenger, item, true);
         var passenger_ticket_return = Map.from(passenger_tiket);
         passenger_ticket_return['_tk_payment'] = subTotalReturn;
-        passenger_ticket_return['_tk_seat'] =
-            widget.model.seatList_return![index];
+        passenger_ticket_return['_tk_seat'] = widget.model.seatList_return![index];
+        passenger_ticket_return['_tk_fl_id'] =
+            widget.model.fl_id_return!;
         passengerReturnList.add(passenger_ticket_return);
       }
       index++;

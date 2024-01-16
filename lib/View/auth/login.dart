@@ -184,7 +184,7 @@ class _LoginState extends State<Login> {
               cursorColor: Colors.black,
               controller: emailController,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(0.0),
+                contentPadding: const EdgeInsets.all(10.0),
                 labelText: 'Email',
                 hintText: 'Username or e-mail',
                 labelStyle: const TextStyle(
@@ -223,7 +223,7 @@ class _LoginState extends State<Login> {
               obscureText: true,
               cursorColor: Colors.black,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.all(0.0),
+                contentPadding: const EdgeInsets.all(10.0),
                 labelText: 'Password',
                 hintText: 'Password',
                 hintStyle: const TextStyle(

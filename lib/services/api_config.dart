@@ -1,5 +1,5 @@
 class ApiConfig {
-  static const baseUrl = 'http://192.168.1.54:8080/api';
+  static const baseUrl = 'http://localhost:8080/api';
   // static const baseUrl = 'http://172.16.1.18:8080/api';
   static const airPort = '/airport/gets';
   static const flight = '/flight/gets';
@@ -12,4 +12,5 @@ class ApiConfig {
   static const listtickets = '/bill/getbycustomermobile';
   static const updateProfile = '/customer/update';
   static const listNotification = '/noti/gets';
+  static const deleteNotification = '/noti/changestatus';
 }

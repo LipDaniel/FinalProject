@@ -1,7 +1,8 @@
-// ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable, void_checks
 
 import 'package:projectsem4/model/notification_model.dart';
 import 'package:flutter/material.dart';
+import 'package:projectsem4/repository/noti_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
@@ -13,6 +14,13 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  void handleDeleteNoti(int id) async {
+    Map<String, dynamic> body = {"_noti_id": id, "_noti_status": 0};
+
+    var response = await NotificationRepository.deleteNotification(body);
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +42,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ));
   }
 
-  Slidable _slideItem(NotificationModel notification, int index) {
+  Widget _slideItem(NotificationModel notification, int index) {
     return Slidable(
       endActionPane: ActionPane(
         motion: const ScrollMotion(),
@@ -52,6 +60,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             flex: 1,
             onPressed: (a) {
               setState(() {
+                handleDeleteNoti(notification.iNotiId!);
                 widget.notiList!.removeAt(index);
               });
             },
