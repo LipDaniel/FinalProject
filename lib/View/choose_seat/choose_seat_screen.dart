@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names, avoid_print, unnecessary_null_comparison
+// ignore_for_file: must_be_immutable, unrelated_type_equality_checks, use_build_context_synchronously, unused_local_variable, non_constant_identifier_names, avoid_print, unnecessary_null_comparison, unnecessary_type_check
 
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -8,6 +8,7 @@ import 'package:projectsem4/model/business_model.dart';
 import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
 
@@ -42,10 +43,15 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
     Map<String, dynamic> params = {
       "_fl_id": widget.model.fl_id as int,
       "_tc_id": widget.model.seatclass_id,
-      '_tc_code': tcCode, // Convert the LinkedList to JSON string
+      '_tc_code': tcCode,
     };
-    var response = await AppConstraint.checkSeat(params);
-    if (response == true) {
+    var response = await SeatClassRepository.checkSeat(params);
+    if (response.length > 0) {
+      var codes = response.map((item) => item['_code']).toList();
+      var combinedString = codes.join(', ');
+      AppConstraint.errorToast("Seat $combinedString is already sold!");
+      EasyLoading.dismiss();
+    } else {
       widget.model.seatList =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
       if (widget.model.isRoundTrip == true) {

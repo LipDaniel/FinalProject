@@ -29,11 +29,6 @@ class AppConstraint {
       scale: 1.7,
     );
 
-  static Future<bool> checkSeat(Map<String, dynamic> params) async {
-    bool response = await SeatClassRepository.checkSeat(params);
-    return response;
-  }
-
   static errorToast(String title) {
     Toast.show(title,
         duration: Toast.lengthLong,

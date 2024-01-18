@@ -22,10 +22,9 @@ class SeatClassRepository {
       final response =
           await ApiService().get(ApiConfig.checkseat, params: params);
       if (response['fail'].isEmpty) {
-        return response['isSuccess'];
-      } else {
-        print('2');
-      }
+        return [];
+      } 
+      return response['fail'];
     } catch (e) {
       throw Exception(e);
     }

@@ -42,7 +42,7 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
       "_tc_id": widget.model.seatclass_id,
       '_tc_code': tcCode, // Convert the LinkedList to JSON string
     };
-    var response = await AppConstraint.checkSeat(params);
+    var response = await SeatClassRepository.checkSeat(params);
     if (response == true) {
       widget.model.seatList_return =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
