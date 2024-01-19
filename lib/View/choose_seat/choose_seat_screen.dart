@@ -23,6 +23,7 @@ class ChooseSeetScreen extends StatefulWidget {
 class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
   SeatModel? seatSelected;
   List<SeatModel> lstSelected = [];
+  List<SeatModel> lstSold = [];
   List<SeatModel> newSeats = [];
 
   @override
@@ -51,6 +52,14 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
       var combinedString = codes.join(', ');
       AppConstraint.errorToast("Seat $combinedString is already sold!");
       EasyLoading.dismiss();
+      for (int i = 0; i < codes.length; i++) {
+        setState(() {
+          SeatModel seatmodel =
+              widget.data.where((element) => element.sCode == codes[i]).first;
+          lstSelected.remove(seatmodel);
+          lstSold.add(seatmodel);
+        });
+      }
     } else {
       widget.model.seatList =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
@@ -278,7 +287,7 @@ class _ChooseSeetScreenState extends State<ChooseSeetScreen> {
             }
             return InkWell(
                 onTap: () => __onChooseSeats(e),
-                child: e.bStatus == true
+                child: e.bStatus == true || lstSold.contains(e)
                     ? Container(
                         margin: EdgeInsets.only(right: margin, bottom: 10),
                         height: MediaQuery.sizeOf(context).width / 10,

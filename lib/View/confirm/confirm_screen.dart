@@ -5,11 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/bottomnavi/screen.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/passenger_model.dart';
+import 'package:projectsem4/model/seat_model.dart';
 import 'package:projectsem4/repository/bill_repo.dart';
+import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 
 class ConfirmScreen extends StatefulWidget {
@@ -119,9 +124,9 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
         num subTotalReturn = calculateSubtotal(isPassenger, item, true);
         var passenger_ticket_return = Map.from(passenger_tiket);
         passenger_ticket_return['_tk_payment'] = subTotalReturn;
-        passenger_ticket_return['_tk_seat'] = widget.model.seatList_return![index];
-        passenger_ticket_return['_tk_fl_id'] =
-            widget.model.fl_id_return!;
+        passenger_ticket_return['_tk_seat'] =
+            widget.model.seatList_return![index];
+        passenger_ticket_return['_tk_fl_id'] = widget.model.fl_id_return!;
         passengerReturnList.add(passenger_ticket_return);
       }
       index++;
@@ -132,16 +137,41 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
 
   void handleInsertBill() async {
     await EasyLoading.show();
+    Map<String, dynamic> params = {
+      "_fl_id": widget.model.fl_id as int,
+      "_tc_id": widget.model.seatclass_id,
+      '_tc_code': widget.model.seatList,
+    };
+    var response = await SeatClassRepository.checkSeat(params);
+    if (response.length > 0) {
+      Map<String, dynamic> request = {
+        '_fl_id': widget.model.fl_id,
+        '_tc_id': widget.model.seatclass_id
+      };
+      var codes = response.map((item) => item['_code']).toList();
+      var combinedString = codes.join(', ');
+      FlightInfoModel flightResponse =
+          await FlightRepository.getSeatList(request);
+      AppConstraint.errorToast("Seat $combinedString is already sold!");
+      Route route = MaterialPageRoute(
+          builder: (context) => ChooseSeetScreen(
+              model: widget.model,
+              data: flightResponse.lFlSeats as List<SeatModel>));
+      Navigator.pushReplacement(context, route);
+      EasyLoading.dismiss();
+      return;
+    }
+
     var data = handleCreateJson();
-    var response = await BillRepository.insertBill(data);
-    if (response == 'Create ticket successfully') {
-      await AppConstraint.successToast(response);
+    var insert_response = await BillRepository.insertBill(data);
+    if (insert_response == 'Create ticket successfully') {
+      await AppConstraint.successToast(insert_response);
       await EasyLoading.dismiss();
       Route route =
           MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
       Navigator.push(context, route);
     } else {
-      await AppConstraint.errorToast(response);
+      await AppConstraint.errorToast(insert_response);
       await EasyLoading.dismiss();
       return;
     }
@@ -254,14 +284,19 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                                 height: 10,
                               ),
                               TimeAndPriceWidget(
-                                  passenger: item, model: widget.model, isRoundTrip: false),
+                                  passenger: item,
+                                  model: widget.model,
+                                  isRoundTrip: false),
                               if (widget.model.isRoundTrip == true)
                                 const SizedBox(
                                   height: 10,
                                 ),
                               if (widget.model.isRoundTrip == true)
                                 TimeAndPriceWidget(
-                                    passenger: item, model: widget.model, isRoundTrip: true,),
+                                  passenger: item,
+                                  model: widget.model,
+                                  isRoundTrip: true,
+                                ),
                               const SizedBox(
                                 height: 20,
                               ),

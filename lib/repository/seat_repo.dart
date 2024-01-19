@@ -18,12 +18,15 @@ class SeatClassRepository {
   }
 
   static checkSeat(Map<String, dynamic> params) async {
+    var tmp = [
+      {"id": 0, "_code": "A2"},
+    ];
     try {
       final response =
           await ApiService().get(ApiConfig.checkseat, params: params);
       if (response['fail'].isEmpty) {
         return [];
-      } 
+      }
       return response['fail'];
     } catch (e) {
       throw Exception(e);

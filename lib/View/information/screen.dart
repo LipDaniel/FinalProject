@@ -4,9 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 import 'package:projectsem4/View/confirm/confirm_screen.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/passenger_model.dart';
+import 'package:projectsem4/model/seat_model.dart';
+import 'package:projectsem4/repository/flight_repo.dart';
+import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:country_picker/country_picker.dart';
 
@@ -35,6 +40,22 @@ class _InformationScreenState extends State<InformationScreen> {
       widget.model.seatList!.length,
       (index) => List.generate(9, (index) => TextEditingController()),
     );
+    if (widget.model.passenger_list!.isNotEmpty) {
+      for (var i = 0; i < widget.model.passenger_list!.length; i++) {
+        formControllers[i][0].text = widget.model.passenger_list![i].title!;
+        formControllers[i][1].text = widget.model.passenger_list![i].name!;
+        formControllers[i][2].text = widget.model.passenger_list![i].birth!;
+        formControllers[i][3].text = widget.model.passenger_list![i].country!;
+        formControllers[i][4].text = widget.model.passenger_list![i].national!;
+        formControllers[i][5].text = widget.model.passenger_list![i].passport!;
+        formControllers[i][6].text =
+            widget.model.passenger_list![i].expire_date!;
+        formControllers[i][7].text =
+            widget.model.passenger_list![i].checked_baggage!;
+        formControllers[i][8].text =
+            widget.model.passenger_list![i].cabin_baggage!;
+      }
+    }
   }
 
   void handleSubmitInformation() async {
@@ -52,12 +73,36 @@ class _InformationScreenState extends State<InformationScreen> {
       passenger.checked_baggage = formControllers[i][7].text;
       passenger.cabin_baggage = formControllers[i][8].text;
       passenger.seat = widget.model.seatList?[i];
-
       passengers.add(passenger);
     }
-    widget.model.passenger_list = passengers;
     if (validateForm(passengers) == false) {
       await EasyLoading.dismiss();
+      return;
+    }
+    widget.model.passenger_list = passengers;
+
+    Map<String, dynamic> params = {
+      "_fl_id": widget.model.fl_id as int,
+      "_tc_id": widget.model.seatclass_id,
+      '_tc_code': widget.model.seatList,
+    };
+    var response = await SeatClassRepository.checkSeat(params);
+    if (response.length > 0) {
+      Map<String, dynamic> request = {
+        '_fl_id': widget.model.fl_id,
+        '_tc_id': widget.model.seatclass_id
+      };
+      var codes = response.map((item) => item['_code']).toList();
+      var combinedString = codes.join(', ');
+      FlightInfoModel flightResponse =
+          await FlightRepository.getSeatList(request);
+      AppConstraint.errorToast("Seat $combinedString is already sold!");
+      Route route = MaterialPageRoute(
+          builder: (context) => ChooseSeetScreen(
+              model: widget.model,
+              data: flightResponse.lFlSeats as List<SeatModel>));
+      Navigator.pushReplacement(context, route);
+      EasyLoading.dismiss();
       return;
     }
 
@@ -136,10 +181,10 @@ class _InformationScreenState extends State<InformationScreen> {
 
   Container _passengerForm(
       String seat, List<TextEditingController> controllers, int index) {
-        String seats = seat;
-        if(widget.model.isRoundTrip == true){
-          seats = "$seats - ${widget.model.seatList_return?[index]}";
-        }
+    String seats = seat;
+    if (widget.model.isRoundTrip == true) {
+      seats = "$seats - ${widget.model.seatList_return?[index]}";
+    }
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
         decoration: BoxDecoration(
@@ -228,7 +273,8 @@ class _InformationScreenState extends State<InformationScreen> {
     controller.text = controller.text == '' ? _titleList[0] : controller.text;
     return CupertinoTextField(
         controller: controller,
-        padding: EdgeInsets.only(top: widget.model.isRoundTrip == true ? 20.5 : 19.5, bottom: 0.0),
+        padding: EdgeInsets.only(
+            top: widget.model.isRoundTrip == true ? 20.5 : 19.5, bottom: 0.0),
         decoration: const BoxDecoration(
             border:
                 Border(bottom: BorderSide(color: AppConstraint.colorInput))),
@@ -310,7 +356,8 @@ class _InformationScreenState extends State<InformationScreen> {
                     TextStyle(fontSize: 13, color: AppConstraint.colorLabel)),
             Text(seat,
                 style: TextStyle(
-                    fontSize: widget.model.isRoundTrip == true ? 16 : 25, fontFamily: AppConstraint.fontFamilyBold))
+                    fontSize: widget.model.isRoundTrip == true ? 16 : 25,
+                    fontFamily: AppConstraint.fontFamilyBold))
           ],
         ));
   }
