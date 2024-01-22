@@ -98,6 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
       model.return_date = _returnInput.text == '' ? null : _returnInput.text;
       model.seatclass_id = _seatClass;
       model.isRoundTrip = _selectedRadio == 'Round trip' ? true : false;
+      model.passenger_list = [];
 
       EasyLoading.dismiss();
 

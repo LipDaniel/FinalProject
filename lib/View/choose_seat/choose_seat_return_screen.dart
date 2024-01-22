@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 import 'package:projectsem4/model/business_model.dart';
+import 'package:projectsem4/model/flightinfo_model.dart';
 import 'package:projectsem4/model/seat_model.dart';
+import 'package:projectsem4/repository/flight_repo.dart';
 import 'package:projectsem4/repository/seat_repo.dart';
 import 'package:projectsem4/ulits/constraint.dart';
 import 'package:projectsem4/view/information/screen.dart';
@@ -21,6 +24,7 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
   SeatModel? seatSelected;
   List<SeatModel> lstSelected = [];
   List<SeatModel> newSeats = [];
+  List<SeatModel> lstSold = [];
 
   @override
   void initState() {
@@ -43,7 +47,45 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
       '_tc_code': tcCode, // Convert the LinkedList to JSON string
     };
     var response = await SeatClassRepository.checkSeat(params);
-    if (response == true) {
+    if (response.length > 0) {
+      var codes = response.map((item) => item['_code']).toList();
+      var combinedString = codes.join(', ');
+      AppConstraint.errorToast("Seat $combinedString is already sold!");
+      EasyLoading.dismiss();
+      for (int i = 0; i < codes.length; i++) {
+        setState(() {
+          SeatModel seatmodel =
+              widget.data.where((element) => element.sCode == codes[i]).first;
+          lstSelected.remove(seatmodel);
+          lstSold.add(seatmodel);
+        });
+      }
+    } else {
+      Map<String, dynamic> checkrdepart_params = {
+        "_fl_id": widget.model.fl_id as int,
+        "_tc_id": widget.model.seatclass_id,
+        '_tc_code': widget.model.seatList,
+      };
+      var depart_response = await SeatClassRepository.checkSeat(checkrdepart_params);
+      if (depart_response.length > 0) {
+        Map<String, dynamic> request = {
+          '_fl_id': widget.model.fl_id,
+          '_tc_id': widget.model.seatclass_id
+        };
+        var codes = depart_response.map((item) => item['_code']).toList();
+        var combinedString = codes.join(', ');
+        FlightInfoModel flightResponse =
+            await FlightRepository.getSeatList(request);
+        AppConstraint.errorToast("Seat $combinedString is already sold!");
+        Route route = MaterialPageRoute(
+            builder: (context) => ChooseSeetScreen(
+                model: widget.model,
+                data: flightResponse.lFlSeats as List<SeatModel>));
+        Navigator.pushReplacement(context, route);
+        EasyLoading.dismiss();
+        return;
+      }
+
       widget.model.seatList_return =
           lstSelected.map((e) => e.sCode).cast<String>().toList();
       Route route = MaterialPageRoute(
@@ -249,7 +291,7 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
             }
             return InkWell(
                 onTap: () => __onChooseSeats(e),
-                child: e.bStatus == true
+                child: e.bStatus == true || lstSold.contains(e)
                     ? Container(
                         margin: EdgeInsets.only(right: margin, bottom: 10),
                         height: MediaQuery.sizeOf(context).width / 10,

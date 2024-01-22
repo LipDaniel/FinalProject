@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, non_constant_identifier_names, unused_local_variable, prefer_const_constructors, must_be_immutable
+// ignore_for_file: sized_box_for_whitespace, non_constant_identifier_names, unused_local_variable, prefer_const_constructors, must_be_immutable, unused_element, dead_code
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -42,8 +42,22 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     SizedBox(height: 10),
                     ...widget.ticketList
                         .where((item) => item.lTickets!.isNotEmpty)
-                        .map((item) {
-                      return _ticketItem(item);
+                        .expand<Widget>((item) {
+                      if (item.lTickets!.length > 1) {
+                        if (item.lTickets![0].sTkFlightId ==
+                            item.lTickets![item.lTickets!.length - 1]
+                                .sTkFlightId) {
+                          return [_ticketItem(item, isRoundtrip: false)];
+                        } else {
+                          return [
+                            _ticketItem(item,
+                                isRoundtrip: true, departOrReturn: 'depart'),
+                            _ticketItem(item,
+                                isRoundtrip: true, departOrReturn: 'return')
+                          ];
+                        }
+                      }
+                      return [_ticketItem(item, isRoundtrip: false)];
                     }).toList(),
                     const SizedBox(
                       height: 120,
@@ -55,30 +69,91 @@ class _TicketsScreenState extends State<TicketsScreen> {
     );
   }
 
-  Container _ticketItem(TicketsModel data) {
+  Container _ticketItem(TicketsModel data,
+      {bool? isRoundtrip, String? departOrReturn}) {
     List<DataRow> dataRows = [];
+
     if (data.lTickets!.isNotEmpty) {
-      dataRows = data.lTickets!.map((item) {
-        return DataRow(cells: [
-          DataCell(Text(item.sTkFullName.toString())),
-          DataCell(Text(item.nTkDob == null
-              ? '18'
-              : calculateAge(item.nTkDob).toString())),
-          DataCell(Text((item.iTkChecked! + item.iTkCabin!).toString())),
-          DataCell(Text(item.sTkSeat.toString())),
-        ]);
-      }).toList();
+      if (isRoundtrip == false) {
+        dataRows = data.lTickets!.map((item) {
+          return DataRow(cells: [
+            DataCell(Text(item.sTkFullName.toString())),
+            DataCell(Text(item.nTkDob == null
+                ? '18'
+                : calculateAge(item.nTkDob).toString())),
+            DataCell(Text((item.iTkChecked! + item.iTkCabin!).toString())),
+            DataCell(Text(item.sTkSeat.toString())),
+          ]);
+        }).toList();
+      } else {
+        int halfLength = data.lTickets!.length ~/ 2;
+        var halfList = departOrReturn == 'depart'
+            ? data.lTickets!.sublist(0, halfLength)
+            : data.lTickets!.sublist(halfLength);
+        dataRows = halfList.map((item) {
+          return DataRow(cells: [
+            DataCell(Text(item.sTkFullName.toString())),
+            DataCell(Text(item.nTkDob == null
+                ? '18'
+                : calculateAge(item.nTkDob).toString())),
+            DataCell(Text((item.iTkChecked! + item.iTkCabin!).toString())),
+            DataCell(Text(item.sTkSeat.toString())),
+          ]);
+        }).toList();
+      }
     }
+
+    double totalPrice = 0;
+    if (isRoundtrip == true) {
+      int halfLength = data.lTickets!.length ~/ 2;
+      if (data.lTickets!.length == 2) {
+        if (departOrReturn == 'depart') {
+          totalPrice = data.lTickets![0].sTkPayment!;
+        } else {
+          totalPrice = data.lTickets![1].sTkPayment!;
+        }
+      } else {
+        if (departOrReturn == 'depart') {
+          var halfList = data.lTickets!.sublist(0, halfLength);
+          totalPrice = halfList.fold(
+            0,
+            (previousValue, element) =>
+                previousValue + (element.sTkPayment as double),
+          );
+        } else {
+          var halfList = data.lTickets!.sublist(halfLength);
+          totalPrice = halfList.fold(
+            0,
+            (previousValue, element) =>
+                previousValue + (element.sTkPayment as double),
+          );
+        }
+      }
+    } else {
+      totalPrice = data.iBilPayment!;
+    }
+
     String priced = NumberFormat.currency(
       symbol: '', // Currency symbol (optional)
       decimalDigits: 0, // Number of decimal digits (optional)
-    ).format(data.iBilPayment);
+    ).format(totalPrice);
 
     DateFormat dateFormat = DateFormat("HH:mm a");
-    String timeFrom = dateFormat
-        .format(DateTime.parse(data.bBilFlight!.sFlTakeOff as String));
-    String timeTo = dateFormat
-        .format(DateTime.parse(data.bBilFlight!.sFlArrival as String));
+
+    String timeFrom = dateFormat.format(DateTime.parse(isRoundtrip == true
+        ? departOrReturn == 'depart'
+            ? data.lTickets![0].bBilFlight!.sFlTakeOff as String
+            : data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlTakeOff
+                as String
+        : data.lTickets![0].bBilFlight!.sFlTakeOff as String));
+
+    String timeTo = dateFormat.format(DateTime.parse(isRoundtrip == true
+        ? departOrReturn == 'depart'
+            ? data.lTickets![0].bBilFlight!.sFlArrival as String
+            : data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlArrival
+                as String
+        : data.lTickets![0].bBilFlight!.sFlArrival as String));
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       width: double.infinity,
@@ -102,10 +177,24 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(data.bBilFlight!.sCarName!,
+                    Text(
+                        isRoundtrip == true
+                            ? departOrReturn == 'depart'
+                                ? data.lTickets![0].bBilFlight!.sCarName
+                                    as String
+                                : data.lTickets![data.lTickets!.length - 1]
+                                    .bBilFlight!.sCarName as String
+                            : data.lTickets![0].bBilFlight!.sCarName as String,
                         style: const TextStyle(fontWeight: FontWeight.bold)),
-                    Text(DateFormat.yMMMMEEEEd().format(
-                        DateTime.parse(data.bBilFlight!.sFlTakeOff as String)))
+                    Text(DateFormat.yMMMMEEEEd().format(DateTime.parse(
+                        isRoundtrip == true
+                            ? departOrReturn == 'depart'
+                                ? data.lTickets![0].bBilFlight!.sFlTakeOff
+                                    as String
+                                : data.lTickets![data.lTickets!.length - 1]
+                                    .bBilFlight!.sFlTakeOff as String
+                            : data.lTickets![0].bBilFlight!.sFlTakeOff
+                                as String)))
                   ],
                 ),
                 Image.asset(
@@ -120,9 +209,17 @@ class _TicketsScreenState extends State<TicketsScreen> {
               children: [
                 Column(
                   children: [
+                    Text(isRoundtrip == true
+                        ? departOrReturn == 'depart'
+                            ? '${data.lTickets![0].bBilFlight!.sFlFromName}, ${data.lTickets![0].bBilFlight!.sCtFromName}'
+                            : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlFromName}, ${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sCtFromName}'
+                        : '${data.lTickets![0].bBilFlight!.sFlFromName}, ${data.lTickets![0].bBilFlight!.sCtFromName}'),
                     Text(
-                        '${data.bBilFlight!.sFlFromName}, ${data.bBilFlight!.sCtFromName}'),
-                    Text('${data.bBilFlight!.sFlFromAbbreviation}',
+                        isRoundtrip == true
+                            ? departOrReturn == 'depart'
+                                ? '${data.lTickets![0].bBilFlight!.sFlFromAbbreviation}'
+                                : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlFromAbbreviation}'
+                            : '${data.lTickets![0].bBilFlight!.sFlFromAbbreviation}',
                         style: const TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold)),
                     Text(timeFrom),
@@ -134,9 +231,17 @@ class _TicketsScreenState extends State<TicketsScreen> {
                 ),
                 Column(
                   children: [
+                    Text(isRoundtrip == true
+                        ? departOrReturn == 'depart'
+                            ? '${data.lTickets![0].bBilFlight!.sFlToName}, ${data.lTickets![0].bBilFlight!.sCtToName}'
+                            : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlToName}, ${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sCtToName}'
+                        : '${data.lTickets![0].bBilFlight!.sFlToName}, ${data.lTickets![0].bBilFlight!.sCtToName}'),
                     Text(
-                        '${data.bBilFlight!.sFlToName}, ${data.bBilFlight!.sCtToName}'),
-                    Text('${data.bBilFlight!.sFlToAbbreviation}',
+                        isRoundtrip == true
+                            ? departOrReturn == 'depart'
+                                ? '${data.lTickets![0].bBilFlight!.sFlToAbbreviation}'
+                                : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sFlToAbbreviation}'
+                            : '${data.lTickets![0].bBilFlight!.sFlToAbbreviation}',
                         style: const TextStyle(
                             fontSize: 25, fontWeight: FontWeight.bold)),
                     Text(timeTo),
@@ -148,10 +253,32 @@ class _TicketsScreenState extends State<TicketsScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _flightInfo('Flight', data.bBilFlight!.sPlCode.toString()),
-                _flightInfo('Gate', getFirstTicketSeat(data)),
-                _flightInfo('Amount', data.lTickets!.length.toString()),
-                _flightInfo('Class', data.bBilFlight!.sTcName.toString()),
+                _flightInfo(
+                    'Flight',
+                    isRoundtrip == true
+                        ? departOrReturn == 'depart'
+                            ? '${data.lTickets![0].bBilFlight!.sPlCode}'
+                            : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sPlCode}'
+                        : '${data.lTickets![0].bBilFlight!.sPlCode}'),
+                _flightInfo(
+                    'Gate',
+                    isRoundtrip == true
+                        ? departOrReturn == 'depart'
+                            ? '${data.lTickets![0].iTkGate}'
+                            : '${data.lTickets![data.lTickets!.length - 1].iTkGate}'
+                        : '${data.lTickets![0].iTkGate}'),
+                _flightInfo(
+                    'Amount',
+                    isRoundtrip == true
+                        ? '${data.lTickets!.length ~/ 2}'
+                        : data.lTickets!.length.toString()),
+                _flightInfo(
+                    'Class',
+                    isRoundtrip == true
+                        ? departOrReturn == 'depart'
+                            ? '${data.lTickets![0].bBilFlight!.sTcName}'
+                            : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sTcName}'
+                        : '${data.lTickets![0].bBilFlight!.sTcName}'),
               ],
             ),
             const SizedBox(height: 10),

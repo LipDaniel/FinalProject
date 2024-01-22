@@ -3,17 +3,13 @@
 class TicketsModel {
   int? iBilId;
   double? iBilPayment;
-  BilFlight? bBilFlight;
   List<Tickets>? lTickets;
 
-  TicketsModel({this.iBilId, this.iBilPayment, this.bBilFlight, this.lTickets});
+  TicketsModel({this.iBilId, this.iBilPayment, this.lTickets});
 
   TicketsModel.fromJson(Map<String, dynamic> json) {
     iBilId = json['_bil_id'];
     iBilPayment = json['_bil_payment'];
-    bBilFlight = json['_bil_flight'] != null
-        ? new BilFlight.fromJson(json['_bil_flight'])
-        : null;
     if (json['_tickets'] != null) {
       lTickets = <Tickets>[];
       json['_tickets'].forEach((v) {
@@ -26,9 +22,6 @@ class TicketsModel {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['_bil_id'] = this.iBilId;
     data['_bil_payment'] = this.iBilPayment;
-    if (this.bBilFlight != null) {
-      data['_bil_flight'] = this.bBilFlight!.toJson();
-    }
     if (this.lTickets != null) {
       data['_tickets'] = this.lTickets!.map((v) => v.toJson()).toList();
     }
@@ -104,9 +97,12 @@ class BilFlight {
 class Tickets {
   String? sTkFullName;
   String? sTkTitle;
+  int? sTkFlightId;
   dynamic nTkDob;
+  double? sTkPayment;
   int? iTkGate;
   String? sTkSeat;
+  BilFlight? bBilFlight;
   int? iTkCabin;
   int? iTkChecked;
 
@@ -114,7 +110,10 @@ class Tickets {
       {this.sTkFullName,
       this.sTkTitle,
       this.nTkDob,
-      this.iTkGate,
+      this.sTkFlightId,
+      this.bBilFlight,
+      this.iTkGate, 
+      this.sTkPayment,
       this.sTkSeat,
       this.iTkCabin,
       this.iTkChecked});
@@ -122,6 +121,11 @@ class Tickets {
   Tickets.fromJson(Map<String, dynamic> json) {
     sTkFullName = json['_tk_full_name'];
     sTkTitle = json['_tk_title'];
+    sTkFlightId = json['_tk_fl_id'];
+    sTkPayment = json['_tk_payment'];
+    bBilFlight = json['_tk_flight'] != null
+        ? new BilFlight.fromJson(json['_tk_flight'])
+        : null;
     nTkDob = json['_tk_dob'];
     iTkGate = json['_tk_gate'];
     sTkSeat = json['_tk_seat'];
@@ -134,10 +138,15 @@ class Tickets {
     data['_tk_full_name'] = this.sTkFullName;
     data['_tk_title'] = this.sTkTitle;
     data['_tk_dob'] = this.nTkDob;
+    data['_tk_payment'] = this.sTkPayment;
+    data['_tk_fl_id'] = this.sTkFlightId;
     data['_tk_gate'] = this.iTkGate;
     data['_tk_seat'] = this.sTkSeat;
     data['_tk_cabin'] = this.iTkCabin;
     data['_tk_checked'] = this.iTkChecked;
+    if (this.bBilFlight != null) {
+      data['_tk_flight'] = this.bBilFlight!.toJson();
+    }
     return data;
   }
 }
