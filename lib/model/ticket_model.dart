@@ -60,8 +60,8 @@ class BilFlight {
       this.sTcName});
 
   BilFlight.fromJson(Map<String, dynamic> json) {
-    sFlTakeOff = json['_fl_take_off'];
-    sFlArrival = json['_fl_arrival'];
+    sFlTakeOff = json['_fl_take_off_mobile'];
+    sFlArrival = json['_fl_arrival_mobile'];
     sCtFromName = json['_ct_from_name'];
     sCtToName = json['_ct_to_name'];
     sCarName = json['_car_name'];
@@ -77,8 +77,8 @@ class BilFlight {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_fl_take_off'] = this.sFlTakeOff;
-    data['_fl_arrival'] = this.sFlArrival;
+    data['_fl_take_off_mobile'] = this.sFlTakeOff;
+    data['_fl_arrival_mobile'] = this.sFlArrival;
     data['_ct_from_name'] = this.sCtFromName;
     data['_ct_to_name'] = this.sCtToName;
     data['_car_name'] = this.sCarName;
@@ -103,6 +103,7 @@ class Tickets {
   int? iTkGate;
   String? sTkSeat;
   BilFlight? bBilFlight;
+  String? sTcName;
   int? iTkCabin;
   int? iTkChecked;
 
@@ -112,10 +113,11 @@ class Tickets {
       this.nTkDob,
       this.sTkFlightId,
       this.bBilFlight,
-      this.iTkGate, 
+      this.iTkGate,
       this.sTkPayment,
       this.sTkSeat,
       this.iTkCabin,
+      this.sTcName,
       this.iTkChecked});
 
   Tickets.fromJson(Map<String, dynamic> json) {
@@ -130,6 +132,7 @@ class Tickets {
     iTkGate = json['_tk_gate'];
     sTkSeat = json['_tk_seat'];
     iTkCabin = json['_tk_cabin'];
+    sTcName = json['_tc_name'];
     iTkChecked = json['_tk_checked'];
   }
 
@@ -143,6 +146,7 @@ class Tickets {
     data['_tk_gate'] = this.iTkGate;
     data['_tk_seat'] = this.sTkSeat;
     data['_tk_cabin'] = this.iTkCabin;
+    data['_tc_name'] = this.sTcName;
     data['_tk_checked'] = this.iTkChecked;
     if (this.bBilFlight != null) {
       data['_tk_flight'] = this.bBilFlight!.toJson();

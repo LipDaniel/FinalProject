@@ -276,9 +276,9 @@ class _TicketsScreenState extends State<TicketsScreen> {
                     'Class',
                     isRoundtrip == true
                         ? departOrReturn == 'depart'
-                            ? '${data.lTickets![0].bBilFlight!.sTcName}'
-                            : '${data.lTickets![data.lTickets!.length - 1].bBilFlight!.sTcName}'
-                        : '${data.lTickets![0].bBilFlight!.sTcName}'),
+                            ? '${data.lTickets![0].sTcName}'
+                            : '${data.lTickets![data.lTickets!.length - 1].sTcName}'
+                        : '${data.lTickets![0].sTcName}'),
               ],
             ),
             const SizedBox(height: 10),
@@ -373,7 +373,8 @@ class _TicketsScreenState extends State<TicketsScreen> {
   }
 
   int calculateAge(String dateOfBirthString) {
-    DateTime dob = DateTime.parse(dateOfBirthString.replaceAll('-', ''));
+    DateFormat format = DateFormat('dd-MM-yyyy');
+    DateTime dob = format.parse(dateOfBirthString);
     // Get the current date
     DateTime now = DateTime.now();
     // Calculate the difference between the current date and the date of birth

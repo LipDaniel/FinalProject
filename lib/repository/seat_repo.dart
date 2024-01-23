@@ -18,9 +18,6 @@ class SeatClassRepository {
   }
 
   static checkSeat(Map<String, dynamic> params) async {
-    var tmp = [
-      {"id": 0, "_code": "C1"},
-    ];
     try {
       final response =
           await ApiService().get(ApiConfig.checkseat, params: params);
