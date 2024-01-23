@@ -31,6 +31,15 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
     super.initState();
     widget.data =
         widget.data.where((element) => !element.sCode!.contains('G')).toList();
+    if (widget.model.seatList_return!.isNotEmpty) {
+      for (var i = 0; i < widget.model.seatList_return!.length; i++) {
+        SeatModel seatselected = widget.data
+            .where(
+                (element) => element.sCode == widget.model.seatList_return![i])
+            .first;
+        lstSelected.add(seatselected);
+      }
+    }
   }
 
   void handleChooseSeats() async {
@@ -66,7 +75,8 @@ class _ChooseSeetReturnScreenState extends State<ChooseSeetReturnScreen> {
         "_tc_id": widget.model.seatclass_id,
         '_tc_code': widget.model.seatList,
       };
-      var depart_response = await SeatClassRepository.checkSeat(checkrdepart_params);
+      var depart_response =
+          await SeatClassRepository.checkSeat(checkrdepart_params);
       if (depart_response.length > 0) {
         Map<String, dynamic> request = {
           '_fl_id': widget.model.fl_id,

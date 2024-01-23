@@ -67,10 +67,8 @@ class _FlightListReturnScreenState extends State<FlightListReturnScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
-        leading: const Icon(Icons.arrow_back),
         foregroundColor: Colors.white,
-        leadingWidth: 15,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         backgroundColor: AppConstraint.mainColor,
         title: _flightinfo(context),
       ),
@@ -198,9 +196,9 @@ class _FlightListReturnScreenState extends State<FlightListReturnScreen> {
               )
             ],
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 2),
           const Icon(Icons.arrow_right_alt, color: Colors.white),
-          const SizedBox(width: 5),
+          const SizedBox(width: 2),
           Column(
             children: [
               Text(widget.model.airport_from_code.toString(),

@@ -14,9 +14,25 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  String formatTimeDifference(String timestamp) {
+    DateTime dateTime = DateTime.parse(timestamp);
+
+    // Calculate the difference between the current time and the given timestamp
+    Duration difference = DateTime.now().difference(dateTime);
+
+    if (difference.inDays > 0) {
+      return '${difference.inDays} ${difference.inDays == 1 ? 'day' : 'days'} ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} ${difference.inHours == 1 ? 'hour' : 'hours'} ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} ${difference.inMinutes == 1 ? 'minute' : 'minutes'} ago';
+    } else {
+      return 'Just now';
+    }
+  }
+
   void handleDeleteNoti(int id) async {
     Map<String, dynamic> body = {"_noti_id": id, "_noti_status": 0};
-
     var response = await NotificationRepository.deleteNotification(body);
     return response;
   }
@@ -102,8 +118,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         fontSize: 15),
                   ),
                   const SizedBox(height: 7),
-                  const Text('3 hours ago',
-                      style: TextStyle(color: AppConstraint.colorLabel))
+                  Text(formatTimeDifference(notification.iNotiCreatedDate!),
+                      style: const TextStyle(color: AppConstraint.colorLabel))
                 ],
               ),
             )

@@ -193,10 +193,8 @@ class _FlightListScreenState extends State<FlightListScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 80,
-        leading: const Icon(Icons.arrow_back),
-        leadingWidth: 15,
         foregroundColor: Colors.white,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         backgroundColor: AppConstraint.mainColor,
         title: _flightinfo(context),
       ),
@@ -406,9 +404,9 @@ class _FlightListScreenState extends State<FlightListScreen> {
               )
             ],
           ),
-          const SizedBox(width: 5),
+          const SizedBox(width: 2),
           const Icon(Icons.arrow_right_alt, color: Colors.white),
-          const SizedBox(width: 5),
+          const SizedBox(width: 2),
           Column(
             children: [
               Text(widget.model.airport_to_code.toString(),

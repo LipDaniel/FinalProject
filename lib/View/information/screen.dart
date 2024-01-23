@@ -230,8 +230,8 @@ class _InformationScreenState extends State<InformationScreen> {
           Row(children: [
             Expanded(flex: 2, child: _title(context, controllers[0])),
             const SizedBox(width: 5),
-            Expanded(flex: 14, child: _textField('Full name', controllers[1])),
-            const SizedBox(width: 15),
+            Expanded(flex: 10, child: _textField('Full name', controllers[1])),
+            const SizedBox(width: 5),
             _seat(seats)
           ]),
           const SizedBox(height: 15),
@@ -249,8 +249,7 @@ class _InformationScreenState extends State<InformationScreen> {
           const SizedBox(height: 20),
           Row(children: [
             Expanded(
-                flex: 5,
-                child: _textField('Citizen ID / Passport', controllers[5])),
+                flex: 5, child: _textField('ID / Passport', controllers[5])),
             const SizedBox(width: 15),
             Expanded(flex: 5, child: _textField('Expire date', controllers[6]))
           ]),

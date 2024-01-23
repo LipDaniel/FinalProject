@@ -19,16 +19,16 @@ class BusinessModel {
   String? seatclass;
   double? price;
   bool? isRoundTrip;
-  List<String>? seatList;
+  List<String>? seatList = [];
   String? plane_code;
   String? plane_name;
   String? time_to;
   String? time_from;
   String? airline;
-  List<PassengerModel>? passenger_list;
+  List<PassengerModel>? passenger_list = [];
 
   int? fl_id_return;
-  List<String>? seatList_return;
+  List<String>? seatList_return = [];
   String? time_to_return;
   String? time_from_return;
   String? airline_return;

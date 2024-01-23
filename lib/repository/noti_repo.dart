@@ -32,7 +32,7 @@ class NotificationRepository {
       );
       final response = await ApiService()
           .post(ApiConfig.deleteNotification, body: body, options: options);
-      if(response['isSuccess']){
+      if (response['isSuccess']) {
         return response['isSuccess'];
       }
       return false;
