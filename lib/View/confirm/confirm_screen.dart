@@ -188,20 +188,19 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
           EasyLoading.dismiss();
           return;
         }
+      }
+      var data = handleCreateJson();
+      var insert_response = await BillRepository.insertBill(data);
+      if (insert_response == 'Create ticket successfully') {
+        await AppConstraint.successToast(insert_response);
+        await EasyLoading.dismiss();
+        Route route =
+            MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
+        Navigator.push(context, route);
       } else {
-        var data = handleCreateJson();
-        var insert_response = await BillRepository.insertBill(data);
-        if (insert_response == 'Create ticket successfully') {
-          await AppConstraint.successToast(insert_response);
-          await EasyLoading.dismiss();
-          Route route =
-              MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
-          Navigator.push(context, route);
-        } else {
-          await AppConstraint.errorToast(insert_response);
-          await EasyLoading.dismiss();
-          return;
-        }
+        await AppConstraint.errorToast(insert_response);
+        await EasyLoading.dismiss();
+        return;
       }
     }
   }
