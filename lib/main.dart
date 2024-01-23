@@ -24,8 +24,8 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         fontFamily: "Montserrat-Regular",
       ),
-      // home: _intoductionslide(context),
-      home: const Login(),
+      home: _intoductionslide(context),
+      // home: const Login(),
       builder: EasyLoading.init(),
     );
   }
