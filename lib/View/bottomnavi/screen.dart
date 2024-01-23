@@ -34,8 +34,11 @@ class _BottomScreenState extends State<BottomScreen> {
   late List<TicketsModel> ticketList = [];
   late List<NotificationModel> notiList = [];
 
-  static List<Widget> getWidgetOptions(List<dynamic> listAir,
-      List<dynamic> listClass, List<TicketsModel> tickets, List<NotificationModel> notiList) {
+  static List<Widget> getWidgetOptions(
+      List<dynamic> listAir,
+      List<dynamic> listClass,
+      List<TicketsModel> tickets,
+      List<NotificationModel> notiList) {
     return [
       HomeScreen(
           listAir: listAir as List<AirportModel>,
@@ -98,8 +101,9 @@ class _BottomScreenState extends State<BottomScreen> {
       _getTicketList();
       _getNotification();
     });
-
-    AppConstraint.successToast(_welcomeMessage);
+    if (widget.tab == null) {
+      AppConstraint.successToast(_welcomeMessage);
+    }
   }
 
   @override

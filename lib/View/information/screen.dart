@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_return_screen.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 import 'package:projectsem4/View/confirm/confirm_screen.dart';
 import 'package:projectsem4/model/business_model.dart';
@@ -104,12 +105,39 @@ class _InformationScreenState extends State<InformationScreen> {
       Navigator.pushReplacement(context, route);
       EasyLoading.dismiss();
       return;
+    } else {
+      if (widget.model.isRoundTrip == true) {
+        Map<String, dynamic> checkreturnParams = {
+          "_fl_id": widget.model.fl_id_return as int,
+          "_tc_id": widget.model.seatclass_id,
+          '_tc_code': widget.model.seatList_return,
+        };
+        var returnResponse =
+            await SeatClassRepository.checkSeat(checkreturnParams);
+        if (returnResponse.length > 0) {
+          Map<String, dynamic> request = {
+            '_fl_id': widget.model.fl_id_return,
+            '_tc_id': widget.model.seatclass_id
+          };
+          var codes = returnResponse.map((item) => item['_code']).toList();
+          var combinedString = codes.join(', ');
+          FlightInfoModel flightResponse =
+              await FlightRepository.getSeatList(request);
+          AppConstraint.errorToast("Seat $combinedString is already sold!");
+          Route route = MaterialPageRoute(
+              builder: (context) => ChooseSeetReturnScreen(
+                  model: widget.model,
+                  data: flightResponse.lFlSeats as List<SeatModel>));
+          Navigator.pushReplacement(context, route);
+          EasyLoading.dismiss();
+          return;
+        }
+      }
+      Route route = MaterialPageRoute(
+          builder: (context) => ConfirmScreen(model: widget.model));
+      Navigator.push(context, route);
+      await EasyLoading.dismiss();
     }
-
-    Route route = MaterialPageRoute(
-        builder: (context) => ConfirmScreen(model: widget.model));
-    Navigator.push(context, route);
-    await EasyLoading.dismiss();
   }
 
   bool validateForm(List<PassengerModel> passengeForms) {
@@ -467,7 +495,7 @@ class _InformationScreenState extends State<InformationScreen> {
               return Theme(
                 data: Theme.of(context).copyWith(
                   colorScheme:
-                      const ColorScheme.light(primary: AppConstraint.mainColor),
+                      const ColorScheme.dark(primary: AppConstraint.mainColor),
                 ),
                 child: child!,
               );

@@ -376,7 +376,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.light(
+                      colorScheme: const ColorScheme.dark(
                           primary: AppConstraint.mainColor),
                     ),
                     child: child!,
@@ -417,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 builder: (context, child) {
                   return Theme(
                     data: Theme.of(context).copyWith(
-                      colorScheme: const ColorScheme.light(
+                      colorScheme: const ColorScheme.dark(
                           primary: AppConstraint.mainColor),
                     ),
                     child: child!,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:intl/intl.dart';
 import 'package:projectsem4/View/bottomnavi/screen.dart';
+import 'package:projectsem4/View/choose_seat/choose_seat_return_screen.dart';
 import 'package:projectsem4/View/choose_seat/choose_seat_screen.dart';
 import 'package:projectsem4/View/confirm/widgets/info_widget.dart';
 import 'package:projectsem4/View/confirm/widgets/time_price_widget.dart';
@@ -160,20 +161,48 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
       Navigator.pushReplacement(context, route);
       EasyLoading.dismiss();
       return;
-    }
-
-    var data = handleCreateJson();
-    var insert_response = await BillRepository.insertBill(data);
-    if (insert_response == 'Create ticket successfully') {
-      await AppConstraint.successToast(insert_response);
-      await EasyLoading.dismiss();
-      Route route =
-          MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
-      Navigator.push(context, route);
     } else {
-      await AppConstraint.errorToast(insert_response);
-      await EasyLoading.dismiss();
-      return;
+      if (widget.model.isRoundTrip == true) {
+        Map<String, dynamic> checkreturnParams = {
+          "_fl_id": widget.model.fl_id_return as int,
+          "_tc_id": widget.model.seatclass_id,
+          '_tc_code': widget.model.seatList_return,
+        };
+        var returnResponse =
+            await SeatClassRepository.checkSeat(checkreturnParams);
+        if (returnResponse.length > 0) {
+          Map<String, dynamic> request = {
+            '_fl_id': widget.model.fl_id_return,
+            '_tc_id': widget.model.seatclass_id
+          };
+          var codes = returnResponse.map((item) => item['_code']).toList();
+          var combinedString = codes.join(', ');
+          FlightInfoModel flightResponse =
+              await FlightRepository.getSeatList(request);
+          AppConstraint.errorToast("Seat $combinedString is already sold!");
+          Route route = MaterialPageRoute(
+              builder: (context) => ChooseSeetReturnScreen(
+                  model: widget.model,
+                  data: flightResponse.lFlSeats as List<SeatModel>));
+          Navigator.pushReplacement(context, route);
+          EasyLoading.dismiss();
+          return;
+        }
+      } else {
+        var data = handleCreateJson();
+        var insert_response = await BillRepository.insertBill(data);
+        if (insert_response == 'Create ticket successfully') {
+          await AppConstraint.successToast(insert_response);
+          await EasyLoading.dismiss();
+          Route route =
+              MaterialPageRoute(builder: (context) => BottomScreen(tab: 2));
+          Navigator.push(context, route);
+        } else {
+          await AppConstraint.errorToast(insert_response);
+          await EasyLoading.dismiss();
+          return;
+        }
+      }
     }
   }
 
