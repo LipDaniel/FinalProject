@@ -101,7 +101,7 @@ class TimeAndPriceWidget extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(
-                      width: 10,
+                      width: 8,
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 3),
@@ -112,7 +112,7 @@ class TimeAndPriceWidget extends StatelessWidget {
                     ),
                     
                     const SizedBox(
-                      width: 10,
+                      width: 8,
                     ),
                     Column(
                       children: [
